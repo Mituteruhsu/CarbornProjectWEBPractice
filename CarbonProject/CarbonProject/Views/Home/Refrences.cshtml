@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Refrences";
+}
+@section HeadContent {
+    <script src="https://cdn.tailwindcss.com"></script>    
+    <script>
+        tailwind.config = {
+                corePlugins: {preflight: false}, //關閉 Tailwind 的預設 Reset，保留 Bootstrap 樣式
+                content: ["#tailwind-scope"],  // 只掃描這個容器
+                important: "#tailwind-scope"
+        }
+    </script>    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        #tailwind-scope {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .bg-gradient-hover {
+            transition: background-position 0.3s ease;
+            background: linear-gradient(to right, #6366f1, #3b82f6, #6366f1);
+            background-size: 200% auto;
+        }
+
+            .bg-gradient-hover:hover {
+                background-position: right center;
+            }
+    </style>
+}
+
+<div id="tailwind-scope" class="max-w-7xl mx-5 mb-5">
+    <h1 class="text-5xl font-bold text-gray-800 text-center m-4">參考公司特色表格</h1>
+
+    <!-- Company Features Table -->
+    <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        公司 / 平台名稱
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        特色服務主軸
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" id="companies-table-body">
+                <!-- Data Rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const companyData = {
+        "淨零綠生活 (環境部)": {
+            group: "public",
+            features: "均值模式快速計算、自訂模式精準推算，公部門權威服務。",
+            link: "https://greenlifestyle.moenv.gov.tw/CarbonPublicPage"
+        },
+        "GreenSwift (昕力資訊)": {
+            group: "public",
+            features: "AI 核心，使用 Python、TensorFlow/PyTorch 模型來進行 AI 碳足跡分析。",
+            link: "https://www.tpisoftware.com/products/greenswift?gad_source=1&gad_campaignid=22483349645&gbraid=0AAAAAC05vg0_cLwRYpPpMgGvbaz-U_q65&gclid=Cj0KCQjw_rPGBhCbARIsABjq9cdDnH-QRpfAmh9nVM0H9E_0ksaELSpvvccDHRipyDNFdJTH-mAeKsMaApzdEALw_wcB"
+        },
+        "Custos": {
+            group: "public",
+            features: "B2B2E 模式；企業合作+遊戲化獎勵員工減碳。",
+            link: "https://www.custoscarbon.com/zh"
+        },
+        "CoGo": {
+            group: "public",
+            features: "連結銀行帳戶，自動消費碳足跡計算，個人化自動化追蹤。",
+            link: "https://www.thecommons.earth/"
+        },
+        "Klima & Wren": {
+            group: "public",
+            features: "個人碳足跡計算 + 碳抵銷服務，APP/網頁跨平台應用。",
+            link: "https://klima.com/"
+        },
+        "Earth Hero": {
+            group: "public",
+            features: "以任務卡片設計推動環保習慣，極重 UX 設計。",
+            link: "https://earthhero.org/"
+        },
+        "JouleBug": {
+            group: "public",
+            features: "社群互動 + 團隊競賽，遊戲化環保體驗。",
+            link: "https://www.joulebug.com/"
+        },
+        "Watershed": {
+            group: "business",
+            features: "企業級 SaaS；雲端、供應鏈數據自動匯入+高質量碳盤查報告。",
+            link: "https://watershed.com/"
+        },
+        "Carbonbase": {
+            group: "business",
+            features: "區塊鏈碳管理平台，Solidity(以太坊)保障數據透明與追溯。",
+            link: "https://carbonbase.co/"
+        },
+        "Chroma (致茂電子)": {
+            group: "business",
+            features: "製造業專用即時設備監控，針對工廠需求設計。",
+            link: "https://www.chromaate.com/tw/product/energy_consumption_carbon_footprint_management_599?gad_source=1&gad_campaignid=22779345515&gbraid=0AAAAA9_JzH-3qpNAbLttta8Jm6TsmrqDo&gclid=Cj0KCQjw_rPGBhCbARIsABjq9cd8RRCDYBw36Q-ajUVhFFzkPflKJ8onMuaehFEsfzgChG5LlVI5FjkaAqwLEALw_wcB"
+        },
+        "遠傳碳管理平台 (Sustaihub)": {
+            group: "business",
+            features: "能源整合+碳盤查管理，法規合規、協助企業資料分析。",
+            link: "https://enterprise.fetnet.net/content/ebu/tw/solution/NetZero/transform/Carbon_Sustaihub.html?WTshort_k=P-O2wsbt0TJO&WTchannel=WEB&CMP&s_kwcid=AL!10909!3!726987754267!p!!g!!%E7%A2%B3%E8%B6%B3%E8%B7%B9&gad_source=1&gad_campaignid=21098300803&gbraid=0AAAAAC7ZfXBmP4Dntau9Lw45bL-7b83Zg&gclid=Cj0KCQjw_rPGBhCbARIsABjq9cdt8bZoQ4fhYlIA02g0AVjExekDUhqbjN99saaG-QWh2MiSvDEk8KQaAjZ3EALw_wcB"
+        },
+        "Carbon Monitor": {
+            group: "refrences",
+            features: "年度全球二氧化碳排放量較。",
+            link: "https://carbonmonitor.org/"
+        },
+        "Global Carbon Atlas": {
+            group: "refrences",
+            features: "全球二氧化碳排放量較。",
+            link: "https://globalcarbonatlas.org/"
+        },
+    };
+
+    function populateTable() {
+        const tbody = document.getElementById('companies-table-body');
+        let lastGroup = "";
+        for (const company in companyData) {
+            const data = companyData[company];
+            if (data.group !== lastGroup) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="3" class="px-6 py-4 whitespace-nowrap text-lg font-bold text-gray-700 ${data.group === 'public' ? 'bg-blue-100' : data.group === 'business' ? 'bg-green-100' : 'bg-yellow-100'}">${data.group === 'public' ? '面向大眾的服務' : data.group === 'business' ? '面向企業的服務' : '其他參考資料'}</td>`;
+                tbody.appendChild(row);
+                lastGroup = data.group;
+            }
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <h3 class="text-base font-medium text-gray-900">${company}</h3>
+                </td>
+                <td class="px-6 py-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">${data.features}</p>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <a href="${data.link}" target="_blank" class="text-white text-center font-bold py-2 px-4 rounded-full bg-gradient-hover hover:scale-105 transition-transform duration-300">
+                            前往官網
+                        </a>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        populateTable();
+    });
+</script>

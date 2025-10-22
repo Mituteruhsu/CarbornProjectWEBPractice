@@ -1,0 +1,242 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section HeadContent {
+    <style>
+        .home-hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #d9f0d9 0%, #a6e4a6 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* 標題文字 */
+        .home-hero h1 {
+            font-size: 3rem;
+            color: #065f46; /* 深綠色 */
+            margin-bottom: 1rem;
+        }
+
+        /* SLOGAN */
+        .home-hero p {
+            font-size: 1.5rem;
+            color: #064e3b;
+            font-weight: 500;
+        }
+
+        /* CSS 繪製太陽 */
+        .sun {
+            position: absolute;
+            top: 10%;
+            right: 15%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at center, #facc15 0%, #fcd34d 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(252, 211, 77, 0.6);
+            animation: rotateSun 20s linear infinite;
+        }
+
+        @@keyframes rotateSun {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* CSS 繪製簡單的樹 */
+        .tree {
+            position: absolute;
+            bottom: 10%;
+            left: 10%;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 60px solid #065f46;
+        }
+
+        .tree::before {
+            content: '';
+            position: absolute;
+            bottom: 50px;
+            left: -40px;
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 60px solid #10b981;
+        }
+
+        .tree::after {
+            content: '';
+            position: absolute;
+            bottom: 90px;
+            left: -30px;
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 50px solid #22c55e;
+        }
+        /* 將原本 carbon-chart 改為 carbon-chart-wrapper，body 不改 */
+        .carbon-chart-wrapper {
+            max-width: 1000px;
+            margin: 2rem auto 0 auto;
+            position: relative;
+        }
+
+        .carbon-chart-wrapper .title {
+        font-size: 2rem;
+        color: #2c7a89;
+        margin-bottom: 1rem;
+        text-align: center;
+        }
+
+        .carbon-chart-wrapper .source,
+        .carbon-chart-wrapper .sink {
+        display: inline-block;
+        width: 200px;
+        text-align: center;
+        margin: 0 20px;
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        .carbon-chart-wrapper .bar {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        position: relative;
+        }
+
+        .carbon-chart-wrapper .bar.industry {
+            height: 150px;
+            background: #f28c28;
+        }
+
+        .carbon-chart-wrapper .bar.landuse {
+            height: 60px;
+            background: #f28c28;
+        }
+
+        .carbon-chart-wrapper .bar.land-sink {
+            height: 120px;
+            background: #3b82f6;
+        }
+
+        .carbon-chart-wrapper .bar.ocean-sink {
+            height: 100px;
+            background: #60a5fa;
+        }
+
+        .carbon-chart-wrapper .bar-label {
+        position: absolute;
+        top: -25px;
+        width: 100%;
+        font-weight: bold;
+        color: #333;
+        }
+
+        .carbon-chart-wrapper .illustration {
+        height: 60px;
+        margin-bottom: 5px;
+        }
+
+        .carbon-chart-wrapper .illustration img {
+            max-height: 60px;
+        }
+
+        .carbon-chart-wrapper .row {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        margin-top: 2rem;
+        }
+
+        .carbon-chart-wrapper .legend {
+        margin-top: 2rem;
+        text-align: center;
+        }
+
+        .carbon-chart-wrapper .legend span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .carbon-chart-wrapper .legend .emission {
+            background: #f28c28;
+        }
+
+        .carbon-chart-wrapper .legend .sink {
+            background: #3b82f6;
+        }
+    </style>
+}
+
+<div class="home-hero">
+    <h1>CarbonProject</h1>
+    <p>Reduce Carbon, Embrace Green Energy!</p>
+
+    <!-- CSS 繪製太陽 -->
+    <div class="sun"></div>
+
+    <!-- CSS 繪製樹木 -->
+    <div class="tree"></div>
+</div>
+<!-- 新增碳排放柱狀圖區塊 -->
+<div class="carbon-chart-wrapper">
+    <div class="title">GLOBAL CARBON BUDGET 2023</div>
+
+    <div class="row">
+        <!-- Fossil fuels & Industry -->
+        <div class="source">
+            <div class="illustration">🏭</div>
+            <div class="bar industry">
+                <div class="bar-label">36.3 Pg CO₂</div>
+            </div>
+            <div>Fossil fuels & Industry</div>
+        </div>
+
+        <!-- Land Use Change -->
+        <div class="source">
+            <div class="illustration">🌾</div>
+            <div class="bar landuse">
+                <div class="bar-label">4.4 Pg CO₂</div>
+            </div>
+            <div>Land Use Change</div>
+        </div>
+
+        <!-- Land Sink -->
+        <div class="sink">
+            <div class="illustration">🌲</div>
+            <div class="bar land-sink">
+                <div class="bar-label">13.5 Pg CO₂</div>
+            </div>
+            <div>Land Sink</div>
+        </div>
+
+        <!-- Ocean Sink -->
+        <div class="sink">
+            <div class="illustration">🌊</div>
+            <div class="bar ocean-sink">
+                <div class="bar-label">10.3 Pg CO₂</div>
+            </div>
+            <div>Ocean Sink</div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <span class="emission"></span> Anthropogenic emissions
+        &nbsp;&nbsp;&nbsp;
+        <span class="sink"></span> Sinks of anthropogenic emissions
+    </div>
+</div>

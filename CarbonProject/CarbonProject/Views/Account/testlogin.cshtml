@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "testLogin";
+}
+
+@{
+    int row = ViewData["row"] != null ? (int)ViewData["row"] : 9;
+    int col = ViewData["col"] != null ? (int)ViewData["col"] : 9;
+}
+
+<style>
+    table, th, td {
+        border: 2px solid black; /* 每格都有邊框 */
+        padding: 10px;
+        text-align: center;
+    }
+    .red{
+        color:red;
+    }
+    .green{
+        color:green;
+    }
+
+    .blue {
+        color: blue;
+    }
+
+    .aliceblue {
+        background-color: aliceblue;
+    }
+    
+    .orange
+    {
+        background-color: orange;
+    }
+</style>
+<h1>Table list</h1>
+<form action="~/Account/testlogin" method="post">
+    <label for="row">列數 (row): </label>
+    <input type="number" id="row" name="row" value="@row" min="1" required>
+    <label for="col">欄數 (col): </label>
+    <input type="number" id="col" name="col" value="@col" min="1" required>
+    <button type="submit">生成表格</button>
+</form>
+<br />
+<table>
+    @for (int r = 0; r < (int)ViewData["row"]; r++)
+    {
+        <tr class="@(r % 2 == 0 ? "green": "blue")">
+        @for (int c = 0; c < (int)ViewData["col"]; c++)
+        {
+            var bgColor = (c + 1) % 2 == 1 ? "aliceblue" : "orange";
+            <td class="@(r == c ? "red":"")" style="background-color:@bgColor;">
+            @(((List<string>)ViewData["result"])[r * (int)ViewData["col"] + c])
+            </td>
+        }
+        </tr>
+    }
+</table>
+
+@* 以下備份 *@
+@* <table border="1">
+    @for (int r = 0; r < (int)ViewData["row"]; r++)
+    {
+        <tr>
+            @for (int c = 0; c < (int)ViewData["col"]; c++)
+            {
+                <td>
+                    @(((List<string>)ViewData["result"])[r*(int)ViewData["col"]+c])
+                </td>
+            }
+        </tr>
+    }
+</table> *@
