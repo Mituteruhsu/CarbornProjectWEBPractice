@@ -4,6 +4,10 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// === 環境偵測 ===
+var environment = builder.Environment.EnvironmentName;
+Console.WriteLine($"[Environment] ASPNETCORE_ENVIRONMENT = {environment}");
+
 // === 讀取環境變數 ===
 var AZURE_SQL_USER = Environment.GetEnvironmentVariable("AZURE_SQL_USER");
 var AZURE_SQL_PWD = Environment.GetEnvironmentVariable("AZURE_SQL_PWD");
@@ -15,7 +19,7 @@ var rawConnStr = builder.Configuration.GetConnectionString("DefaultConnection")
 // 把連線字串存回設定
 builder.Configuration["ConnectionStrings:DefaultConnection"] = rawConnStr;
 
-// === MVC 基本設定 === Add services to the container.
+// === MVC 基本設定 === 自動依據環境載入 appsettings.{Environment}.json
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 // 強化 session 與 cookie 設定
@@ -37,6 +41,10 @@ CarbonProject.Models.ActionsRepository.Init(builder.Configuration); // 初始化 Ac
 
 // === 啟用 app ===
 var app = builder.Build();
+
+// === 啟動時輸出連線資訊（非敏感部分）===
+Console.WriteLine($"[Connection] Using database: {builder.Configuration.GetConnectionString("DefaultConnection")?.Split(';')[1]}");
+Console.WriteLine($"[Connection] SQL User: {AZURE_SQL_USER}");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
