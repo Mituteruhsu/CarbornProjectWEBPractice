@@ -1,0 +1,128 @@
+﻿@model CarbonProject.Models.ActionsViewModel
+@{
+    ViewData["Title"] = "行動方案";
+}
+
+<h2 class="mt-3">行動方案（Actions）</h2>
+
+@if (TempData["Alert"] != null)
+{
+    <div class="alert alert-info">@TempData["Alert"]</div>
+}
+
+<div class="row align-items-center mb-3">
+    <div class="col-md-8">
+        <form method="get" asp-action="Index" class="d-flex">
+            <select class="form-select me-2" name="year" onchange="this.form.submit()">
+                <option value="0" @@(Model.SelectedYear == 0 ? "selected" : "")>全部年度</option>
+                @foreach (var year in CarbonProject.Models.ActionsRepository.GetYears())
+                {
+                    @if (year == Model.SelectedYear)
+                    {
+                        <option value="@year" selected>@year</option>
+                    }
+                    else
+                    {
+                        <option value="@year">@year</option>
+                    }
+                }
+            </select>
+
+            <select class="form-select me-2" name="category" onchange="this.form.submit()">
+                <option value="" @@(string.IsNullOrEmpty(Model.SelectedCategory) ? "selected" : "")>全部類別</option>
+                @foreach (var category in Model.Categories)
+                {
+                    @if (category == Model.SelectedCategory)
+                    {
+                        <option value="@category" selected>@category</option>
+                    }
+                    else
+                    {
+                        <option value="@category">@category</option>
+                    }
+                }
+            </select>
+
+            <a class="btn btn-outline-secondary text-nowrap ms-2" asp-action="Create">新增行動方案</a>
+        </form>
+    </div>
+
+    <div class="col-md-4 text-end">
+        <form asp-action="DownloadReport" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="year" value="@Model.SelectedYear" />
+            <input type="hidden" name="category" value="@Model.SelectedCategory" />
+            <button class="btn btn-outline-success">📄 匯出報告 (PDF)</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>年度</th>
+                    <th>類別</th>
+                    <th>名稱</th>
+                    <th>預期減碳 (噸/年)</th>
+                    <th>進度</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.Actions)
+                {
+                    <tr>
+                        <td>@a.Year</td>
+                        <td>@a.Category</td>
+                        <td>@a.Title</td>
+                        <td>@a.ExpectedReductionTon / 年</td>
+                        <td style="min-width:180px;">
+                            <div class="progress" style="height:18px;">
+                                <div class="progress-bar" role="progressbar" style="width:@a.ProgressPercent%;">@a.ProgressPercent% </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@a.Id">檢視</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@a.Id">編輯</a>
+
+                            <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('確定刪除此項目？');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@a.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">刪除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-muted small">@a.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">總覽</h5>
+                <p>專案數： <strong>@Model.Actions.Count()</strong></p>
+                <p>總預期減碳量： <strong>@Model.Actions.Sum(x => x.ExpectedReductionTon)</strong> 噸/年</p>
+                <p>平均進度： <strong>@(Model.Actions.Any() ? Model.Actions.Average(x => x.ProgressPercent).ToString("N0") + "%" : "N/A")</strong></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">按類別統計</h5>
+                <ul class="list-unstyled">
+                    @foreach (var cat in Model.Categories)
+                    {
+                        var count = Model.Actions.Count(a => a.Category == cat);
+                        <li>@cat : @count</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

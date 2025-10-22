@@ -1,0 +1,32 @@
+﻿@model CarbonProject.Models.ESGAction
+@{
+    ViewData["Title"] = "行動方案詳細";
+}
+
+<h3>@Model.Title</h3>
+
+<div class="mb-3">
+    <strong>年度：</strong> @Model.Year
+</div>
+<div class="mb-3">
+    <strong>類別：</strong> @Model.Category
+</div>
+<div class="mb-3">
+    <strong>負責部門：</strong> @Model.OwnerDepartment
+</div>
+<div class="mb-3">
+    <strong>預期減碳 (噸/年)：</strong> @Model.ExpectedReductionTon:N0
+</div>
+<div class="mb-3">
+    <strong>進度：</strong>
+    <div class="progress" style="height:18px;">
+        <div class="progress-bar" role="progressbar" style="width:@Model.ProgressPercent%;">@Model.ProgressPercent% </div>
+    </div>
+</div>
+<div class="mb-3">
+    <strong>說明：</strong>
+    <p class="text-muted">@Model.Description</p>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">回列表</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary ms-2">編輯</a>

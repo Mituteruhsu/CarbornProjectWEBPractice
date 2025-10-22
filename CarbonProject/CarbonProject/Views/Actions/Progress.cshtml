@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CarbonProject.Models.ESGProgress>
+@{
+    ViewData["Title"] = "驗算報告結果";
+}
+
+<h3 class="mt-3">驗算報告結果</h3>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+else if (ViewBag.Status == "Connected")
+{
+    <div class="alert alert-success">驗算服務已連線。</div>
+}
+else if (ViewBag.Status == "Starting")
+{
+    <div class="alert alert-info">正在啟動驗算服務，請稍候...</div>
+}
+else if (ViewBag.Status == "Unavailable")
+{
+    <div class="alert alert-warning">驗算服務未啟動或無法連線。</div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">目前沒有驗算資料。</div>
+}
+else
+{
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>年度</th>
+                <th>總方案數</th>
+                <th>完成</th>
+                <th>進行中</th>
+                <th>未開始</th>
+                <th>總減碳量</th>
+                <th>平均進度 (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Year</td>
+                    <td>@r.TotalActions</td>
+                    <td>@r.CompletedCount</td>
+                    <td>@r.InProgressCount</td>
+                    <td>@r.NotStartedCount</td>
+                    <td>@r.TotalReductionTon.ToString("N0")</td>
+                    <td>@r.AverageProgress.ToString("F1")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
