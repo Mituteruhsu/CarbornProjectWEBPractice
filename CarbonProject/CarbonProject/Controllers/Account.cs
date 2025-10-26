@@ -1,7 +1,8 @@
-using CarbonProject.Models;
+ï»¿using CarbonProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using YourProject.Models;
 
 namespace CarbonProject.Controllers
 {
@@ -16,121 +17,183 @@ namespace CarbonProject.Controllers
             _logger = logger;
             _config = config;
 
-            Members.Init(config); // ªì©l¤Æ DB ³s½u¦r¦ê
+            Members.Init(config);   // åˆå§‹åŒ– Members DB é€£ç·šå­—ä¸²
+            Company.Init(config);   // åˆå§‹åŒ– Company DB é€£ç·šå­—ä¸²
+            Industry.Init(config);  // åˆå§‹åŒ– Industry DB é€£ç·šå­—ä¸²
         }
-        //===============µn¤J===============
+        //===============ç™»å…¥===============
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Login(string UID, string password)
         {
-            // ¥¿³WÅçÃÒ(UID:¦Ü¤Ö4¦ì¼Æ¡Apassword:¦Ü¤Ö8¦ì¼Æ¡A¨âªÌ¥i¥]§t­^¤å¤j¤p¼g¤Î¼Æ¦r 0~9)
+            // æ­£è¦é©—è­‰(UID:è‡³å°‘4ä½æ•¸ï¼Œpassword:è‡³å°‘8ä½æ•¸ï¼Œå…©è€…å¯åŒ…å«è‹±æ–‡å¤§å°å¯«åŠæ•¸å­— 0~9)
             var uidRegex = new Regex(@"^[a-zA-Z0-9]{4,}$");
             var pwdRegex = new Regex(@"^[a-zA-Z0-9]{8,}$");
 
             if (!uidRegex.IsMatch(UID))
             {
-                ViewBag.Error = "±b¸¹¦Ü¤Ö4¦ì¡A¥B¶È¯à¥]§t­^¤å»P¼Æ¦r";
+                ViewBag.Error = "å¸³è™Ÿè‡³å°‘4ä½ï¼Œä¸”åƒ…èƒ½åŒ…å«è‹±æ–‡èˆ‡æ•¸å­—";
                 return View("Login");
             }
             if (!pwdRegex.IsMatch(password))
             {
-                ViewBag.Error = "±K½X¦Ü¤Ö8¦ì¡A¥B¶È¯à¥]§t­^¤å»P¼Æ¦r";
+                ViewBag.Error = "å¯†ç¢¼è‡³å°‘8ä½ï¼Œä¸”åƒ…èƒ½åŒ…å«è‹±æ–‡èˆ‡æ•¸å­—";
                 return View("Login");
             }
 
-            // ÅçÃÒ±b¸¹±K½X
+            // é©—è­‰å¸³è™Ÿå¯†ç¢¼
             var member = Members.CheckLogin(UID, password);
             if (member != null)
             {
-                // ³]©w Session
+                // è¨­å®š Session
                 HttpContext.Session.SetString("isLogin", "true");
                 HttpContext.Session.SetString("Role", member.Role);
                 HttpContext.Session.SetString("Username", member.Username);
-                
-                // ®Ú¾Ú Role ¾É¦V¤£¦P­¶­±
+
+                // æ ¹æ“š Role å°å‘ä¸åŒé é¢
                 if (member.Role == "Admin")
-                    return RedirectToAction("Admin_read", "Account"); // ºŞ²z­¶
+                    return RedirectToAction("Admin_read", "Account"); // ç®¡ç†é 
                 else
-                    return RedirectToAction("testLogin", "Account"); // ¤@¯ë·|­û´ú¸Õ­¶
+                    return RedirectToAction("testLogin", "Account"); // ä¸€èˆ¬æœƒå“¡æ¸¬è©¦é 
             }
             else
             {
-                ViewBag.Error = "±b¸¹©Î±K½X¿ù»~";
+                ViewBag.Error = "å¸³è™Ÿæˆ–å¯†ç¢¼éŒ¯èª¤";
                 return View("Login");
             }
         }
-        //===============µn¥X===============
+        //===============ç™»å‡º===============
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("isLogin");
             return RedirectToAction("Login");
         }
-        //===============µù¥U===============
+        //===============è¨»å†Š===============
         public IActionResult Register()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Register(string username, string email, string password, string passwordConfirm, string fullname)
+        [ValidateAntiForgeryToken]
+        public IActionResult Register(
+            string username, string email, string password, string passwordConfirm,
+            string fullname, string userType,
+            string CompanyName, string TaxId, string Address, string Contact_Email,
+            string IndustryId)
         {
-            // 1. ±K½X½T»{
+            // 1. å¯†ç¢¼ç¢ºèª
             if (password != passwordConfirm)
             {
-                ViewBag.Error = "±K½X»P½T»{±K½X¤£¤@­P";
+                ViewBag.Error = "å¯†ç¢¼èˆ‡ç¢ºèªå¯†ç¢¼ä¸ä¸€è‡´";
                 return View();
             }
-            // 2. ¥¿«hÅçÃÒ
-            var usernameRegex = new Regex(@"^[a-zA-Z0-9]{4,}$"); // ±b¸¹¦Ü¤Ö4¦ì
-            var pwdRegex = new Regex(@"^[a-zA-Z0-9]{8,}$");      // ±K½X¦Ü¤Ö8¦ì
-            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$"); // Email®æ¦¡
+            // 2. æ­£å‰‡é©—è­‰
+            var usernameRegex = new Regex(@"^[a-zA-Z0-9]{4,}$"); // å¸³è™Ÿè‡³å°‘4ä½
+            var pwdRegex = new Regex(@"^[a-zA-Z0-9]{8,}$");      // å¯†ç¢¼è‡³å°‘8ä½
+            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$"); // Emailæ ¼å¼
             if (!usernameRegex.IsMatch(username))
             {
-                ViewBag.Error = "±b¸¹¦Ü¤Ö4¦ì¡A¥B¶È¯à¥]§t­^¤å»P¼Æ¦r";
+                ViewBag.Error = "å¸³è™Ÿè‡³å°‘4ä½ï¼Œä¸”åƒ…èƒ½åŒ…å«è‹±æ–‡èˆ‡æ•¸å­—";
                 return View();
             }
 
             if (!pwdRegex.IsMatch(password))
             {
-                ViewBag.Error = "±K½X¦Ü¤Ö8¦ì¡A¥B¶È¯à¥]§t­^¤å»P¼Æ¦r";
+                ViewBag.Error = "å¯†ç¢¼è‡³å°‘8ä½ï¼Œä¸”åƒ…èƒ½åŒ…å«è‹±æ–‡èˆ‡æ•¸å­—";
                 return View();
             }
 
             if (!emailRegex.IsMatch(email))
             {
-                ViewBag.Error = "Email ®æ¦¡¤£¥¿½T";
+                ViewBag.Error = "Email æ ¼å¼ä¸æ­£ç¢º";
                 return View();
             }
-            // 3. «Ø¥ß·|­ûª«¥ó
+            // 3. å»ºç«‹æœƒå“¡ç‰©ä»¶
             var member = new Members
             {
                 Username = username,
                 Email = email,
                 PasswordHash = password,
-                FullName = fullname
+                FullName = fullname,
+                Role = (userType == "Company") ? "Company" : "Viewer",
+                IsActive = true
             };
-            // 4. ¼g¤J¸ê®Æªí
-            bool success = Members.AddMember(member);
-            if (!success)
+            // 4. å¯«å…¥è³‡æ–™è¡¨
+            int newMemberId = Members.AddMember(member);
+            if (newMemberId == -1)
             {
-                ViewBag.Error = "±b¸¹©ÎEmail¤w¦s¦b";
+                ViewBag.Error = "å¸³è™Ÿæˆ–Emailå·²å­˜åœ¨";
                 return View();
             }
+            if (newMemberId <= 0)
+            {
+                ViewBag.Error = "æœƒå“¡è¨»å†Šå¤±æ•—ï¼Œè«‹ç¨å¾Œå†è©¦ã€‚";
+                return View();
+            }
+            // 5. è‹¥ç‚ºä¼æ¥­ç”¨æˆ¶ï¼Œå»ºç«‹å…¬å¸è³‡æ–™ + é—œè¯
+            if (userType == "Company")
+            {
+                try
+                {
+                    // ç¢ºä¿ IndustryId å·²ç¶“å¾å‰ç«¯å‚³å›ï¼Œä¾‹å¦‚ A-01
+                    if (string.IsNullOrEmpty(IndustryId))
+                    {
+                        ViewBag.Error = "è«‹é¸æ“‡è¡Œæ¥­åˆ¥ã€‚";
+                        return View();
+                    }
 
-            TempData["RegisterSuccess"] = "µù¥U¦¨¥\¡A½Ğµn¤J¡I";
+                    // å»ºç«‹å…¬å¸ç‰©ä»¶
+                    var company = new Company
+                    {
+                        CompanyName = CompanyName?.Trim(),
+                        TaxId = TaxId?.Trim(),
+                        Industry = IndustryId.Trim(), // A-01 (å°æ‡‰è¡Œæ¥­ä¸­é¡)
+                        Address = Address?.Trim(),
+                        Contact_Email = Contact_Email?.Trim(),
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        MemberId = newMemberId // é—œè¯åˆ°å‰›æ–°å¢çš„æœƒå“¡
+                    };
+                    Debug.WriteLine(company);
+                    // å¯«å…¥è³‡æ–™åº«
+                    bool CPsuccess = Company.AddCompany(company);
+
+                    if (!CPsuccess)
+                    {
+                        ViewBag.Error = "ä¼æ¥­è³‡æ–™æ–°å¢å¤±æ•—ï¼Œè«‹ç¨å¾Œå†è©¦ã€‚";
+                        return View();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = "ä¼æ¥­è¨»å†Šæ™‚ç™¼ç”ŸéŒ¯èª¤ï¼š" + ex.Message;
+                    return View();
+                }
+            }
+
+            TempData["RegisterSuccess"] = "è¨»å†ŠæˆåŠŸï¼Œè«‹ç™»å…¥ï¼";
             return RedirectToAction("Login");
         }
-        //===============Admin ·|­ûºŞ²z===============
+        // çµ¦å‰ç«¯ AJAX ç”¨çš„ç”¢æ¥­æŸ¥è©¢ API
+        [HttpGet]
+        public IActionResult GetIndustries()
+        {
+            var grouped = Industry.GetGrouped();
+            return Json(grouped);
+        }
+        //===============Admin æœƒå“¡ç®¡ç†===============
         public IActionResult Admin_read()
         {
-            // ÀË¬d¬O§_¬° Admin µn¤J
+            // æª¢æŸ¥æ˜¯å¦ç‚º Admin ç™»å…¥
             if (HttpContext.Session.GetString("isLogin") != "true" ||
                 HttpContext.Session.GetString("Role") != "Admin")
             {
-                TempData["LoginAlert"] = "±z¨S¦³ºŞ²zÅv­­";
+                TempData["LoginAlert"] = "æ‚¨æ²’æœ‰ç®¡ç†æ¬Šé™";
                 return RedirectToAction("Login");
             }
 
@@ -138,50 +201,51 @@ namespace CarbonProject.Controllers
             return View(members);
         }
 
-        // §R°£·|­û
+        // åˆªé™¤æœƒå“¡
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteMember(int id)
         {
-            // ¶È­­ Admin
             if (HttpContext.Session.GetString("Role") != "Admin")
             {
-                TempData["AdminError"] = "µLÅv­­¾Ş§@";
+                TempData["AdminError"] = "ç„¡æ¬Šé™æ“ä½œ";
                 return RedirectToAction("Login");
             }
 
             bool success = Members.DeleteMember(id);
             if (!success)
             {
-                TempData["AdminError"] = "§R°£¥¢±Ñ";
+                TempData["AdminError"] = "åˆªé™¤å¤±æ•—";
             }
             return RedirectToAction("Admin_read");
         }
 
-        // ½s¿è·|­û (¥Ü½d)
+        // ç·¨è¼¯æœƒå“¡
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult EditMember(int id, string username, string email, string fullname)
         {
             if (HttpContext.Session.GetString("Role") != "Admin")
             {
-                TempData["AdminError"] = "µLÅv­­¾Ş§@";
+                TempData["AdminError"] = "ç„¡æ¬Šé™æ“ä½œ";
                 return RedirectToAction("Login");
             }
 
             bool success = Members.UpdateMember(id, username, email, fullname);
             if (!success)
             {
-                TempData["AdminError"] = "§ó·s¥¢±Ñ";
+                TempData["AdminError"] = "æ›´æ–°å¤±æ•—";
             }
             return RedirectToAction("Admin_read");
         }
 
-        //==================== ¤@¯ë·|­û´ú¸Õ­¶ ====================
+        //==================== ä¸€èˆ¬æœƒå“¡æ¸¬è©¦é  ====================
         public IActionResult testLogin(int row, int col)
         {
             if (HttpContext.Session.GetString("isLogin") != "true")
             {
-                TempData["LoginAlert"] = "½Ğµn¤J«á¨Ï¥Î";
-                return RedirectToAction("Login"); // ¦^µn¤J­¶
+                TempData["LoginAlert"] = "è«‹ç™»å…¥å¾Œä½¿ç”¨";
+                return RedirectToAction("Login"); // å›ç™»å…¥é 
             }
             var result = new List<string>();
             for (int r = 1; r <= row; r++)

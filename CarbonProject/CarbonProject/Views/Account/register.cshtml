@@ -17,7 +17,7 @@
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 350px;
+            width: 400px;
             text-align: center;
         }
 
@@ -26,7 +26,8 @@
                 color: #065f46;
             }
 
-            .register-box input {
+            .register-box input,
+            .register-box select {
                 width: 100%;
                 padding: 10px;
                 margin: 0.5rem 0;
@@ -35,7 +36,8 @@
                 font-size: 1rem;
             }
 
-                .register-box input:focus {
+                .register-box input:focus,
+                .register-box select:focus {
                     outline: none;
                     border-color: #22c55e;
                     box-shadow: 0 0 5px rgba(34, 197, 94, 0.4);
@@ -84,6 +86,24 @@
             margin-bottom: 10px;
             font-size: 0.9rem;
         }
+
+        .company-section {
+            display: none;
+            text-align: left;
+            margin-top: 1rem;
+        }
+
+            .company-section h3 {
+                color: #065f46;
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+
+        label {
+            font-weight: 500;
+            display: block;
+            margin-top: 0.3rem;
+        }
     </style>
 }
 
@@ -102,12 +122,50 @@
         }
 
         <form asp-controller="Account" asp-action="Register" method="post" id="register-form">
+            @Html.AntiForgeryToken()
             <input type="text" name="username" placeholder="帳號" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" id="password" name="password" placeholder="密碼" required>
             <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="確認密碼" required>
             <input type="text" name="fullname" placeholder="姓名">
+
+            <label for="userType">帳號類型</label>
+            <select id="userType" name="userType" required>
+                <option value="Viewer">一般用戶</option>
+                <option value="Company">企業用戶</option>
+            </select>
+
+            <!-- 企業用戶區塊 -->
+            <div id="companyFields" class="company-section">
+                <h3>企業資料</h3>
+
+                <label>公司名稱 (繁體中文)</label>
+                <input type="text" name="CompanyName" placeholder="例如：群碳科技股份有限公司">
+
+                <label>統一編號 (Tax ID)</label>
+                <input type="text" name="TaxId" placeholder="8位數字">
+
+                <label>產業大類</label>
+                <select id="industryCategory" required>
+                    <option value="">請選擇大類</option>
+                    @* 後端 API 讀取後 JS 填入 *@
+                </select>
+
+                <label>產業中類</label>
+                <select id="industrySubcategory" name="Industry" required>
+                    <option value="">請選擇中類</option>
+                    @* 後端 API 讀取後 JS 填入 *@
+                </select>
+
+                <label>公司地址</label>
+                <input type="text" name="Address" placeholder="可輸入繁體中文地址">
+
+                <label>聯絡 Email</label>
+                <input type="email" name="Contact_Email" placeholder="企業聯絡信箱">
+            </div>
+
             <div id="password-match-msg" class="error-msg"></div>
+
             <button type="submit">註冊</button>
         </form>
 
@@ -122,7 +180,15 @@
         const passwordInput = document.getElementById('password');
         const passwordConfirmInput = document.getElementById('passwordConfirm');
         const passwordMsg = document.getElementById('password-match-msg');
+        const userTypeSelect = document.getElementById('userType');
+        const companyFields = document.getElementById('companyFields');
+        const categoryInput = document.getElementById('industryCategory');      // <input list="categoryList">
+        const subcategoryInput = document.getElementById('industrySubcategory');// <input list="subcategoryList">
+        const categoryList = document.getElementById('categoryList');          // <datalist id="categoryList">
+        const subcategoryList = document.getElementById('subcategoryList');    // <datalist id="subcategoryList">
+        const form = document.getElementById('register-form');
 
+        // 密碼確認
         function checkPasswordMatch() {
             if (passwordInput.value !== passwordConfirmInput.value) {
                 passwordMsg.textContent = "密碼與確認密碼不一致";
@@ -130,8 +196,72 @@
                 passwordMsg.textContent = "";
             }
         }
-
         passwordInput.addEventListener('input', checkPasswordMatch);
         passwordConfirmInput.addEventListener('input', checkPasswordMatch);
+
+        // 顯示/隱藏 企業用戶欄位
+        userTypeSelect.addEventListener('change', () => {
+            if (userTypeSelect.value === "Company") {
+                companyFields.style.display = "block";
+            } else {
+                companyFields.style.display = "none";
+            }
+        });
+
+        // 前端存放產業中類對應
+        const industryMap = {}; // { MajorName: [ {id, name}, ... ] }
+
+        // ----------前端產業資料， AJAX 從後端載入----------
+        // ASP.NET Core 的預設 JSON 序列化器（System.Text.Json）會自動把屬性轉成 camelCase（小寫開頭）
+        fetch('/Account/GetIndustries')
+        .then(res => res.json())
+        .then(data => {
+            console.log("後端回傳產業資料:", data);
+
+            // 先清空大類 select
+            categoryInput.innerHTML = '<option value="">請選擇大類</option>';
+            subcategoryInput.innerHTML = '<option value="">請選擇中類</option>';
+
+            data.forEach(cat => {
+                const middles = cat.middles || [];
+
+                console.log("大類:", cat.majorName, "中類數量:", middles.length);
+
+                // 建立對應關聯
+                industryMap[cat.majorName] = middles.map(m => ({
+                    id: m.industry_Id,
+                    name: m.middleCategoryName || m.middle_Category_Name
+                }));
+
+                // 填入大類 select
+                const opt = document.createElement('option');
+                opt.value = cat.majorName;
+                opt.textContent = cat.majorName;
+                categoryInput.appendChild(opt);
+            });
+        })
+        .catch(err => console.error("載入產業資料失敗:", err));
+
+        // ----------大類輸入改變 → 更新中類----------
+        function updateSubcategories(selectedCategory) {
+            const selectedMiddles = industryMap[selectedCategory] || [];
+            console.log("更新中類:", selectedCategory, selectedMiddles);
+
+            // 清空中類 select
+            subcategoryInput.innerHTML = '<option value="">請選擇中類</option>';
+
+            // 建立新的中類選項
+            selectedMiddles.forEach(mid => {
+                const opt = document.createElement('option');
+                opt.value = mid.id;   // 將 Industry_Id 當 value
+                opt.textContent = mid.name;
+                subcategoryInput.appendChild(opt);
+            });
+        }
+
+        // 大類 select 變動時
+        categoryInput.addEventListener('change', () => {
+            updateSubcategories(categoryInput.value);
+        });
     </script>
 }

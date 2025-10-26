@@ -35,6 +35,7 @@
 </style>
 <h1>Table list</h1>
 <form action="~/Account/testlogin" method="post">
+    @Html.AntiForgeryToken()
     <label for="row">列數 (row): </label>
     <input type="number" id="row" name="row" value="@row" min="1" required>
     <label for="col">欄數 (col): </label>
