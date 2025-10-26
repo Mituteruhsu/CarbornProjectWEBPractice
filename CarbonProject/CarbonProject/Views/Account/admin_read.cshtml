@@ -25,33 +25,30 @@
         @foreach (var m in Model)
         {
             <tr>
-                <form id="memberForm" method="post">
+                <form method="post">
                     @Html.AntiForgeryToken()
-                <td>@m.MemberId<input type="hidden" name="id" value="@m.MemberId" autocomplete="off" /></td>
-                <td><input type="text" name="username" value="@m.Username" style="width:100px;" autocomplete="off" /></td>
-                <td><input type="email" name="email" value="@m.Email" style="width:160px;" autocomplete="off" /></td>
-                <td><input type="text" name="fullname" value="@m.FullName" style="width:120px;" autocomplete="off" /></td>
-                    <td>@m.Role</td>
-                    <td>
-                        <button type="button" onclick="submitForm('EditMember')" style="background:#4CAF50; color:white; border:none; padding:5px 10px;">儲存</button>
-                    <input type="hidden" name="id" value="@m.MemberId" autocomplete="off" />
-                        <button type="button" onclick="submitForm('DeleteMember');return confirm('確定要刪除嗎？');" style="background:#f87171; color:white; border:none; padding:5px 10px;">
-                            刪除
-                        </button>
-                    </td>
+                <td>
+                    @m.MemberId
+                    <input type="hidden" name="id" value="@m.MemberId" />
+                </td>
+                <td><input type="text" name="username" value="@m.Username" style="width:100px;" /></td>
+                <td><input type="email" name="email" value="@m.Email" style="width:160px;" /></td>
+                <td><input type="text" name="fullname" value="@m.FullName" style="width:120px;" /></td>
+                <td>@m.Role</td>
+                <td>
+                    <!-- 編輯按鈕 -->
+                    <button type="submit" formaction="/Account/EditMember" style="background:#4CAF50; color:white; border:none; padding:5px 10px;">
+                        儲存
+                    </button>
+                    <!-- 刪除按鈕 -->
+                    <button type="submit" formaction="/Account/DeleteMember" onclick="return confirm('確定要刪除嗎？');" style="background:#f87171; color:white; border:none; padding:5px 10px;">
+                        刪除
+                    </button>
+                </td>
                 </form>
-                
             </tr>
         }
     </tbody>
 </table>
 
 <a asp-controller="Account" asp-action="Logout" style="display:inline-block; margin-top:20px;">登出</a>
-
-<script>
-    function submitForm(actionName) {
-        var form = document.getElementById('memberForm');
-        form.action = '/Account/' + actionName; // 動態改 form 的 action
-        form.submit();
-    }
-</script>

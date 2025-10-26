@@ -139,20 +139,20 @@
             <div id="companyFields" class="company-section">
                 <h3>企業資料</h3>
 
-                <label>公司名稱 (繁體中文)</label>
+                <label>公司名稱</label>
                 <input type="text" name="CompanyName" placeholder="例如：群碳科技股份有限公司">
 
                 <label>統一編號 (Tax ID)</label>
                 <input type="text" name="TaxId" placeholder="8位數字">
 
                 <label>產業大類</label>
-                <select id="industryCategory" required>
+                <select id="industryCategory">
                     <option value="">請選擇大類</option>
                     @* 後端 API 讀取後 JS 填入 *@
                 </select>
 
                 <label>產業中類</label>
-                <select id="industrySubcategory" name="Industry" required>
+                <select id="industrySubcategory" name="IndustryId">
                     <option value="">請選擇中類</option>
                     @* 後端 API 讀取後 JS 填入 *@
                 </select>
@@ -201,11 +201,18 @@
 
         // 顯示/隱藏 企業用戶欄位
         userTypeSelect.addEventListener('change', () => {
-            if (userTypeSelect.value === "Company") {
-                companyFields.style.display = "block";
-            } else {
-                companyFields.style.display = "none";
-            }
+            const isCompany = userTypeSelect.value === "Company";
+            companyFields.style.display = isCompany ? "block" : "none";
+
+            // 動態調整企業欄位的 required 狀態
+            const companyInputs = companyFields.querySelectorAll('input, select');
+            companyInputs.forEach(input => {
+                if (isCompany) {
+                    input.setAttribute('required', 'required');
+                } else {
+                    input.removeAttribute('required');
+                }
+            });
         });
 
         // 前端存放產業中類對應

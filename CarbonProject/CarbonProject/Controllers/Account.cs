@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using YourProject.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CarbonProject.Controllers
 {
@@ -92,6 +93,7 @@ namespace CarbonProject.Controllers
                 ViewBag.Error = "密碼與確認密碼不一致";
                 return View();
             }
+
             // 2. 正則驗證
             var usernameRegex = new Regex(@"^[a-zA-Z0-9]{4,}$"); // 帳號至少4位
             var pwdRegex = new Regex(@"^[a-zA-Z0-9]{8,}$");      // 密碼至少8位
@@ -113,6 +115,7 @@ namespace CarbonProject.Controllers
                 ViewBag.Error = "Email 格式不正確";
                 return View();
             }
+
             // 3. 建立會員物件
             var member = new Members
             {
@@ -123,6 +126,7 @@ namespace CarbonProject.Controllers
                 Role = (userType == "Company") ? "Company" : "Viewer",
                 IsActive = true
             };
+
             // 4. 寫入資料表
             int newMemberId = Members.AddMember(member);
             if (newMemberId == -1)
@@ -135,50 +139,51 @@ namespace CarbonProject.Controllers
                 ViewBag.Error = "會員註冊失敗，請稍後再試。";
                 return View();
             }
+            
             // 5. 若為企業用戶，建立公司資料 + 關聯
             if (userType == "Company")
             {
-                try
+                if (string.IsNullOrEmpty(CompanyName) ||
+                    string.IsNullOrEmpty(TaxId) ||
+                    string.IsNullOrEmpty(IndustryId) ||
+                    string.IsNullOrEmpty(Address) ||
+                    string.IsNullOrEmpty(Contact_Email))
                 {
-                    // 確保 IndustryId 已經從前端傳回，例如 A-01
-                    if (string.IsNullOrEmpty(IndustryId))
-                    {
-                        ViewBag.Error = "請選擇行業別。";
-                        return View();
-                    }
-
-                    // 建立公司物件
-                    var company = new Company
-                    {
-                        CompanyName = CompanyName?.Trim(),
-                        TaxId = TaxId?.Trim(),
-                        Industry = IndustryId.Trim(), // A-01 (對應行業中類)
-                        Address = Address?.Trim(),
-                        Contact_Email = Contact_Email?.Trim(),
-                        CreatedAt = DateTime.Now,
-                        UpdatedAt = DateTime.Now,
-                        MemberId = newMemberId // 關聯到剛新增的會員
-                    };
-                    Debug.WriteLine(company);
-                    // 寫入資料庫
-                    bool CPsuccess = Company.AddCompany(company);
-
-                    if (!CPsuccess)
-                    {
-                        ViewBag.Error = "企業資料新增失敗，請稍後再試。";
-                        return View();
-                    }
+                    ViewBag.Error = "請填寫完整企業資料";
+                    return View();
                 }
-                catch (Exception ex)
+
+                // 建立公司物件
+                var company = new Company
                 {
-                    ViewBag.Error = "企業註冊時發生錯誤：" + ex.Message;
+                    MemberId = newMemberId,
+                    CompanyName = CompanyName.Trim(),
+                    TaxId = TaxId.Trim(),
+                    Industry = IndustryId.Trim(),
+                    Address = Address.Trim(),
+                    Contact_Email = Contact_Email.Trim(),
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+                Debug.WriteLine(company);
+                // 寫入 Companies 資料庫
+                int newCompanyId = Company.AddCompany(company);
+                if (newCompanyId == -1)
+                {
+                    ViewBag.Error = "企業名，統編或聯絡Email已存在";
+                    return View();
+                }
+                if (newCompanyId <= 0)
+                {
+                    ViewBag.Error = "企業資料新增失敗，請稍後再試。";
                     return View();
                 }
             }
-
+            // 6. 註冊完成
             TempData["RegisterSuccess"] = "註冊成功，請登入！";
-            return RedirectToAction("Login");
+                return RedirectToAction("Login");
         }
+
         // 給前端 AJAX 用的產業查詢 API
         [HttpGet]
         public IActionResult GetIndustries()
@@ -206,6 +211,9 @@ namespace CarbonProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteMember(int id)
         {
+            Debug.WriteLine($"==========here is ID==========");
+            Debug.WriteLine(id);
+            Debug.WriteLine($"==========here is ID==========");
             if (HttpContext.Session.GetString("Role") != "Admin")
             {
                 TempData["AdminError"] = "無權限操作";

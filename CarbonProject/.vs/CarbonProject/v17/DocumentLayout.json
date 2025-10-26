@@ -3,119 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\members.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\members.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\account\\admin_read.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\account\\admin_read.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\controllers\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\controllers\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\members.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\members.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\company.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\company.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\account\\admin_read.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\account\\admin_read.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\industry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\industry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\carbondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\carbondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\controllers\\actions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\controllers\\actions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\account\\testlogin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\account\\testlogin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\actions\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\actions\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\actions\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\actions\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\actions\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\actions\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\esgaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\esgaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\actions\\progress.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\actions\\progress.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\home\\refrences.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\home\\refrences.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\actions\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\actions\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\models\\esgprogress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\models\\esgprogress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\controllers\\datagoals.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\controllers\\datagoals.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\home\\datagoals.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\home\\datagoals.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/CarbonProject/True/SqlTable/dbo.Members.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -130,39 +39,51 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Members.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\Members.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Models\\Members.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\Members.cs",
-              "RelativeToolTip": "CarbonProject\\Models\\Members.cs",
-              "ViewState": "AgIAAJkAAAAAAAAAAAAuwLMAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-04T13:09:12.761Z",
+              "Title": "admin_read.cshtml",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\admin_read.cshtml",
+              "RelativeDocumentMoniker": "CarbonProject\\Views\\Account\\admin_read.cshtml",
+              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\admin_read.cshtml",
+              "RelativeToolTip": "CarbonProject\\Views\\Account\\admin_read.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-26T07:36:46.638Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Industry.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\Industry.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Models\\Industry.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\Industry.cs",
-              "RelativeToolTip": "CarbonProject\\Models\\Industry.cs",
-              "ViewState": "AgIAAFgAAAAAAAAAAAAmwEYAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-25T10:30:13.38Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 5,
               "Title": "register.cshtml",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\register.cshtml",
               "RelativeDocumentMoniker": "CarbonProject\\Views\\Account\\register.cshtml",
               "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\register.cshtml",
               "RelativeToolTip": "CarbonProject\\Views\\Account\\register.cshtml",
-              "ViewState": "AgIAAKwAAAAAAAAAAAAswO8AAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAcwJoAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-10-04T13:24:58.373Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Account.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\Account.cs",
+              "RelativeDocumentMoniker": "CarbonProject\\Controllers\\Account.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\Account.cs",
+              "RelativeToolTip": "CarbonProject\\Controllers\\Account.cs",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAiwNUAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-05T06:56:42.143Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Members.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\Members.cs",
+              "RelativeDocumentMoniker": "CarbonProject\\Models\\Members.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\Members.cs",
+              "RelativeToolTip": "CarbonProject\\Models\\Members.cs",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAwwKQAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T13:09:12.761Z"
             },
             {
               "$type": "Document",
@@ -172,230 +93,13 @@
               "RelativeDocumentMoniker": "CarbonProject\\Models\\Company.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\Company.cs",
               "RelativeToolTip": "CarbonProject\\Models\\Company.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAwwBgAAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAAAD4AAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-24T14:28:18.613Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Account.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\Account.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Controllers\\Account.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\Account.cs",
-              "RelativeToolTip": "CarbonProject\\Controllers\\Account.cs",
-              "ViewState": "AgIAAEwAAAAAAAAAAAA4wO0AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-05T06:56:42.143Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Home\\Index.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAN4AAAAAAAAAAAAAABQAAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-03T06:55:36.26Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "admin_read.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\admin_read.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Account\\admin_read.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\admin_read.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Account\\admin_read.cshtml",
-              "ViewState": "AgIAABUAAAAAAAAAAAAswCAAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-05T06:50:51.132Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "login.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\login.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Account\\login.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\login.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Account\\login.cshtml",
-              "ViewState": "AgIAAFYAAAAAAAAAAAAwwGcAAABiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-03T12:20:05.282Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Controllers\\HomeController.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "CarbonProject\\Controllers\\HomeController.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAAwBoAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T02:55:11.33Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Program.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Program.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Program.cs",
-              "RelativeToolTip": "CarbonProject\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-04T13:22:26.622Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "CarbonData.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\CarbonData.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Models\\CarbonData.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\CarbonData.cs",
-              "RelativeToolTip": "CarbonProject\\Models\\CarbonData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T02:35:37.061Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Actions.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\Actions.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Controllers\\Actions.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\Actions.cs",
-              "RelativeToolTip": "CarbonProject\\Controllers\\Actions.cs",
-              "ViewState": "AgIAAHYAAAAAAAAAAAAmwIAAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T02:46:53.723Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Details.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Actions\\Details.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Details.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Actions\\Details.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-22T02:45:52.898Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "testlogin.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\testlogin.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Account\\testlogin.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Account\\testlogin.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Account\\testlogin.cshtml",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAACUAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-03T12:13:36.664Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Index.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Actions\\Index.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Index.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Actions\\Index.cshtml",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAswH8AAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-22T02:45:54.043Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Edit.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Edit.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Actions\\Edit.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Edit.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Actions\\Edit.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-22T02:45:53.533Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "Refrences.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Home\\Refrences.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Home\\Refrences.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Home\\Refrences.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Home\\Refrences.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-03T04:00:05.55Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\appsettings.json",
-              "RelativeDocumentMoniker": "CarbonProject\\appsettings.json",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\appsettings.json",
-              "RelativeToolTip": "CarbonProject\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-05T03:58:50.289Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "appsettings.Production.json",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\appsettings.Production.json",
-              "RelativeDocumentMoniker": "CarbonProject\\appsettings.Production.json",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\appsettings.Production.json",
-              "RelativeToolTip": "CarbonProject\\appsettings.Production.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-22T06:01:03.019Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "Progress.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Progress.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Actions\\Progress.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Progress.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Actions\\Progress.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-22T02:45:54.809Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "ESGAction.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\ESGAction.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Models\\ESGAction.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\ESGAction.cs",
-              "RelativeToolTip": "CarbonProject\\Models\\ESGAction.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAABAwCQAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T02:46:37.759Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "appsettings.Development.json",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\appsettings.Development.json",
-              "RelativeDocumentMoniker": "CarbonProject\\appsettings.Development.json",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\appsettings.Development.json",
-              "RelativeToolTip": "CarbonProject\\appsettings.Development.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAADAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-22T06:02:11.564Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Actions\\Create.cshtml",
               "RelativeDocumentMoniker": "CarbonProject\\Views\\Actions\\Create.cshtml",
@@ -404,75 +108,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-10-22T02:45:40.331Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "ErrorViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\ErrorViewModel.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Models\\ErrorViewModel.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\ErrorViewModel.cs",
-              "RelativeToolTip": "CarbonProject\\Models\\ErrorViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T02:50:34.321Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "ESGProgress.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\ESGProgress.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Models\\ESGProgress.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Models\\ESGProgress.cs",
-              "RelativeToolTip": "CarbonProject\\Models\\ESGProgress.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T02:50:48.095Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "DataGoals.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\DataGoals.cs",
-              "RelativeDocumentMoniker": "CarbonProject\\Controllers\\DataGoals.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Controllers\\DataGoals.cs",
-              "RelativeToolTip": "CarbonProject\\Controllers\\DataGoals.cs",
-              "ViewState": "AgIAAEQAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T02:33:12.081Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "DataGoals.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Home\\DataGoals.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Home\\DataGoals.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Home\\DataGoals.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Home\\DataGoals.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-22T02:31:51.45Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-05T10:54:32.114Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "dbo.Members.sql",
-              "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/CarbonProject/True/SqlTable/dbo.Members.sql",
-              "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/CarbonProject/True/SqlTable/dbo.Members.sql",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-10-05T03:52:34.151Z"
             }
           ]
         }
