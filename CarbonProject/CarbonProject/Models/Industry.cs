@@ -1,9 +1,9 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 
-namespace YourProject.Models
+namespace CarbonProject.Models
 {
     public class Industry
     {
@@ -13,7 +13,7 @@ namespace YourProject.Models
         public string Middle_Category_Code { get; set; }
         public string Middle_Category_Name { get; set; }
 
-        // ³s½u¦r¦ê±q appsettings.json ¨ú±o
+        // é€£ç·šå­—ä¸²å¾ appsettings.json å–å¾—
         private static string connStr;
 
         public static void Init(IConfiguration configuration)
@@ -21,7 +21,7 @@ namespace YourProject.Models
             connStr = configuration.GetConnectionString("DefaultConnection");
         }
 
-        // ¨ú±o©Ò¦³²£·~²M³æ
+        // å–å¾—æ‰€æœ‰ç”¢æ¥­æ¸…å–®
         public static List<Industry> GetAll()
         {
             var list = new List<Industry>();
@@ -52,7 +52,7 @@ namespace YourProject.Models
             return list;
         }
 
-        // ¨Ì¤jÃş¤À²Õ¡A¨Ñ«eºİÅã¥Ü
+        // ä¾å¤§é¡åˆ†çµ„ï¼Œä¾›å‰ç«¯é¡¯ç¤º
         public static IEnumerable<object> GetGrouped()
         {
             var industries = GetAll();
@@ -72,13 +72,13 @@ namespace YourProject.Models
                 });
         }
 
-        // ¨ú±o³æ¤@²£·~
+        // å–å¾—å–®ä¸€ç”¢æ¥­
         public static Industry GetById(string id)
         {
             return GetAll().FirstOrDefault(i => i.Industry_Id == id);
         }
 
-        // (¹w¯d) ·s¼W²£·~
+        // (é ç•™) æ–°å¢ç”¢æ¥­
         public static bool AddIndustry(Industry model)
         {
             using (var conn = new SqlConnection(connStr))
@@ -98,7 +98,7 @@ namespace YourProject.Models
             }
         }
 
-        // (¹w¯d) §ó·s²£·~
+        // (é ç•™) æ›´æ–°ç”¢æ¥­
         public static bool UpdateIndustry(Industry model)
         {
             using (var conn = new SqlConnection(connStr))
@@ -121,7 +121,7 @@ namespace YourProject.Models
             }
         }
 
-        // (¹w¯d) §R°£²£·~
+        // (é ç•™) åˆªé™¤ç”¢æ¥­
         public static bool DeleteIndustry(string id)
         {
             using (var conn = new SqlConnection(connStr))

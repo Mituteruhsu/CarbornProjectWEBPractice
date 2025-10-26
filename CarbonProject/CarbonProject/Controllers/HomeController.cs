@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using CarbonProject.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +15,14 @@ namespace CarbonProject.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = new DashboardViewModel
+            {
+                TotalCompanies = 12,
+                TotalMembers = 58,
+                ActiveMembers = 47,
+                RecentLogins = 23
+            };
+            return View(model);
         }
         public IActionResult Privacy()
         {

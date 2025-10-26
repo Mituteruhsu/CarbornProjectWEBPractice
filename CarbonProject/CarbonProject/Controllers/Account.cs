@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using YourProject.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CarbonProject.Controllers
@@ -245,34 +244,6 @@ namespace CarbonProject.Controllers
                 TempData["AdminError"] = "更新失敗";
             }
             return RedirectToAction("Admin_read");
-        }
-
-        //==================== 一般會員測試頁 ====================
-        public IActionResult testLogin(int row, int col)
-        {
-            if (HttpContext.Session.GetString("isLogin") != "true")
-            {
-                TempData["LoginAlert"] = "請登入後使用";
-                return RedirectToAction("Login"); // 回登入頁
-            }
-            var result = new List<string>();
-            for (int r = 1; r <= row; r++)
-            {
-                for (int c = 1; c <= col; c++)
-                {
-                    result.Add(r + "*" + c + "=" + r * c);
-                }
-            }
-            ViewData["row"] = row;
-            ViewData["col"] = col;
-            ViewData["result"] = result;
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
