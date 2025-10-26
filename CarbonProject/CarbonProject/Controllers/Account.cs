@@ -59,7 +59,7 @@ namespace CarbonProject.Controllers
                 if (member.Role == "Admin")
                     return RedirectToAction("Admin_read", "Account"); // 管理頁
                 else
-                    return RedirectToAction("testLogin", "Account"); // 一般會員測試頁
+                    return RedirectToAction("Index", "Home"); // 一般會員測試頁
             }
             else
             {
