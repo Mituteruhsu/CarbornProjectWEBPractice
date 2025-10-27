@@ -1,5 +1,6 @@
 ﻿using CarbonProject.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -138,44 +139,66 @@ namespace CarbonProject.Controllers
                 ViewBag.Error = "會員註冊失敗，請稍後再試。";
                 return View();
             }
-            
-            // 5. 若為企業用戶，建立公司資料 + 關聯
+
+            // 5. 若為企業用戶，建立或綁定公司資料
             if (userType == "Company")
             {
-                if (string.IsNullOrEmpty(CompanyName) ||
-                    string.IsNullOrEmpty(TaxId) ||
-                    string.IsNullOrEmpty(IndustryId) ||
-                    string.IsNullOrEmpty(Address) ||
-                    string.IsNullOrEmpty(Contact_Email))
+                if (string.IsNullOrEmpty(TaxId))
                 {
-                    ViewBag.Error = "請填寫完整企業資料";
+                    ViewBag.Error = "請輸入統一編號（Tax ID）";
                     return View();
                 }
 
-                // 建立公司物件
-                var company = new Company
+                // 檢查是否已有此公司
+                var existingCompany = Company.GetCompanyByTaxId(TaxId.Trim());
+                int companyId;
+
+                if (existingCompany != null)
                 {
-                    MemberId = newMemberId,
-                    CompanyName = CompanyName.Trim(),
-                    TaxId = TaxId.Trim(),
-                    Industry = IndustryId.Trim(),
-                    Address = Address.Trim(),
-                    Contact_Email = Contact_Email.Trim(),
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
-                };
-                Debug.WriteLine(company);
-                // 寫入 Companies 資料庫
-                int newCompanyId = Company.AddCompany(company);
-                if (newCompanyId == -1)
-                {
-                    ViewBag.Error = "企業名，統編或聯絡Email已存在";
-                    return View();
+                    // 已存在公司，直接綁定
+                    companyId = existingCompany.CompanyId;
                 }
-                if (newCompanyId <= 0)
+                else
                 {
-                    ViewBag.Error = "企業資料新增失敗，請稍後再試。";
-                    return View();
+                    // 建立新公司
+                    if (string.IsNullOrEmpty(CompanyName) ||
+                        string.IsNullOrEmpty(Address) ||
+                        string.IsNullOrEmpty(Contact_Email) ||
+                        string.IsNullOrEmpty(IndustryId))
+                    {
+                        ViewBag.Error = "請填寫完整企業資料";
+                        return View();
+                    }
+
+                    var newCompany = new Company
+                    {
+                        CompanyName = CompanyName.Trim(),
+                        TaxId = TaxId.Trim(),
+                        Industry = IndustryId.Trim(),
+                        Address = Address.Trim(),
+                        Contact_Email = Contact_Email.Trim(),
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    };
+
+                    companyId = Company.AddCompany(newCompany);
+                    if (companyId <= 0)
+                    {
+                        ViewBag.Error = "企業資料新增失敗，請稍後再試。";
+                        return View();
+                    }
+                }
+                // 更新會員綁定公司
+                using (var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    string updateSql = @"UPDATE Users SET CompanyId=@CompanyId WHERE MemberId=@MemberId";
+                    using (var cmd = new SqlCommand(updateSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CompanyId", companyId);
+                        cmd.Parameters.AddWithValue("@MemberId", newMemberId);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
             // 6. 註冊完成
@@ -183,12 +206,36 @@ namespace CarbonProject.Controllers
                 return RedirectToAction("Login");
         }
 
-        // 給前端 AJAX 用的產業查詢 API
+        // 給前端 AJAX 用的查詢 API - register.cshtml/
         [HttpGet]
         public IActionResult GetIndustries()
         {
             var grouped = Industry.GetGrouped();
             return Json(grouped);
+        }
+        [HttpGet]
+        public IActionResult GetCompanyByTaxId(string taxId)
+        {
+            if (string.IsNullOrEmpty(taxId))
+                return Json(new { exists = false });
+
+            var company = Company.GetCompanyByTaxId(taxId);
+            if (company == null)
+                return Json(new { exists = false });
+
+            return Json(new
+            {
+                exists = true,
+                company = new
+                {
+                    company.CompanyId,
+                    company.CompanyName,
+                    company.TaxId,
+                    company.Address,
+                    company.Contact_Email,
+                    company.Industry
+                }
+            });
         }
         //===============Admin 會員管理===============
         public IActionResult Admin_read()

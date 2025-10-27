@@ -57,12 +57,11 @@
             },
             {
               "sku": {
-                "name": "GP_S_Gen5",
-                "tier": "GeneralPurpose",
-                "family": "Gen5",
-                "capacity": 2
+                "name": "Standard",
+                "tier": "Standard",
+                "capacity": 20
               },
-              "kind": "v12.0,user,vcore,serverless,freelimit",
+              "kind": "v12.0,user",
               "location": "[parameters('resourceLocation')]",
               "name": "carbonproject/carbonproject",
               "type": "Microsoft.Sql/servers/databases",

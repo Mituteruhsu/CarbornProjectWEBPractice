@@ -139,11 +139,11 @@
             <div id="companyFields" class="company-section">
                 <h3>企業資料</h3>
 
-                <label>公司名稱</label>
-                <input type="text" name="CompanyName" placeholder="例如：群碳科技股份有限公司">
-
                 <label>統一編號 (Tax ID)</label>
                 <input type="text" name="TaxId" placeholder="8位數字">
+                
+                <label>公司名稱</label>
+                <input type="text" name="CompanyName" placeholder="例如：群碳科技股份有限公司">
 
                 <label>產業大類</label>
                 <select id="industryCategory">
@@ -177,6 +177,13 @@
 
 @section Scripts {
     <script>
+        // TaxId查詢-Company info
+        const taxIdInput = document.querySelector('input[name="TaxId"]');
+        const companyNameInput = document.querySelector('input[name="CompanyName"]');
+        const addressInput = document.querySelector('input[name="Address"]');
+        const contactEmailInput = document.querySelector('input[name="Contact_Email"]');
+        const industrySelect = document.getElementById('industrySubcategory');
+        // 註冊用
         const passwordInput = document.getElementById('password');
         const passwordConfirmInput = document.getElementById('passwordConfirm');
         const passwordMsg = document.getElementById('password-match-msg');
@@ -187,7 +194,7 @@
         const categoryList = document.getElementById('categoryList');          // <datalist id="categoryList">
         const subcategoryList = document.getElementById('subcategoryList');    // <datalist id="subcategoryList">
         const form = document.getElementById('register-form');
-
+        
         // 密碼確認
         function checkPasswordMatch() {
             if (passwordInput.value !== passwordConfirmInput.value) {
@@ -213,6 +220,56 @@
                     input.removeAttribute('required');
                 }
             });
+        });
+        // 企業TaxId查詢
+        taxIdInput.addEventListener('blur', () => {
+            const taxId = taxIdInput.value.trim();
+            if (!taxId) return;
+
+            fetch(`/Account/GetCompanyByTaxId?taxId=${taxId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.exists && data.company) {
+                    const c = data.company;
+
+                    companyNameInput.value = c.companyName || "";
+                    addressInput.value = c.address || "";
+                    contactEmailInput.value = c.contact_Email || "";
+
+                    // 鎖定欄位
+                    companyNameInput.readOnly = true;
+                    addressInput.readOnly = true;
+                    contactEmailInput.readOnly = true;
+                    // 鎖定下拉選單
+                    industryCategory.disabled = true;
+                    industrySubcategory.disabled = true;
+
+                    // 拆分大類+中類 (例如 "A-01")
+                    if (c.industry) {
+                        const parts = c.industry.split("-");
+                        const majorCode = parts[0]; // "A"
+                        const middleCode = parts[1]; // "01"
+
+                        // 找到對應大類的名稱
+                        const majorEntry = Object.entries(industryMap).find(([majorName, mids]) => {
+                            return mids.some(m => m.id.startsWith(`${majorCode}-`));
+                        });
+
+                        if (majorEntry) {
+                            const [majorName, middles] = majorEntry;
+                            // 設定大類
+                            industryCategory.value = majorName;
+
+                            // 觸發更新中類清單
+                            updateSubcategories(majorName);
+
+                            // 設定中類
+                            industrySubcategory.value = c.industry;
+                        }
+                    }
+                }
+            })
+            .catch(err => console.error("查詢統編失敗:", err));
         });
 
         // 前端存放產業中類對應
