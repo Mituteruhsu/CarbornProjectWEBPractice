@@ -16,6 +16,7 @@ namespace CarbonProject.Controllers
 
             // 初始化連線字串
             HomeIndexViewModel.Init(config);
+            ActivityLog.Init(config);
         }
 
         public IActionResult Index()

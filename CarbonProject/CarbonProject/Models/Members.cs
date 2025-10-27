@@ -3,6 +3,8 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+
 // 從上方工具->NuGet套件管理員->管理方案的 NuGet 套件->瀏覽輸入後點選安裝(需選擇專案)
 // 需安裝 MySql.Data
 // 需安裝 BCrypt.Net-Next
@@ -18,6 +20,7 @@ namespace CarbonProject.Models
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string FullName { get; set; }
+        public int CompanyId { get; set; }
         public string Role { get; set; } // Admin / Viewer / Company
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -67,6 +70,7 @@ namespace CarbonProject.Models
                     cmd.Parameters.AddWithValue("@FullName", member.FullName ?? "");
                     cmd.Parameters.AddWithValue("@Role", member.Role ?? "Viewer");
                     cmd.Parameters.AddWithValue("@IsActive", member.IsActive);
+                    cmd.Parameters.AddWithValue("@CompanyId", member.CompanyId);
 
                     // 取得新建會員的 MemberId
                     int newId = (int)cmd.ExecuteScalar();
@@ -92,6 +96,8 @@ namespace CarbonProject.Models
                         if (reader.Read())
                         {
                             string hash = reader["PasswordHash"].ToString();
+                            int memberId = Convert.ToInt32(reader["MemberId"]);
+                            int companyId = reader["CompanyId"] != DBNull.Value ? Convert.ToInt32(reader["CompanyId"]) : 0;
 
                             //登入錯誤嘗試紀錄
                             int failedAttempts = reader["FailedLoginAttempts"] != DBNull.Value ? Convert.ToInt32(reader["FailedLoginAttempts"]) : 0;
@@ -116,6 +122,7 @@ namespace CarbonProject.Models
                                     Email = reader["Email"].ToString(),
                                     Role = reader["Role"].ToString(),
                                     IsActive = false // 標記為鎖定（供 Controller 判斷）
+
                                 };
                             }
                             // 驗證密碼
@@ -123,11 +130,12 @@ namespace CarbonProject.Models
                             {
                                 return new Members
                                 {
-                                    MemberId = Convert.ToInt32(reader["MemberId"]),
+                                    MemberId = memberId,
                                     Username = reader["Username"].ToString(),
                                     Email = reader["Email"].ToString(),
                                     FullName = reader["FullName"].ToString(),
                                     Role = reader["Role"].ToString(),
+                                    CompanyId = companyId,
                                     IsActive = true
                                 };
                             }

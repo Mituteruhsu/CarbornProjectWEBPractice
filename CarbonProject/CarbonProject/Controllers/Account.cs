@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Text.Json;   // 用來轉 JSON 格式
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CarbonProject.Controllers
@@ -18,9 +19,10 @@ namespace CarbonProject.Controllers
             _logger = logger;
             _config = config;
 
-            Members.Init(config);   // 初始化 Members DB 連線字串
-            Company.Init(config);   // 初始化 Company DB 連線字串
-            Industry.Init(config);  // 初始化 Industry DB 連線字串
+            Members.Init(config);       // 初始化 Members DB 連線字串
+            Company.Init(config);       // 初始化 Company DB 連線字串
+            Industry.Init(config);      // 初始化 Industry DB 連線字串
+            ActivityLog.Init(config);   // 初始化 ActivityLog
         }
         //===============登入===============
         public IActionResult Login()
@@ -60,6 +62,18 @@ namespace CarbonProject.Controllers
                 // 登入成功：更新最後登入時間、重置錯誤次數
                 Members.UpdateLastLoginAt(member.MemberId);
                 
+                // 寫入登入成功紀錄
+                ActivityLog.Write(
+                    memberId: member.MemberId,
+                    companyId: member.CompanyId,
+                    actionType: "Auth.Login.Success",
+                    actionCategory: "Auth",
+                    outcome: "Success",
+                    ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    userAgent: Request.Headers["User-Agent"].ToString(),
+                    detailsJson: JsonSerializer.Serialize(new { username = member.Username })
+                );
+
                 // 設定 Session
                 HttpContext.Session.SetString("isLogin", "true");
                 HttpContext.Session.SetString("Role", member.Role);
@@ -75,6 +89,18 @@ namespace CarbonProject.Controllers
             {
                 // 登入失敗：增加錯誤次數
                 Members.IncrementFailedLogin(UID);
+                
+                // 寫入登入失敗紀錄
+                ActivityLog.Write(
+                    memberId: null,
+                    companyId: null,
+                    actionType: "Auth.Login.Failed",
+                    actionCategory: "Auth",
+                    outcome: "Failure",
+                    ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    userAgent: Request.Headers["User-Agent"].ToString(),
+                    detailsJson: JsonSerializer.Serialize(new { username = UID })
+                );
 
                 ViewBag.Error = "帳號或密碼錯誤";
                 return View("Login");
@@ -91,6 +117,18 @@ namespace CarbonProject.Controllers
                 if (memberId > 0)
                 {
                     Members.UpdateLastLogoutAt(memberId);
+                    
+                    // 登出紀錄
+                    ActivityLog.Write(
+                        memberId: memberId,
+                        companyId: null,
+                        actionType: "Auth.Logout",
+                        actionCategory: "Auth",
+                        outcome: "Success",
+                        ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                        userAgent: Request.Headers["User-Agent"].ToString(),
+                        detailsJson: JsonSerializer.Serialize(new { username })
+                    );
                 }
             }
 

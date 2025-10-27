@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using static CarbonProject.Models.Members;
 
 namespace CarbonProject.Models
 {
@@ -39,54 +40,107 @@ namespace CarbonProject.Models
                     model.TotalMembers = (int)cmd.ExecuteScalar();
                 }
 
-                // 3.最近 30 天內登入過的會員（活躍會員）
-                using (SqlCommand cmd = new SqlCommand(
-                    "SELECT COUNT(*) FROM Users WHERE LastLoginAt >= DATEADD(DAY, -30, GETDATE())", conn))
+                // 3. 活躍會員：最近 30 天內有成功登入的會員數
+                string activeSql = @"
+                    SELECT COUNT(DISTINCT MemberId) 
+                    FROM ActivityLog 
+                    WHERE ActionType = 'Auth.Login.Success' 
+                      AND ActionTime >= DATEADD(DAY, -30, GETDATE())";
+                using (SqlCommand cmd = new SqlCommand(activeSql, conn))
                 {
                     model.ActiveMembers = (int)cmd.ExecuteScalar();
                 }
 
-                // 4.最近 7 日登入過的登入次數
-                using (SqlCommand cmd = new SqlCommand(
-                    "SELECT COUNT(*) FROM Users WHERE LastLoginAt >= DATEADD(DAY, -7, GETDATE())", conn))
+                // 4. 最近 7 天登入次數
+                string recentSql = @"
+                    SELECT COUNT(*) 
+                    FROM ActivityLog 
+                    WHERE ActionType = 'Auth.Login.Success' 
+                      AND ActionTime >= DATEADD(DAY, -7, GETDATE())";
+                using (SqlCommand cmd = new SqlCommand(recentSql, conn))
                 {
                     model.RecentLogins = (int)cmd.ExecuteScalar();
                 }
 
+                // 5. 最近 20 筆活動紀錄
+                string recentActSql = @"
+                    SELECT TOP 20 al.ActionTime, u.Username, al.ActionType
+                    FROM ActivityLog al
+                    LEFT JOIN Users u ON al.MemberId = u.MemberId
+                    ORDER BY al.ActionTime DESC";
+
+                using (SqlCommand cmd = new SqlCommand(recentActSql, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string actionType = reader["ActionType"].ToString();
+
+                        // 轉換為可讀文字 (if/else)
+                        string actionDisplay;
+                        if (actionType == "Auth.Login.Success")
+                        {
+                            actionDisplay = "登入系統";
+                        }
+                        else if (actionType == "Auth.Login.Failed")
+                        {
+                            actionDisplay = "登入失敗";
+                        }
+                        else if (actionType == "Auth.Logout")
+                        {
+                            actionDisplay = "登出系統";
+                        }
+                        else
+                        {
+                            actionDisplay = actionType; // 其他原樣顯示
+                        }
+
+                        model.RecentActivities.Add(new ActivityRecord
+                        {
+                            ActionTime = Convert.ToDateTime(reader["ActionTime"]),
+                            Username = reader["Username"]?.ToString() ?? "匿名",
+                            Action = actionDisplay
+                        });
+                    }
+                }
+
                 conn.Close();
+                return model;
             }
-            
-            // 取得最近活動紀錄
-            model.RecentActivities = Members.GetRecentActivities(20);
 
             return model;
         }
-        // 取得最近 N 天登入統計
+
+        // 取得最近 N 天登入統計給 Chart.js
         public static (List<string> Labels, List<int> Counts) GetRecentLogins(int days = 7)
         {
             var labels = new List<string>();
             var counts = new List<int>();
 
-            using (var conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
 
                 for (int i = days - 1; i >= 0; i--)
                 {
                     DateTime date = DateTime.Today.AddDays(-i);
-                    string sql = @"SELECT COUNT(*) FROM Users 
-                                   WHERE CAST(LastLoginAt AS DATE) = @Date";
-
-                    using (var cmd = new SqlCommand(sql, conn))
+                    string sql = @"
+                        SELECT COUNT(*) 
+                        FROM ActivityLog 
+                        WHERE ActionType='Auth.Login.Success' 
+                          AND CAST(ActionTime AS DATE) = @Date";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Date", date);
                         int count = (int)cmd.ExecuteScalar();
-
                         labels.Add(date.ToString("MM/dd"));
                         counts.Add(count);
                     }
                 }
+
+                conn.Close();
             }
+
             return (labels, counts);
         }
     }
