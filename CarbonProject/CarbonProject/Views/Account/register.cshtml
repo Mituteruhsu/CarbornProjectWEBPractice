@@ -226,6 +226,20 @@
             const taxId = taxIdInput.value.trim();
             if (!taxId) return;
 
+            // 先解除鎖定
+            companyNameInput.readOnly = false;
+            addressInput.readOnly = false;
+            contactEmailInput.readOnly = false;
+            industryCategory.disabled = false;
+            industrySubcategory.disabled = false;
+
+            // 清空輸入欄位
+            companyNameInput.value = "";
+            addressInput.value = "";
+            contactEmailInput.value = "";
+            industryCategory.value = "";
+            subcategoryInput.innerHTML = '<option value="">請選擇中類</option>';
+
             fetch(`/Account/GetCompanyByTaxId?taxId=${taxId}`)
             .then(res => res.json())
             .then(data => {
