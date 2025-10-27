@@ -92,6 +92,33 @@ namespace CarbonProject.Models
                         if (reader.Read())
                         {
                             string hash = reader["PasswordHash"].ToString();
+
+                            //登入錯誤嘗試紀錄
+                            int failedAttempts = reader["FailedLoginAttempts"] != DBNull.Value ? Convert.ToInt32(reader["FailedLoginAttempts"]) : 0;
+                            DateTime? lastFailedLoginAt = reader["LastFailedLoginAt"] != DBNull.Value ? Convert.ToDateTime(reader["LastFailedLoginAt"]) : null;
+
+                            // 自動解鎖：若已鎖住且 30 分鐘已過
+                            if (failedAttempts >= 5 && lastFailedLoginAt.HasValue &&
+                                DateTime.Now.Subtract(lastFailedLoginAt.Value).TotalMinutes >= 30)
+                            {
+                                ResetFailedLogin(Convert.ToInt32(reader["MemberId"]));
+                                failedAttempts = 0;
+                            }
+
+                            // 如果錯誤次數 >= 5，（30 分鐘內）
+                            if (failedAttempts >= 5)
+                            {
+                                // 帳號被鎖定，不進行密碼驗證
+                                return new Members
+                                {
+                                    MemberId = Convert.ToInt32(reader["MemberId"]),
+                                    Username = reader["Username"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    Role = reader["Role"].ToString(),
+                                    IsActive = false // 標記為鎖定（供 Controller 判斷）
+                                };
+                            }
+                            // 驗證密碼
                             if (BCrypt.Net.BCrypt.Verify(password, hash))
                             {
                                 return new Members
@@ -100,7 +127,8 @@ namespace CarbonProject.Models
                                     Username = reader["Username"].ToString(),
                                     Email = reader["Email"].ToString(),
                                     FullName = reader["FullName"].ToString(),
-                                    Role = reader["Role"].ToString()
+                                    Role = reader["Role"].ToString(),
+                                    IsActive = true
                                 };
                             }
                         }
@@ -109,6 +137,82 @@ namespace CarbonProject.Models
             }
             return null;
         }
+
+        // 更新最後登入時間
+        public static void UpdateLastLoginAt(int memberId)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = @"
+                    UPDATE Users 
+                    SET 
+                        LastLoginAt = GETDATE(),
+                        FailedLoginAttempts = 0,
+                        LastFailedLoginAt = NULL
+                    WHERE MemberId = @MemberId";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MemberId", memberId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // 登入失敗時遞增 FailedLoginAttempts + 更新失敗時間
+        public static void IncrementFailedLogin(string usernameOrEmail)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = @"
+                    UPDATE Users 
+                    SET 
+                        FailedLoginAttempts = ISNULL(FailedLoginAttempts, 0) + 1,
+                        LastFailedLoginAt = GETDATE()
+                    WHERE Username = @U OR Email = @U";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@U", usernameOrEmail);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        // 登入成功後重設失敗次數
+        public static void ResetFailedLogin(int memberId)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = @"UPDATE Users 
+                               SET FailedLoginAttempts = 0,
+                                   LastFailedLoginAt = NULL
+                               WHERE MemberId=@ID";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ID", memberId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // 更新最後登出時間
+        public static void UpdateLastLogoutAt(int memberId)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = @"UPDATE Users 
+                       SET LastLogoutAt = GETDATE() 
+                       WHERE MemberId = @MemberId";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MemberId", memberId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         // 會員名取得會員ID
         public static int GetMemberIdByUsername(string username)
         {

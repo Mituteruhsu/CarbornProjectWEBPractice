@@ -51,6 +51,15 @@ namespace CarbonProject.Controllers
             var member = Members.CheckLogin(UID, password);
             if (member != null)
             {
+                // 如果帳號已被鎖定
+                if (!member.IsActive)
+                {
+                    ViewBag.Error = "帳號已暫時鎖定，請稍後再試。";
+                    return View("Login");
+                }
+                // 登入成功：更新最後登入時間、重置錯誤次數
+                Members.UpdateLastLoginAt(member.MemberId);
+                
                 // 設定 Session
                 HttpContext.Session.SetString("isLogin", "true");
                 HttpContext.Session.SetString("Role", member.Role);
@@ -64,6 +73,9 @@ namespace CarbonProject.Controllers
             }
             else
             {
+                // 登入失敗：增加錯誤次數
+                Members.IncrementFailedLogin(UID);
+
                 ViewBag.Error = "帳號或密碼錯誤";
                 return View("Login");
             }
@@ -71,7 +83,19 @@ namespace CarbonProject.Controllers
         //===============登出===============
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("isLogin");
+            // 取得目前登入的會員
+            var username = HttpContext.Session.GetString("Username");
+            if (!string.IsNullOrEmpty(username))
+            {
+                int memberId = Members.GetMemberIdByUsername(username);
+                if (memberId > 0)
+                {
+                    Members.UpdateLastLogoutAt(memberId);
+                }
+            }
+
+            // 清除 Session
+            HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
         //===============註冊===============

@@ -1,27 +1,26 @@
-﻿using System.Diagnostics;
-using CarbonProject.Models;
+﻿using CarbonProject.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Configuration;
+using System.Diagnostics;
 
 namespace CarbonProject.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IConfiguration _config;
+        public HomeController(ILogger<HomeController> logger, IConfiguration config)
         {
             _logger = logger;
+            _config = config;
+
+            // 初始化連線字串
+            HomeIndexViewModel.Init(config);
         }
 
         public IActionResult Index()
         {
-            var model = new DashboardViewModel
-            {
-                TotalCompanies = 12,
-                TotalMembers = 58,
-                ActiveMembers = 47,
-                RecentLogins = 23
-            };
+            var model = HomeIndexViewModel.GetIndexData();
             return View(model);
         }
         public IActionResult Privacy()
