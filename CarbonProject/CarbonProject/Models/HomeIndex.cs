@@ -8,6 +8,8 @@ namespace CarbonProject.Models
         public int TotalMembers { get; set; }
         public int ActiveMembers { get; set; }   // 最近 30 天內登入過
         public int RecentLogins { get; set; }    // 最近 7 天內登入次數
+        public List<Members.ActivityRecord> RecentActivities { get; set; } = new List<Members.ActivityRecord>();    // 活動紀錄列表
+
 
         private static string connStr;
 
@@ -53,8 +55,39 @@ namespace CarbonProject.Models
 
                 conn.Close();
             }
+            
+            // 取得最近活動紀錄
+            model.RecentActivities = Members.GetRecentActivities(20);
 
             return model;
+        }
+        // 取得最近 N 天登入統計
+        public static (List<string> Labels, List<int> Counts) GetRecentLogins(int days = 7)
+        {
+            var labels = new List<string>();
+            var counts = new List<int>();
+
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                for (int i = days - 1; i >= 0; i--)
+                {
+                    DateTime date = DateTime.Today.AddDays(-i);
+                    string sql = @"SELECT COUNT(*) FROM Users 
+                                   WHERE CAST(LastLoginAt AS DATE) = @Date";
+
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Date", date);
+                        int count = (int)cmd.ExecuteScalar();
+
+                        labels.Add(date.ToString("MM/dd"));
+                        counts.Add(count);
+                    }
+                }
+            }
+            return (labels, counts);
         }
     }
 }

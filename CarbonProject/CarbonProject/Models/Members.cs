@@ -293,5 +293,48 @@ namespace CarbonProject.Models
                 }
             }
         }
+        // 取得最近 N 筆活動紀錄
+        public class ActivityRecord
+        {
+            public DateTime ActionTime { get; set; }
+            public string Username { get; set; }
+            public string Action { get; set; }
+        }
+
+        public static List<ActivityRecord> GetRecentActivities(int top = 20)
+        {
+            var list = new List<ActivityRecord>();
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                // 抓取最近登入與登出
+                string sql = $@"
+                    SELECT TOP (@Top) Username, LastLoginAt AS ActionTime, N'登入系統' AS Action
+                    FROM Users
+                    WHERE LastLoginAt IS NOT NULL
+                    UNION ALL
+                    SELECT TOP (@Top) Username, LastLogoutAt AS ActionTime, N'登出系統' AS Action
+                    FROM Users
+                    WHERE LastLogoutAt IS NOT NULL
+                    ORDER BY ActionTime DESC";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Top", top);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new ActivityRecord
+                            {
+                                Username = reader["Username"].ToString(),
+                                ActionTime = Convert.ToDateTime(reader["ActionTime"]),
+                                Action = reader["Action"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return list;
+        }
     }
 }

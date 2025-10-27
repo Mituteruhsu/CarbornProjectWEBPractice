@@ -23,6 +23,12 @@ namespace CarbonProject.Controllers
             var model = HomeIndexViewModel.GetIndexData();
             return View(model);
         }
+        // 回傳最近 7 天登入統計給 Chart.js
+        public JsonResult GetLoginTrend(int days = 7)
+        {
+            var (labels, counts) = HomeIndexViewModel.GetRecentLogins(days);
+            return Json(new { labels, counts });
+        }
         public IActionResult Privacy()
         {
             return View();
