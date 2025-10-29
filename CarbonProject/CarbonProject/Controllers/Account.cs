@@ -1,11 +1,15 @@
 ﻿using CarbonProject.Models;
+using CarbonProject.Models.EFModels;
+using CarbonProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using System.Text.Json;   // 用來轉 JSON 格式
+using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
+// From -> Service/ActivityLogService.cs
 namespace CarbonProject.Controllers
 {
     public class Account : Controller
@@ -13,18 +17,21 @@ namespace CarbonProject.Controllers
         private IWebHostEnvironment Environment;
         private readonly ILogger<Account> _logger;
         private readonly IConfiguration _config;
-        public Account(IWebHostEnvironment _environment, ILogger<Account> logger, IConfiguration config)
+        private readonly ActivityLogService _activityLog;
+        public Account(IWebHostEnvironment _environment, ILogger<Account> logger, IConfiguration config, ActivityLogService activityLog)
         {
             Environment = _environment;
             _logger = logger;
             _config = config;
+            _activityLog = activityLog;
 
             Members.Init(config);       // 初始化 Members DB 連線字串
             Company.Init(config);       // 初始化 Company DB 連線字串
             Industry.Init(config);      // 初始化 Industry DB 連線字串
-            ActivityLog.Init(config);   // 初始化 ActivityLog
         }
         //===============登入===============
+        //Include ActivityLogService
+        // From -> Service/ActivityLogService.cs
         public IActionResult Login()
         {
             return View();
@@ -32,7 +39,7 @@ namespace CarbonProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(string UID, string password)
+        public async Task<IActionResult> Login(string UID, string password)
         {
             // 正規驗證(UID:至少4位數，password:至少8位數，兩者可包含英文大小寫及數字 0~9)
             var uidRegex = new Regex(@"^[a-zA-Z0-9]{4,}$");
@@ -61,9 +68,10 @@ namespace CarbonProject.Controllers
                 }
                 // 登入成功：更新最後登入時間、重置錯誤次數
                 Members.UpdateLastLoginAt(member.MemberId);
-                
-                // 寫入登入成功紀錄
-                ActivityLog.Write(
+
+                // 寫入登入成功 EF Core 紀錄
+                // From -> Service/ActivityLogService.cs
+                await _activityLog.LogAsync(
                     memberId: member.MemberId,
                     companyId: member.CompanyId,
                     actionType: "Auth.Login.Success",
@@ -71,7 +79,8 @@ namespace CarbonProject.Controllers
                     outcome: "Success",
                     ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
                     userAgent: Request.Headers["User-Agent"].ToString(),
-                    detailsJson: JsonSerializer.Serialize(new { username = member.Username })
+                    createdBy: member.Username,
+                    detailsObj: new { username = member.Username }
                 );
 
                 // 設定 Session
@@ -89,9 +98,10 @@ namespace CarbonProject.Controllers
             {
                 // 登入失敗：增加錯誤次數
                 Members.IncrementFailedLogin(UID);
-                
-                // 寫入登入失敗紀錄
-                ActivityLog.Write(
+
+                // 寫入登入失敗 EF Core 紀錄
+                // From -> Service/ActivityLogService.cs
+                await _activityLog.LogAsync(
                     memberId: null,
                     companyId: null,
                     actionType: "Auth.Login.Failed",
@@ -99,7 +109,8 @@ namespace CarbonProject.Controllers
                     outcome: "Failure",
                     ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
                     userAgent: Request.Headers["User-Agent"].ToString(),
-                    detailsJson: JsonSerializer.Serialize(new { username = UID })
+                    createdBy: "System",
+                    detailsObj: new { username = UID }
                 );
 
                 ViewBag.Error = "帳號或密碼錯誤";
@@ -107,7 +118,8 @@ namespace CarbonProject.Controllers
             }
         }
         //===============登出===============
-        public IActionResult Logout()
+        //Include ActivityLogService
+        public async Task<IActionResult> Logout()
         {
             // 取得目前登入的會員
             var username = HttpContext.Session.GetString("Username");
@@ -117,9 +129,10 @@ namespace CarbonProject.Controllers
                 if (memberId > 0)
                 {
                     Members.UpdateLastLogoutAt(memberId);
-                    
-                    // 登出紀錄
-                    ActivityLog.Write(
+
+                    // 登出 EF Core 紀錄
+                    // From -> Service/ActivityLogService.cs
+                    await _activityLog.LogAsync(
                         memberId: memberId,
                         companyId: null,
                         actionType: "Auth.Logout",
@@ -127,7 +140,8 @@ namespace CarbonProject.Controllers
                         outcome: "Success",
                         ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
                         userAgent: Request.Headers["User-Agent"].ToString(),
-                        detailsJson: JsonSerializer.Serialize(new { username })
+                        createdBy: username,
+                        detailsObj: new { username }
                     );
                 }
             }
@@ -137,13 +151,14 @@ namespace CarbonProject.Controllers
             return RedirectToAction("Login");
         }
         //===============註冊===============
+        //Include ActivityLogService
         public IActionResult Register()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(
+        public async Task<IActionResult> Register(
             string username, string email, string password, string passwordConfirm,
             string fullname, string userType,
             string CompanyName, string TaxId, string Address, string Contact_Email,
@@ -202,6 +217,8 @@ namespace CarbonProject.Controllers
                 return View();
             }
 
+            int? companyId = null; // 只有公司用戶才會有 CompanyId
+
             // 5. 若為企業用戶，建立或綁定公司資料
             if (userType == "Company")
             {
@@ -213,8 +230,6 @@ namespace CarbonProject.Controllers
 
                 // 檢查是否已有此公司
                 var existingCompany = Company.GetCompanyByTaxId(TaxId.Trim());
-                int companyId;
-
                 if (existingCompany != null)
                 {
                     // 已存在公司，直接綁定
@@ -263,6 +278,18 @@ namespace CarbonProject.Controllers
                     }
                 }
             }
+            // 註冊成功寫入 ActivityLog
+            await _activityLog.LogAsync(
+                memberId: newMemberId,
+                companyId: companyId,
+                actionType: "Auth.Register",
+                actionCategory: "Auth",
+                outcome: "Success",
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: username,
+                detailsObj: new { username, email, role = member.Role, companyId }
+            );
             // 6. 註冊完成
             TempData["RegisterSuccess"] = "註冊成功，請登入！";
                 return RedirectToAction("Login");
@@ -300,6 +327,7 @@ namespace CarbonProject.Controllers
             });
         }
         //===============Admin 會員管理===============
+        //Include ActivityLogService
         public IActionResult Admin_read()
         {
             // 檢查是否為 Admin 登入
@@ -315,9 +343,10 @@ namespace CarbonProject.Controllers
         }
 
         // 刪除會員
+        //Include ActivityLogService
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteMember(int id)
+        public async Task<IActionResult> DeleteMember(int id)
         {
             Debug.WriteLine($"==========here is ID==========");
             Debug.WriteLine(id);
@@ -329,6 +358,18 @@ namespace CarbonProject.Controllers
             }
 
             bool success = Members.DeleteMember(id);
+            // 刪除會員寫入 ActivityLog
+            await _activityLog.LogAsync(
+                memberId: id,
+                companyId: null,
+                actionType: "Admin.DeleteMember",
+                actionCategory: "Admin",
+                outcome: success ? "Success" : "Failure",
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: HttpContext.Session.GetString("Username"),
+                detailsObj: new { memberId = id }
+            );
             if (!success)
             {
                 TempData["AdminError"] = "刪除失敗";
@@ -337,9 +378,10 @@ namespace CarbonProject.Controllers
         }
 
         // 編輯會員
+        //Include ActivityLogService
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditMember(int id, string username, string email, string fullname)
+        public async Task<IActionResult> EditMember(int id, string username, string email, string fullname)
         {
             if (HttpContext.Session.GetString("Role") != "Admin")
             {
@@ -348,6 +390,19 @@ namespace CarbonProject.Controllers
             }
 
             bool success = Members.UpdateMember(id, username, email, fullname);
+            // 編輯會員寫入 ActivityLog
+            await _activityLog.LogAsync(
+                memberId: id,
+                companyId: null,
+                actionType: "Admin.EditMember",
+                actionCategory: "Admin",
+                outcome: success ? "Success" : "Failure",
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: HttpContext.Session.GetString("Username"),
+                detailsObj: new { username, email, fullname }
+            );
+
             if (!success)
             {
                 TempData["AdminError"] = "更新失敗";

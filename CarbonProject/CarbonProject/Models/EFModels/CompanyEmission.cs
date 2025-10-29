@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CarbonProject.Models
+namespace CarbonProject.Models.EFModels
 {
     public class CompanyEmission
     {
         [Key]
         public int EmissionId { get; set; }
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
         public int Year { get; set; }
         public byte Quarter { get; set; }   // 如果資料庫欄位是 TINYINT，使用 byte 類型
         public decimal Scope1Emission { get; set; }

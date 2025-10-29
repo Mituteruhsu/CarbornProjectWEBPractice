@@ -12,6 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CarbonProject.Controllers
 {
+    // DashboardController 負責數據顯示、統計分析
     public class DashboardController : Controller
     {
         private readonly CarbonDbContext _context;          // From -> Data/CarbonDbContext.cs

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CarbonProject.Models
+namespace CarbonProject.Models.EFModels
 {
     public class CompanyEmissionTarget
     {

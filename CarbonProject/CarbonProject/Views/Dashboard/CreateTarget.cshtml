@@ -1,0 +1,42 @@
+﻿@model CarbonProject.Models.EFModels.CompanyEmissionTarget
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<partial name="~/Views/Dashboard/_FormStyles.cshtml" />
+
+<div class="carbon-form">
+    <h2>新增減碳目標</h2>
+    <form asp-action="CreateTarget" method="post">
+        <div class="mb-3">
+            <label>公司ID</label>
+            <input asp-for="CompanyId" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>基準年</label>
+            <input asp-for="BaselineYear" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>目標年</label>
+            <input asp-for="TargetYear" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>基準排放量</label>
+            <input asp-for="BaselineEmission" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>目標排放量</label>
+            <input asp-for="TargetEmission" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>減碳百分比 (%)</label>
+            <input asp-for="ReductionPercent" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>說明</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <button type="submit">送出</button>
+    </form>
+</div>

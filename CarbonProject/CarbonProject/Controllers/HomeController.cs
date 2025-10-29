@@ -1,27 +1,51 @@
 ﻿using CarbonProject.Models;
+using CarbonProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Configuration;
 using System.Diagnostics;
 
+// From -> Service/ActivityLogService.cs
 namespace CarbonProject.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _config;
-        public HomeController(ILogger<HomeController> logger, IConfiguration config)
+        private readonly ActivityLogService _activityLog;
+        public HomeController(ILogger<HomeController> logger, IConfiguration config, ActivityLogService activityLog)
         {
             _logger = logger;
             _config = config;
+            _activityLog = activityLog;
 
             // 初始化連線字串
             HomeIndexViewModel.Init(config);
-            ActivityLog.Init(config);
         }
 
-        public IActionResult Index()
+        // 在 Index 記錄瀏覽首頁事件
+        // Include ActivityLogService
+        // From -> Service/ActivityLogService.cs
+        public async Task<IActionResult> Index()
         {
             var model = HomeIndexViewModel.GetIndexData();
+
+            // 取得 nullable MemberId 和 CompanyId
+            int? memberId = HttpContext.Session.GetInt32("MemberId");
+            int? companyId = HttpContext.Session.GetInt32("CompanyId");
+
+            // 記錄 ActivityLog
+            await _activityLog.LogAsync(
+                memberId: memberId, // 或 null
+                companyId: companyId,
+                actionType: "Home.View.Index",
+                actionCategory: "PageView",
+                outcome: "Success",
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: HttpContext.Session.GetString("Username") ?? "Anonymous",
+                detailsObj: new { page = "Index" }
+            );
+
             return View(model);
         }
         // 回傳最近 7 天登入統計給 Chart.js
@@ -30,12 +54,45 @@ namespace CarbonProject.Controllers
             var (labels, counts) = HomeIndexViewModel.GetRecentLogins(days);
             return Json(new { labels, counts });
         }
-        public IActionResult Privacy()
+        // Include ActivityLogService
+        // From -> Service/ActivityLogService.cs
+        public async Task<IActionResult> Privacy()
         {
+            int? memberId = HttpContext.Session.GetInt32("MemberId");
+            int? companyId = HttpContext.Session.GetInt32("CompanyId");
+
+            await _activityLog.LogAsync(
+                memberId: memberId,
+                companyId: companyId,
+                actionType: "Home.View.Privacy",
+                actionCategory: "PageView",
+                outcome: "Success",
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: HttpContext.Session.GetString("Username") ?? "Anonymous",
+                detailsObj: new { page = "Privacy" }
+            );
             return View();
         }
-        public IActionResult Refrences()
+        // Include ActivityLogService
+        // From -> Service/ActivityLogService.cs
+        public async Task<IActionResult> Refrences()
         {
+            int? memberId = HttpContext.Session.GetInt32("MemberId");
+            int? companyId = HttpContext.Session.GetInt32("CompanyId");
+
+            await _activityLog.LogAsync(
+                memberId: memberId,
+                companyId: companyId,
+                actionType: "Home.View.Refrences",
+                actionCategory: "PageView",
+                outcome: "Success",
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: HttpContext.Session.GetString("Username") ?? "Anonymous",
+                detailsObj: new { page = "Refrences" }
+            );
+
             return View();
         }
 

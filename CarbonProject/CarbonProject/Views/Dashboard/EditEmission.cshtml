@@ -1,0 +1,44 @@
+﻿@model CarbonProject.Models.EFModels.CompanyEmission
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<partial name="~/Views/Dashboard/_FormStyles.cshtml" />
+
+<div class="carbon-form">
+    <h2>編輯排放量紀錄</h2>
+    <form asp-action="EditEmission" method="post">
+        <input type="hidden" asp-for="EmissionId" />
+
+        <div class="mb-3">
+            <label>公司ID</label>
+            <input asp-for="CompanyId" class="form-control" readonly />
+        </div>
+        <div class="mb-3">
+            <label>年度</label>
+            <input asp-for="Year" class="form-control" readonly />
+        </div>
+        <div class="mb-3">
+            <label>範疇1排放量</label>
+            <input asp-for="Scope1Emission" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>範疇2排放量</label>
+            <input asp-for="Scope2Emission" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>範疇3排放量</label>
+            <input asp-for="Scope3Emission" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>總排放量</label>
+            <input asp-for="TotalEmission" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>來源</label>
+            <input asp-for="Source" class="form-control" />
+        </div>
+        <button type="submit">更新</button>
+    </form>
+</div>

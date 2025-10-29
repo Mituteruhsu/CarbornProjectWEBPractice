@@ -30,6 +30,8 @@ builder.Services.AddDbContext<CarbonDbContext>(options =>
     options.UseSqlServer(rawConnStr));
 // 註冊 Service From -> Service/EmissionService.cs
 builder.Services.AddScoped<EmissionService>();
+// 註冊 Service From -> Service/ActivityLogService.cs
+builder.Services.AddScoped<ActivityLogService>();
 
 // 強化 session 與 cookie 設定
 builder.Services.AddDistributedMemoryCache();   // 存放在新空間
