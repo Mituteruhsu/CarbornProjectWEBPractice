@@ -1,29 +1,29 @@
-namespace CarbonProject.Models
+ï»¿namespace CarbonProject.Models
 {
-    // ·s¼W Model¡GCarbonData
-    // ³o­Ó¼Ò«¬¥Î©ó­º­¶®i¥ÜÂ²©öªººÒ±Æ©ñ¼Æ¾Ú¡C
-    // ¸ê®Æ¥Ø«e¬OÀRºA¼ÒÀÀ¡A¥¼¨Ó¥i¥H³s±µ¸ê®Æ®w©Î«áºİºŞ²zºİ§ó·s¡C
+    // æ–°å¢ Modelï¼šCarbonData
+    // é€™å€‹æ¨¡å‹ç”¨æ–¼é¦–é å±•ç¤ºç°¡æ˜“çš„ç¢³æ’æ”¾æ•¸æ“šã€‚
+    // è³‡æ–™ç›®å‰æ˜¯éœæ…‹æ¨¡æ“¬ï¼Œæœªä¾†å¯ä»¥é€£æ¥è³‡æ–™åº«æˆ–å¾Œç«¯ç®¡ç†ç«¯æ›´æ–°ã€‚
     public class CarbonData
     {
         public string CompanyName { get; set; }
-        public decimal CurrentEmission { get; set; }   // ¥Ø«eºÒ±Æ©ñ¶q
-        public decimal TargetEmission { get; set; }    // ¦~«×¥Ø¼ĞºÒ±Æ©ñ¶q
-        public decimal AchievementRate { get; set; }   // ¹F¦¨²v (0~1)
+        public decimal CurrentEmission { get; set; }   // ç›®å‰ç¢³æ’æ”¾é‡
+        public decimal TargetEmission { get; set; }    // å¹´åº¦ç›®æ¨™ç¢³æ’æ”¾é‡
+        public decimal AchievementRate { get; set; }   // é”æˆç‡ (0~1)
     }
-    // ¦~«×ºÒ±Æ©ñ¸ê®Æ
+    // å¹´åº¦ç¢³æ’æ”¾è³‡æ–™
     public class AnnualEmission
     {
         public int Year { get; set; }
-        public decimal Emission { get; set; } // ³æ¦ì¡G¾·
+        public decimal Emission { get; set; } // å–®ä½ï¼šå™¸
     }
-    // ¥ø·~ºÒ±Æ©ñ¥Ø¼Ğ
+    // ä¼æ¥­ç¢³æ’æ”¾ç›®æ¨™
     public class CarbonGoal
     {
-        public decimal CurrentEmission { get; set; }  // ¥Ø«e±Æ©ñ¶q
-        public decimal TargetEmission { get; set; }   // ¥Ø¼Ğ±Æ©ñ¶q
+        public decimal CurrentEmission { get; set; }  // ç›®å‰æ’æ”¾é‡
+        public decimal TargetEmission { get; set; }   // ç›®æ¨™æ’æ”¾é‡
         public decimal ProgressRate => TargetEmission == 0 ? 0 : 1 - (CurrentEmission / TargetEmission);
     }
-    // ¥Î©ó¾ã¦X ¦~«×ºÒ±Æ/¥ø·~ºÒ±Æ©ñ ¨â­Ó Model
+    // ç”¨æ–¼æ•´åˆ å¹´åº¦ç¢³æ’/ä¼æ¥­ç¢³æ’æ”¾ å…©å€‹ Model
     public class DataGoalsViewModel
     {
         public List<AnnualEmission> AnnualEmissions { get; set; }

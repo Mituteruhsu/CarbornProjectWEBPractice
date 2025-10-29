@@ -1,14 +1,16 @@
-// ª©¥»2.0
-using Microsoft.EntityFrameworkCore;
+ï»¿// ç‰ˆæœ¬2.0
 using System;
+using CarbonProject.Data; // DbContext å‘½åç©ºé–“
+using CarbonProject.Services;  // Services å‘½åç©ºé–“
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// === Àô¹Ò°»´ú ===
+// === ç’°å¢ƒåµæ¸¬ ===
 var environment = builder.Environment.EnvironmentName;
 Console.WriteLine($"[Environment] ASPNETCORE_ENVIRONMENT = {environment}");
 
-// === Åª¨úÀô¹ÒÅÜ¼Æ ===
+// === è®€å–ç’°å¢ƒè®Šæ•¸ ===
 var AZURE_SQL_USER = Environment.GetEnvironmentVariable("AZURE_SQL_USER");
 var AZURE_SQL_PWD = Environment.GetEnvironmentVariable("AZURE_SQL_PWD");
 
@@ -16,33 +18,40 @@ var rawConnStr = builder.Configuration.GetConnectionString("DefaultConnection")
     .Replace("{SQL_USER}", AZURE_SQL_USER)
     .Replace("{SQL_PWD}", AZURE_SQL_PWD);
 
-// §â³s½u¦r¦ê¦s¦^³]©w
+// æŠŠé€£ç·šå­—ä¸²å­˜å›è¨­å®š
 builder.Configuration["ConnectionStrings:DefaultConnection"] = rawConnStr;
 
-// === MVC °ò¥»³]©w === ¦Û°Ê¨Ì¾ÚÀô¹Ò¸ü¤J appsettings.{Environment}.json
+// === è¨»å†Š MVC åŸºæœ¬è¨­å®š === è‡ªå‹•ä¾æ“šç’°å¢ƒè¼‰å…¥ appsettings.{Environment}.json
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
-// ±j¤Æ session »P cookie ³]©w
-builder.Services.AddDistributedMemoryCache();   // ¦s©ñ¦b·sªÅ¶¡
-// ³Ğ«Ø session
+
+// è¨»å†Š DbContext From -> Data/CarbonDbContext.cs
+builder.Services.AddDbContext<CarbonDbContext>(options =>
+    options.UseSqlServer(rawConnStr));
+// è¨»å†Š Service From -> Service/EmissionService.cs
+builder.Services.AddScoped<EmissionService>();
+
+// å¼·åŒ– session èˆ‡ cookie è¨­å®š
+builder.Services.AddDistributedMemoryCache();   // å­˜æ”¾åœ¨æ–°ç©ºé–“
+// å‰µå»º session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // µø»İ¨D½Õ¾ã
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // è¦–éœ€æ±‚èª¿æ•´
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.Cookie.SameSite = SameSiteMode.Strict;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // production: Always
 });
 
-// === ªì©l¤Æ¸ê®Æ®w ===
-// builder.Configuration ¤º¤w¸g¬O´À´««áªº³s½u¦r¦ê
-CarbonProject.Models.Members.Init(builder.Configuration);           // ªì©l¤Æ Members ³s½u¦r¦ê
-CarbonProject.Models.ActionsRepository.Init(builder.Configuration); // ªì©l¤Æ ActionsRepository ³s½u¦r¦ê
+// === åˆå§‹åŒ–è³‡æ–™åº« ===
+// builder.Configuration å…§å·²ç¶“æ˜¯æ›¿æ›å¾Œçš„é€£ç·šå­—ä¸²
+CarbonProject.Models.Members.Init(builder.Configuration);           // åˆå§‹åŒ– Members é€£ç·šå­—ä¸²
+CarbonProject.Models.ActionsRepository.Init(builder.Configuration); // åˆå§‹åŒ– ActionsRepository é€£ç·šå­—ä¸²
 
-// === ±Ò¥Î app ===
+// === å•Ÿç”¨ app ===
 var app = builder.Build();
 
-// === ±Ò°Ê®É¿é¥X³s½u¸ê°T¡]«D±Ó·P³¡¤À¡^===
+// === å•Ÿå‹•æ™‚è¼¸å‡ºé€£ç·šè³‡è¨Šï¼ˆéæ•æ„Ÿéƒ¨åˆ†ï¼‰===
 Console.WriteLine($"[Connection] Using database: {builder.Configuration.GetConnectionString("DefaultConnection")?.Split(';')[1]}");
 Console.WriteLine($"[Connection] SQL User: {AZURE_SQL_USER}");
 
@@ -57,7 +66,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseSession();   //¨Ï¥Î session ¥²¶·¦b UseRouting «á¡BUseEndpoints «e
+app.UseSession();   //ä½¿ç”¨ session å¿…é ˆåœ¨ UseRouting å¾Œã€UseEndpoints å‰
 app.UseAuthorization();
 
 app.MapControllerRoute(

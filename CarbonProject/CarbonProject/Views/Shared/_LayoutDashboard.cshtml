@@ -275,9 +275,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="DataGoals" asp-action="">數據與目標</a>
-                        </li>                        
+                        </li>                         *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
@@ -388,8 +388,7 @@
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2 active"
-                                   aria-current="page"
-                                   href="#">
+                                   aria-current="page" asp-area="" asp-controller="Dashboard" asp-action="Index">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#house-fill"></use>
                                     </svg>
@@ -397,15 +396,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="Index">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#file-earmark"></use>
                                     </svg>
-                                    TopPage
+                                    OverView
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject1">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#cart"></use>
                                     </svg>
@@ -413,7 +412,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject2">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#people"></use>
                                     </svg>
@@ -421,7 +420,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject3">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#puzzle"></use>
                                     </svg>
@@ -503,7 +502,7 @@
                     </div>
                 </div>
             </div>
-            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-5" id="dashboard">
+            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-5 pt-4" id="dashboard" style="max-height: 40rem; overflow-y: auto;">
                     @RenderBody()
             </main>
         </div>
@@ -514,13 +513,9 @@
             &copy; 2025 - CarbonProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"
-            class="astro-vvvwv3sm"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js"
-            integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp"
-            crossorigin="anonymous"
-            class="astro-vvvwv3sm"></script>
-    <script src="~/js/dashboard.js" class="astro-vvvwv3sm"></script>
+    <script src="~/assets/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

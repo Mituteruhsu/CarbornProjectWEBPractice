@@ -60,3 +60,15 @@ wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\img\TerraCPBanner.png
 wwwroot\img\TerraLogo.png
+wwwroot\assets\brand\bootstrap-logo-white.svg
+wwwroot\assets\brand\bootstrap-logo.svg
+wwwroot\assets\dist\css\bootstrap.min.css
+wwwroot\assets\dist\css\bootstrap.min.css.map
+wwwroot\assets\dist\css\bootstrap.rtl.min.css
+wwwroot\assets\dist\css\bootstrap.rtl.min.css.map
+wwwroot\assets\dist\js\bootstrap.bundle.min.js
+wwwroot\assets\dist\js\bootstrap.bundle.min.js.map
+wwwroot\assets\js\color-modes.js
+wwwroot\css\dashboard.css
+wwwroot\css\dashboard.rtl.css
+wwwroot\js\dashboard.js
