@@ -30,7 +30,7 @@ namespace CarbonProject.Controllers
             Industry.Init(config);      // 初始化 Industry DB 連線字串
         }
         //===============登入===============
-        //Include ActivityLogService
+        // Include ActivityLogService
         // From -> Service/ActivityLogService.cs
         public IActionResult Login()
         {

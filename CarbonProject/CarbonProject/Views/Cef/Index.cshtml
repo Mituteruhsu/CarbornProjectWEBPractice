@@ -1,0 +1,67 @@
+﻿@model CarbonProject.Models.CefItemsViewModel
+@{
+    ViewData["Title"] = "CEF";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+<div class="d-flex flex-column mx-5" style="height: 100%;">
+
+    <!-- 搜尋卡片固定在最上方 -->
+    <div class="mb-4 flex-shrink-0">
+        <div class="card shadow-sm bg-primary-subtle">
+            <div class="card-body">
+                <h5 class="text-dark-emphasis mb-3">碳係數查詢</h5>
+                <form method="POST" asp-action="IndexPost">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <input name="search" type="text" class="form-control" placeholder="輸入名稱或部門" />
+                        <button type="submit" class="btn btn-primary">查詢</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table 區塊，剩餘空間滾動 -->
+    <div class="flex-grow-1" style="overflow-y: auto;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success">
+                <strong>碳係數列表</strong>
+            </div>
+            <div>
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-success" style="position: sticky; top: 0; z-index: 10; background-color: #cfe2ff;">
+                        <tr>
+                            <th scope="col">碳係數名稱</th>
+                            <th scope="col">碳係數</th>
+                            <th scope="col">單位</th>
+                            <th scope="col">政府部門/公司名稱</th>
+                            <th scope="col">公告年份</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.items != null && Model.items.Count > 0)
+                        {
+                            foreach (var a in Model.items)
+                            {
+                                <tr>
+                                    <td>@a.name</td>
+                                    <td>@a.coe</td>
+                                    <td>@a.unit</td>
+                                    <td>@a.departmentname</td>
+                                    <td>@a.announcementyear</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">沒有符合的資料</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

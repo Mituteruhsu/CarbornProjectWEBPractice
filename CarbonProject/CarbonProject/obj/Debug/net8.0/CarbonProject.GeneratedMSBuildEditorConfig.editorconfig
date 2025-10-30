@@ -52,6 +52,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aW9uc1xQcm9ncmVzcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Cef/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2VmXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/CALCULATLINK.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXENBTENVTEFUTElOSy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -102,6 +106,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Shared/_LayoutDashboardX.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXREYXNoYm9hcmRYLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Shared/_ValidationScriptsPartial.cshtml]

@@ -10,6 +10,7 @@ wwwroot\assets\js\color-modes.js
 wwwroot\css\dashboard.css
 wwwroot\css\dashboard.rtl.css
 wwwroot\css\site.css
+wwwroot\data\cef_items.csv
 wwwroot\favicon.ico
 wwwroot\img\TerraCPBanner.png
 wwwroot\img\TerraLogo.png

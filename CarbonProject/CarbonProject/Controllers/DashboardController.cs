@@ -17,12 +17,16 @@ namespace CarbonProject.Controllers
     {
         private readonly CarbonDbContext _context;          // From -> Data/CarbonDbContext.cs
         private readonly EmissionService _emissionService;  // From -> Service/EmissionService.cs
-        public DashboardController(CarbonDbContext context, EmissionService emissionService)
+        private readonly ActivityLogService _activityLog;
+        public DashboardController(CarbonDbContext context, EmissionService emissionService, ActivityLogService activityLog)
         {
             _context = context;
             _emissionService = emissionService;
+            _activityLog = activityLog;
         }
-        // 建立 ViewModel For -> "Index()"
+
+        // ---------- ViewModel ----------
+        // For -> "Index()"
         public class DashboardViewModel
         {
             public List<CompanyEmissionTarget> CompanyEmissionTargets { get; set; }
@@ -30,6 +34,26 @@ namespace CarbonProject.Controllers
             public decimal AvgReductionPercent { get; set; }
             public decimal AvgTotalEmission { get; set; }
             public List<YearlyEmissionAverage> YearlyEmissionAverages { get; set; }
+        }
+        // ---------- ActivityLog Helper ----------
+        // For Pages below
+        private async Task LogActivityAsync(string actionType, string actionCategory = "PageView", string outcome = "Success")
+        {
+            int? memberId = HttpContext.Session.GetInt32("MemberId");
+            int? companyId = HttpContext.Session.GetInt32("CompanyId");
+            string username = HttpContext.Session.GetString("Username") ?? "Anonymous";
+
+            await _activityLog.LogAsync(
+                memberId: memberId,
+                companyId: companyId,
+                actionType: actionType,
+                actionCategory: actionCategory,
+                outcome: outcome,
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: username,
+                detailsObj: new { Controller = "Dashboard", Action = actionType }
+            );
         }
         public async Task<IActionResult> Index()
         {
@@ -63,6 +87,9 @@ namespace CarbonProject.Controllers
                 YearlyEmissionAverages = yearlyAverages
             };
 
+            // Use ActivityLog
+            await LogActivityAsync("Dashboard.OverView");
+            
             return View(viewModel);
         }
 
@@ -134,11 +161,16 @@ namespace CarbonProject.Controllers
                     .ToListAsync();
             }
 
+            // Use ActivityLog
+            await LogActivityAsync("GetChartsData", actionCategory: "API");
+
             // 回傳 JSON（前端用 fetch）
             return Json(vm);
         }
         public IActionResult CALCULATLINK()
         {
+            // Use ActivityLog
+            _ = LogActivityAsync("Dashboard.Calculation"); // 可以不用 await
             return View();
         }
         // ==== Demo顯示圖表 ====
@@ -211,6 +243,8 @@ namespace CarbonProject.Controllers
                     .Take(10)
                     .ToListAsync();
             }
+            // Use ActivityLog
+            await LogActivityAsync("Dashboard.Report");
 
             return View(vm);
         }

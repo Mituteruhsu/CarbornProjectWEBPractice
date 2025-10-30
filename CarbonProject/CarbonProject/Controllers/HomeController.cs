@@ -37,7 +37,7 @@ namespace CarbonProject.Controllers
             await _activityLog.LogAsync(
                 memberId: memberId, // 或 null
                 companyId: companyId,
-                actionType: "Home.View.Index",
+                actionType: "HomePage.Index",
                 actionCategory: "PageView",
                 outcome: "Success",
                 ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
