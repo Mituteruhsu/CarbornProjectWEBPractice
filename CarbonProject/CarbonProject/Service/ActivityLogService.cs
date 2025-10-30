@@ -3,6 +3,7 @@ using CarbonProject.Data;
 using CarbonProject.Models;
 using CarbonProject.Models.EFModels;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 // 這裡架構 ActivityLogService (非靜態，用 DI 注入) Accont.cs
 // Use -> Models/EFModels/ActivityLog.cs
@@ -12,10 +13,12 @@ namespace CarbonProject.Services
     public class ActivityLogService
     {
         private readonly CarbonDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ActivityLogService(CarbonDbContext context)
+        public ActivityLogService(CarbonDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // 所有記錄用 LogAsync() 寫入 EF Core，可序列化 detailsObj，保留原本 JSON 資料
@@ -32,6 +35,35 @@ namespace CarbonProject.Services
             string createdBy = null,
             object detailsObj = null)
         {
+            // 若沒傳入 IP 或 UserAgent，從 HttpContext 自動取
+            ip ??= _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+            userAgent ??= _httpContextAccessor.HttpContext?.Request?.Headers["User-Agent"].ToString();
+
+            // 自動生成 CorrelationId（每個請求唯一）
+            // var correlationId = _httpContextAccessor.HttpContext?.TraceIdentifier ?? Guid.NewGuid().ToString();
+            
+            // 嘗試用 TraceIdentifier 轉 GUID，如果失敗就生成新的 GUID
+            Guid correlationId;
+            if (!Guid.TryParse(_httpContextAccessor.HttpContext?.TraceIdentifier, out correlationId))
+            {
+                correlationId = Guid.NewGuid();
+            }
+
+            // 序列化詳細資訊
+            var detailsJson = detailsObj != null
+                ? JsonSerializer.Serialize(detailsObj, new JsonSerializerOptions { WriteIndented = true })
+                : null;
+
+            if (companyId != null)
+            {
+                bool exists = await _context.Companies.AnyAsync(c => c.CompanyId == companyId.Value);
+                if (!exists)
+                {
+                    // 不寫入不存在的 CompanyId，或設定為 null
+                    companyId = null;
+                }
+            }
+
             var log = new ActivityLog
             {
                 MemberId = memberId,
@@ -41,9 +73,9 @@ namespace CarbonProject.Services
                 Outcome = outcome,
                 IpAddress = ip,
                 UserAgent = userAgent,
-                Source = source,
-                CorrelationId = Guid.NewGuid().ToString(),
-                Details = detailsObj != null ? JsonSerializer.Serialize(detailsObj) : null,
+                Source = source,    // 預設 Web，可依場景改成 "API" 或 "BackgroundJob"
+                CorrelationId = correlationId,
+                Details = detailsJson,
                 CreatedBy = createdBy,
                 ActionTime = DateTime.Now,
                 CreatedAt = DateTime.Now

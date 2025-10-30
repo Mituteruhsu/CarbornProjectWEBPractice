@@ -16,7 +16,7 @@ namespace CarbonProject.Models.EFModels
         public string IpAddress { get; set; }
         public string UserAgent { get; set; }
         public string Source { get; set; }
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
         public string Details { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -1,4 +1,5 @@
-﻿using CarbonProject.Models.EFModels;
+﻿using CarbonProject.Models;
+using CarbonProject.Models.EFModels;
 using Microsoft.EntityFrameworkCore;
 //EF Core
 //[ SQL Server 資料庫 ]
@@ -29,6 +30,7 @@ namespace CarbonProject.Data
         public DbSet<CompanyEmissionTarget> CompanyEmissionTargets { get; set; }
         public DbSet<CompanyEmission> CompanyEmissions { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
+        public DbSet<Company> Companies { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CompanyEmissionTarget>().HasKey(t => t.TargetId);
@@ -37,6 +39,9 @@ namespace CarbonProject.Data
             // ActivityLog
             modelBuilder.Entity<ActivityLog>().ToTable("ActivityLog");
             modelBuilder.Entity<ActivityLog>().HasKey(a => a.LogId);
+
+            // Companies
+            modelBuilder.Entity<Company>().HasKey(c => c.CompanyId);
         }
     }
 }

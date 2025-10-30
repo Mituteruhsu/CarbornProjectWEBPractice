@@ -97,7 +97,7 @@ namespace CarbonProject.Services
                     IpAddress = ip,
                     UserAgent = ua,
                     Source = "Web",
-                    CorrelationId = Guid.NewGuid().ToString(),
+                    CorrelationId = Guid.NewGuid(),
                     Details = $"新增排放資料 Year={model.Year}, Quarter={model.Quarter}, Total={model.TotalEmission}",
                     CreatedBy = $"Member {memberId}",
                     CreatedAt = DateTime.Now
@@ -161,7 +161,7 @@ namespace CarbonProject.Services
                     IpAddress = ip,
                     UserAgent = ua,
                     Source = "Web",
-                    CorrelationId = Guid.NewGuid().ToString(),
+                    CorrelationId = Guid.NewGuid(),
                     Details = $"新增減碳目標 TargetYear={model.TargetYear}, Reduction={model.ReductionPercent}%",
                     CreatedBy = $"Member {memberId}",
                     CreatedAt = DateTime.Now

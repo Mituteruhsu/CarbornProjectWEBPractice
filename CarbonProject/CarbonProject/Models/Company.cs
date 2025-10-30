@@ -1,10 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarbonProject.Models
 {
     public class Company
     {
+        [Key]
         public int? CompanyId { get; set; }
         public int? MemberId { get; set; } // 關聯到 Members
         public string CompanyName { get; set; }
