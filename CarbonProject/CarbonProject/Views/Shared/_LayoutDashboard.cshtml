@@ -404,21 +404,38 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject1">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Actions" asp-action="Index">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#cart"></use>
                                     </svg>
-                                    NameYourProject 1
+                                    行動方案（Actions）
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject2">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Actions" asp-action="Progress">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#people"></use>
                                     </svg>
-                                    NameYourProject 2
+                                    Progress
                                 </a>
                             </li>
+                            @* <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject3">
+                                    <svg class="bi" aria-hidden="true">
+                                        <use xlink:href="#puzzle"></use>
+                                    </svg>
+                                    NameYourProject 3
+                                </a>
+                            </li> *@
+                            @* <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Actions" asp-action="Progress">
+                                    <svg class="bi" aria-hidden="true">
+                                        <use xlink:href="#people"></use>
+                                    </svg>
+                                    Progress
+                                </a>
+                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject3">
                                     <svg class="bi" aria-hidden="true">
@@ -426,9 +443,9 @@
                                     </svg>
                                     NameYourProject 3
                                 </a>
-                            </li>
+                            </li> *@
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="Report">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#graph-up"></use>
                                     </svg>
@@ -450,17 +467,17 @@
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                                     <svg class="bi" aria-hidden="true">
-                                        <use xlink:href="#file-earmark-text"></use>
+                                        <use xlink:href="#puzzle"></use>
                                     </svg>
                                     Current month
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="CALCULATLINK">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#file-earmark-text"></use>
                                     </svg>
-                                    Last quarter
+                                    碳足跡計算機
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -476,22 +493,22 @@
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#file-earmark-text"></use>
                                     </svg>
-                                    Year-end sale
+                                    Year-end
                                 </a>
                             </li>
                         </ul>
                         <hr class="my-3" />
                         <ul class="nav flex-column mb-auto ms-4">
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#gear-wide-connected"></use>
                                     </svg>
                                     Settings
                                 </a>
-                            </li>
+                            </li> *@
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-controller="Account" asp-action="Logout">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#door-closed"></use>
                                     </svg>

@@ -65,14 +65,154 @@ namespace CarbonProject.Controllers
 
             return View(viewModel);
         }
-        
-        public IActionResult NameYourProject1()
+
+        // （選用）回傳 JSON 的 API（讓前端可延遲載入）
+        public async Task<IActionResult> GetChartsData()
+        {
+            var vm = new DashboardChartsViewModel();
+
+            vm.YearlyTotals = await _context.CompanyEmissions
+                .Where(e => e.TotalEmission != null)
+                .GroupBy(e => e.Year)
+                .Select(g => new YearlyTotalDto
+                {
+                    Year = g.Key,
+                    TotalEmission = g.Sum(x => x.TotalEmission)
+                })
+                .OrderBy(x => x.Year)
+                .ToListAsync();
+
+            vm.YearlyAverages = await _context.CompanyEmissions
+                .Where(e => e.TotalEmission != null)
+                .GroupBy(e => e.Year)
+                .Select(g => new YearlyAvgPerCompanyDto
+                {
+                    Year = g.Key,
+                    AvgPerCompany = g.Sum(x => x.TotalEmission)
+                                     / (g.Select(x => x.CompanyId).Distinct().Count())
+                })
+                .OrderBy(x => x.Year)
+                .ToListAsync();
+
+            var latestYear = await _context.CompanyEmissions
+                .Where(e => e.TotalEmission != null)
+                .MaxAsync(e => (int?)e.Year) ?? 0;
+
+            if (latestYear > 0)
+            {
+                var scopeTotals = await _context.CompanyEmissions
+                    .Where(e => e.Year == latestYear)
+                    .GroupBy(e => 1)
+                    .Select(g => new
+                    {
+                        Scope1 = g.Sum(x => x.Scope1Emission),
+                        Scope2 = g.Sum(x => x.Scope2Emission),
+                        Scope3 = g.Sum(x => x.Scope3Emission)
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (scopeTotals != null)
+                {
+                    vm.LatestScopeShares = new List<ScopeShareDto>
+                {
+                    new ScopeShareDto{ Scope = "Scope1", Value = scopeTotals.Scope1 },
+                    new ScopeShareDto{ Scope = "Scope2", Value = scopeTotals.Scope2 },
+                    new ScopeShareDto{ Scope = "Scope3", Value = scopeTotals.Scope3 }
+                };
+                }
+
+                vm.TopCompaniesLatest = await _context.CompanyEmissions
+                    .Where(e => e.Year == latestYear && e.TotalEmission != null)
+                    .GroupBy(e => e.CompanyId)
+                    .Select(g => new TopCompanyDto
+                    {
+                        CompanyId = g.Key,
+                        TotalEmission = g.Sum(x => x.TotalEmission)
+                    })
+                    .OrderByDescending(x => x.TotalEmission)
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            // 回傳 JSON（前端用 fetch）
+            return Json(vm);
+        }
+        public IActionResult CALCULATLINK()
         {
             return View();
         }
-        public IActionResult NameYourProject2()
+        // ==== Demo顯示圖表 ====
+        public async Task<IActionResult> Report()
         {
-            return View();
+            var vm = new DashboardChartsViewModel();
+
+            // 年度總排放量
+            vm.YearlyTotals = await _context.CompanyEmissions
+                .Where(e => e.TotalEmission != null)
+                .GroupBy(e => e.Year)
+                .Select(g => new YearlyTotalDto
+                {
+                    Year = g.Key,
+                    TotalEmission = g.Sum(x => x.TotalEmission)
+                })
+                .OrderBy(x => x.Year)
+                .ToListAsync();
+
+            // 每公司年度平均
+            vm.YearlyAverages = await _context.CompanyEmissions
+                .Where(e => e.TotalEmission != null)
+                .GroupBy(e => e.Year)
+                .Select(g => new YearlyAvgPerCompanyDto
+                {
+                    Year = g.Key,
+                    AvgPerCompany = g.Sum(x => x.TotalEmission) / (g.Select(x => x.CompanyId).Distinct().Count())
+                })
+                .OrderBy(x => x.Year)
+                .ToListAsync();
+
+            // 最新年度範疇比例
+            var latestYear = await _context.CompanyEmissions
+                .Where(e => e.TotalEmission != null)
+                .MaxAsync(e => (int?)e.Year) ?? 0;
+
+            if (latestYear > 0)
+            {
+                var scopeTotals = await _context.CompanyEmissions
+                    .Where(e => e.Year == latestYear)
+                    .GroupBy(e => 1)
+                    .Select(g => new
+                    {
+                        Scope1 = g.Sum(x => x.Scope1Emission),
+                        Scope2 = g.Sum(x => x.Scope2Emission),
+                        Scope3 = g.Sum(x => x.Scope3Emission)
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (scopeTotals != null)
+                {
+                    vm.LatestScopeShares = new List<ScopeShareDto>
+            {
+                new ScopeShareDto { Scope = "Scope1", Value = scopeTotals.Scope1 },
+                new ScopeShareDto { Scope = "Scope2", Value = scopeTotals.Scope2 },
+                new ScopeShareDto { Scope = "Scope3", Value = scopeTotals.Scope3 }
+            };
+                }
+
+                // 最新年度前 10 名公司總排放
+                vm.TopCompaniesLatest = await _context.CompanyEmissions
+                    .Where(e => e.Year == latestYear && e.TotalEmission != null)
+                    .GroupBy(e => e.CompanyId)
+                    .Select(g => new TopCompanyDto
+                    {
+                        CompanyId = g.Key,
+                        TotalEmission = g.Sum(x => x.TotalEmission)
+                    })
+                    .OrderByDescending(x => x.TotalEmission)
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return View(vm);
         }
         public IActionResult NameYourProject3()
         {

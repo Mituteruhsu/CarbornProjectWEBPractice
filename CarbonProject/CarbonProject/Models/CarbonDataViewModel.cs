@@ -2,8 +2,7 @@
 {
     // 新增 Model：CarbonData
     // 這個模型用於首頁展示簡易的碳排放數據。
-    // 資料目前是靜態模擬，未來可以連接資料庫或後端管理端更新。
-    public class CarbonData
+    public class CarbonDataViewModel
     {
         public string CompanyName { get; set; }
         public decimal CurrentEmission { get; set; }   // 目前碳排放量
@@ -28,5 +27,37 @@
     {
         public List<AnnualEmission> AnnualEmissions { get; set; }
         public CarbonGoal Goal { get; set; }
+    }
+    // CompanyEmissions 相關
+    public class YearlyTotalDto
+    {
+        public int Year { get; set; }
+        public decimal TotalEmission { get; set; }
+    }
+
+    public class YearlyAvgPerCompanyDto
+    {
+        public int Year { get; set; }
+        public decimal AvgPerCompany { get; set; }
+    }
+
+    public class ScopeShareDto
+    {
+        public string Scope { get; set; } = "";
+        public decimal Value { get; set; }
+    }
+
+    public class TopCompanyDto
+    {
+        public int? CompanyId { get; set; }
+        public decimal TotalEmission { get; set; }
+    }
+
+    public class DashboardChartsViewModel
+    {
+        public List<YearlyTotalDto> YearlyTotals { get; set; } = new();
+        public List<YearlyAvgPerCompanyDto> YearlyAverages { get; set; } = new();
+        public List<ScopeShareDto> LatestScopeShares { get; set; } = new();
+        public List<TopCompanyDto> TopCompaniesLatest { get; set; } = new();
     }
 }
