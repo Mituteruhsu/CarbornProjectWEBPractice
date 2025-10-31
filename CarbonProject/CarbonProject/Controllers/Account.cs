@@ -87,6 +87,9 @@ namespace CarbonProject.Controllers
                 HttpContext.Session.SetString("isLogin", "true");
                 HttpContext.Session.SetString("Role", member.Role);
                 HttpContext.Session.SetString("Username", member.Username);
+                HttpContext.Session.SetInt32("MemberId", member.MemberId);
+                if (member.CompanyId > 0)
+                    HttpContext.Session.SetInt32("CompanyId", member.CompanyId);
 
                 // 根據 Role 導向不同頁面
                 if (member.Role == "Admin")

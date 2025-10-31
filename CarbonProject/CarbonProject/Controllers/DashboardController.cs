@@ -41,7 +41,11 @@ namespace CarbonProject.Controllers
         {
             int? memberId = HttpContext.Session.GetInt32("MemberId");
             int? companyId = HttpContext.Session.GetInt32("CompanyId");
-            string username = HttpContext.Session.GetString("Username") ?? "Anonymous";
+            string username = HttpContext.Session.GetString("Username");
+            if (string.IsNullOrEmpty(username))
+            {
+                username = "Anonymous";
+            }
 
             await _activityLog.LogAsync(
                 memberId: memberId,

@@ -411,14 +411,14 @@
                                     行動方案（Actions）
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Actions" asp-action="Progress">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#people"></use>
                                     </svg>
                                     Progress
                                 </a>
-                            </li>
+                            </li> *@
                             @* <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" asp-area="" asp-controller="Dashboard" asp-action="NameYourProject3">
                                     <svg class="bi" aria-hidden="true">
@@ -453,7 +453,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase ms-4">
+                        @* <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase ms-4">
                             <span>Saved reports</span>
                             <a class="link-secondary"
                                href="#"
@@ -462,7 +462,7 @@
                                     <use xlink:href="#plus-circle"></use>
                                 </svg>
                             </a>
-                        </h6>
+                        </h6> *@
 
                         <ul class="nav flex-column mb-auto ms-4">
 
@@ -490,7 +490,7 @@
                                     碳足跡計算機
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                                     <svg class="bi" aria-hidden="true">
                                         <use xlink:href="#file-earmark-text"></use>
@@ -505,7 +505,7 @@
                                     </svg>
                                     Year-end
                                 </a>
-                            </li>
+                            </li> *@
                         </ul>
                         <hr class="my-3" />
                         <ul class="nav flex-column mb-auto ms-4">
@@ -529,7 +529,7 @@
                     </div>
                 </div>
             </div>
-            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-5 pt-4" id="dashboard" style="max-height: 40rem; overflow-y: auto;">
+            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-5 pt-4" id="dashboard" style="height: 40rem; overflow-y: auto;">
                     @RenderBody()
             </main>
         </div>

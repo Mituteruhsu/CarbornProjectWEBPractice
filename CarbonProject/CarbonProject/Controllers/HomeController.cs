@@ -32,6 +32,10 @@ namespace CarbonProject.Controllers
             // 取得 nullable MemberId 和 CompanyId
             int? memberId = HttpContext.Session.GetInt32("MemberId");
             int? companyId = HttpContext.Session.GetInt32("CompanyId");
+            string username = HttpContext.Session.GetString("Username");
+            if (string.IsNullOrWhiteSpace(username))
+                username = "Anonymous";
+
 
             // 記錄 ActivityLog
             await _activityLog.LogAsync(
@@ -42,7 +46,7 @@ namespace CarbonProject.Controllers
                 outcome: "Success",
                 ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
                 userAgent: Request.Headers["User-Agent"].ToString(),
-                createdBy: HttpContext.Session.GetString("Username") ?? "Anonymous",
+                createdBy: username,
                 detailsObj: new { page = "Index" }
             );
 

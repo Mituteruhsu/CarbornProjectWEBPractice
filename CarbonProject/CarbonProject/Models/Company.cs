@@ -42,7 +42,7 @@ namespace CarbonProject.Models
                                 CompanyId = Convert.ToInt32(reader["CompanyId"]),
                                 CompanyName = reader["CompanyName"].ToString(),
                                 TaxId = reader["TaxId"].ToString(),
-                                Industry = reader["Industry"].ToString(),
+                                Industry = reader["Industry_Id"].ToString(),
                                 Address = reader["Address"].ToString(),
                                 Contact_Email = reader["Contact_Email"].ToString(),
                                 CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
@@ -71,15 +71,15 @@ namespace CarbonProject.Models
 
                 // 2. 新增公司，並回傳 CompanyId
                 string sql = @"
-                    INSERT INTO Companies (CompanyName, TaxId, Industry, Address, Contact_Email, CreatedAt, UpdatedAt)
+                    INSERT INTO Companies (CompanyName, TaxId, Industry_Id, Address, Contact_Email, CreatedAt, UpdatedAt)
                     OUTPUT INSERTED.CompanyId
-                    VALUES (@CompanyName, @TaxId, @Industry, @Address, @Contact_Email, GETDATE(), GETDATE());";
+                    VALUES (@CompanyName, @TaxId, @Industry_Id, @Address, @Contact_Email, GETDATE(), GETDATE());";
 
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@CompanyName", company.CompanyName ?? "");
                     cmd.Parameters.AddWithValue("@TaxId", company.TaxId ?? "");
-                    cmd.Parameters.AddWithValue("@Industry", company.Industry ?? "");
+                    cmd.Parameters.AddWithValue("@Industry_Id", company.Industry ?? "");
                     cmd.Parameters.AddWithValue("@Address", company.Address ?? "");
                     cmd.Parameters.AddWithValue("@Contact_Email", company.Contact_Email ?? "");
                     return (int)cmd.ExecuteScalar();
