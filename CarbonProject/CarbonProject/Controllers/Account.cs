@@ -1,6 +1,7 @@
 ﻿using CarbonProject.Models;
 using CarbonProject.Models.EFModels;
 using CarbonProject.Services;
+using CarbonProject.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.Design;
@@ -18,15 +19,18 @@ namespace CarbonProject.Controllers
         private readonly ILogger<Account> _logger;
         private readonly IConfiguration _config;
         private readonly ActivityLogService _activityLog;
-        public Account(IWebHostEnvironment _environment, ILogger<Account> logger, IConfiguration config, ActivityLogService activityLog)
+        private readonly CompanyRepository _companyRepository;
+        public Account(IWebHostEnvironment _environment, ILogger<Account> logger, IConfiguration config, ActivityLogService activityLog, CompanyRepository companyRepository)
         {
+            // 非 static 用法，需要在Program.cs 註冊，建議使用較不會
             Environment = _environment;
             _logger = logger;
             _config = config;
             _activityLog = activityLog;
+            _companyRepository = companyRepository;
 
+            // static 用法，不須註冊方便呼叫
             Members.Init(config);       // 初始化 Members DB 連線字串
-            Company.Init(config);       // 初始化 Company DB 連線字串
             Industry.Init(config);      // 初始化 Industry DB 連線字串
         }
         //===============登入===============
@@ -232,7 +236,7 @@ namespace CarbonProject.Controllers
                 }
 
                 // 檢查是否已有此公司
-                var existingCompany = Company.GetCompanyByTaxId(TaxId.Trim());
+                var existingCompany = _companyRepository.GetCompanyByTaxId(TaxId.Trim());
                 if (existingCompany != null)
                 {
                     // 已存在公司，直接綁定
@@ -254,14 +258,14 @@ namespace CarbonProject.Controllers
                     {
                         CompanyName = CompanyName.Trim(),
                         TaxId = TaxId.Trim(),
-                        Industry = IndustryId.Trim(),
+                        Industry_Id = IndustryId.Trim(),
                         Address = Address.Trim(),
                         Contact_Email = Contact_Email.Trim(),
-                        CreatedAt = DateTime.Now,
-                        UpdatedAt = DateTime.Now
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
                     };
 
-                    companyId = Company.AddCompany(newCompany);
+                    companyId = _companyRepository.AddCompany(newCompany);
                     if (companyId <= 0)
                     {
                         ViewBag.Error = "企業資料新增失敗，請稍後再試。";
@@ -311,7 +315,7 @@ namespace CarbonProject.Controllers
             if (string.IsNullOrEmpty(taxId))
                 return Json(new { exists = false });
 
-            var company = Company.GetCompanyByTaxId(taxId);
+            var company = _companyRepository.GetCompanyByTaxId(taxId);
             if (company == null)
                 return Json(new { exists = false });
 
@@ -325,7 +329,7 @@ namespace CarbonProject.Controllers
                     company.TaxId,
                     company.Address,
                     company.Contact_Email,
-                    company.Industry
+                    company.Industry_Id
                 }
             });
         }
@@ -363,7 +367,7 @@ namespace CarbonProject.Controllers
             bool success = Members.DeleteMember(id);
             // 刪除會員寫入 ActivityLog
             await _activityLog.LogAsync(
-                memberId: id,
+                memberId: null,
                 companyId: null,
                 actionType: "Admin.DeleteMember",
                 actionCategory: "Admin",
@@ -371,7 +375,7 @@ namespace CarbonProject.Controllers
                 ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
                 userAgent: Request.Headers["User-Agent"].ToString(),
                 createdBy: HttpContext.Session.GetString("Username"),
-                detailsObj: new { memberId = id }
+                detailsObj: new { deletememberId = id }
             );
             if (!success)
             {

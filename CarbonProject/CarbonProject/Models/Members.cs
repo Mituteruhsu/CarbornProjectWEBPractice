@@ -1,9 +1,11 @@
 ﻿using BCrypt.Net;
 using Microsoft.Data.SqlClient;
+using CarbonProject.Helpers;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using CarbonProject.Models;
 
 // 從上方工具->NuGet套件管理員->管理方案的 NuGet 套件->瀏覽輸入後點選安裝(需選擇專案)
 // 需安裝 MySql.Data
@@ -33,7 +35,6 @@ namespace CarbonProject.Models
         {
             connStr = configuration.GetConnectionString("DefaultConnection");
         }
-
         // 新增會員
         public static int AddMember(Members member)
         {
@@ -59,7 +60,7 @@ namespace CarbonProject.Models
                 string insertSql = @"
                     INSERT INTO Users (Username, Email, PasswordHash, FullName, Role, IsActive, CreatedAt, UpdatedAt)
                     OUTPUT INSERTED.MemberId
-                    VALUES (@Username, @Email, @PasswordHash, @FullName, @Role, @IsActive, GETDATE(), GETDATE());
+                    VALUES (@Username, @Email, @PasswordHash, @FullName, @Role, @IsActive, SYSUTCDATETIME(), SYSUTCDATETIME());
                 ";
 
                 using (var cmd = new SqlCommand(insertSql, conn))
@@ -105,7 +106,7 @@ namespace CarbonProject.Models
 
                             // 自動解鎖：若已鎖住且 30 分鐘已過
                             if (failedAttempts >= 5 && lastFailedLoginAt.HasValue &&
-                                DateTime.Now.Subtract(lastFailedLoginAt.Value).TotalMinutes >= 30)
+                                DateTime.UtcNow.Subtract(lastFailedLoginAt.Value).TotalMinutes >= 30)
                             {
                                 ResetFailedLogin(Convert.ToInt32(reader["MemberId"]));
                                 failedAttempts = 0;
@@ -155,7 +156,7 @@ namespace CarbonProject.Models
                 string sql = @"
                     UPDATE Users 
                     SET 
-                        LastLoginAt = GETDATE(),
+                        LastLoginAt = SYSUTCDATETIME(),
                         FailedLoginAttempts = 0,
                         LastFailedLoginAt = NULL
                     WHERE MemberId = @MemberId";
@@ -177,7 +178,7 @@ namespace CarbonProject.Models
                     UPDATE Users 
                     SET 
                         FailedLoginAttempts = ISNULL(FailedLoginAttempts, 0) + 1,
-                        LastFailedLoginAt = GETDATE()
+                        LastFailedLoginAt = SYSUTCDATETIME()
                     WHERE Username = @U OR Email = @U";
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -211,7 +212,7 @@ namespace CarbonProject.Models
             {
                 conn.Open();
                 string sql = @"UPDATE Users 
-                       SET LastLogoutAt = GETDATE() 
+                       SET LastLogoutAt = SYSUTCDATETIME() 
                        WHERE MemberId = @MemberId";
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -258,8 +259,8 @@ namespace CarbonProject.Models
                             PasswordHash = reader["PasswordHash"].ToString(),
                             FullName = reader["FullName"].ToString(),
                             Role = reader["Role"].ToString(),
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"]),
+                            CreatedAt = TimeHelper.ToTaipeiTime(Convert.ToDateTime(reader["CreatedAt"])),
+                            UpdatedAt = TimeHelper.ToTaipeiTime(Convert.ToDateTime(reader["UpdatedAt"])),
                             IsActive = Convert.ToBoolean(reader["IsActive"])
                         });
                     }
@@ -270,9 +271,12 @@ namespace CarbonProject.Models
         // 刪除會員 by id
         public static bool DeleteMember(int id)
         {
+
             using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
+
+                // 刪除使用者
                 string sql = "DELETE FROM Users WHERE MemberId=@Id";
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -288,7 +292,7 @@ namespace CarbonProject.Models
             {
                 conn.Open();
                 string sql = @"UPDATE Users 
-                               SET Username=@Username, Email=@Email, FullName=@FullName, UpdatedAt=GETDATE() 
+                               SET Username=@Username, Email=@Email, FullName=@FullName, UpdatedAt=SYSUTCDATETIME() 
                                WHERE MemberId=@Id";
 
                 using (var cmd = new SqlCommand(sql, conn))
@@ -302,29 +306,23 @@ namespace CarbonProject.Models
             }
         }
         // 取得最近 N 筆活動紀錄
-        public class ActivityRecord
-        {
-            public DateTime ActionTime { get; set; }
-            public string Username { get; set; }
-            public string Action { get; set; }
-        }
+        
 
-        public static List<ActivityRecord> GetRecentActivities(int top = 20)
+        public static List<HomeIndexViewModel.ActivityRecord> GetRecentActivities(int top = 20)
         {
-            var list = new List<ActivityRecord>();
+            var list = new List<HomeIndexViewModel.ActivityRecord>();
             using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                // 抓取最近登入與登出
-                string sql = $@"
-                    SELECT TOP (@Top) Username, LastLoginAt AS ActionTime, N'登入系統' AS Action
-                    FROM Users
-                    WHERE LastLoginAt IS NOT NULL
-                    UNION ALL
-                    SELECT TOP (@Top) Username, LastLogoutAt AS ActionTime, N'登出系統' AS Action
-                    FROM Users
-                    WHERE LastLogoutAt IS NOT NULL
-                    ORDER BY ActionTime DESC";
+                // 抓取最近20筆資料
+                string sql = @"
+                    SELECT TOP (@Top)
+                        al.ActionTime,
+                        al.ActionType,
+                        al.CreatedBy
+                    FROM ActivityLog al
+                    ORDER BY al.ActionTime DESC";
+
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@Top", top);
@@ -332,11 +330,28 @@ namespace CarbonProject.Models
                     {
                         while (reader.Read())
                         {
-                            list.Add(new ActivityRecord
+                            string actionType = reader["ActionType"].ToString();
+
+                            // 可選：轉換成更可讀的中文
+                            string actionDisplay;
+                            if (actionType == "Auth.Login.Success")
+                                actionDisplay = "登入系統";
+                            else if (actionType == "Auth.Login.Failed")
+                                actionDisplay = "登入失敗";
+                            else if (actionType == "Auth.Logout")
+                                actionDisplay = "登出系統";
+                            else
+                                actionDisplay = actionType; // 其他原樣顯示
+
+                            // UTC -> 台北
+                            DateTime utcTime = Convert.ToDateTime(reader["ActionTime"]);
+                            DateTime taipeiTime = TimeHelper.ToTaipeiTime(utcTime);
+
+                            list.Add(new HomeIndexViewModel.ActivityRecord
                             {
-                                Username = reader["Username"].ToString(),
-                                ActionTime = Convert.ToDateTime(reader["ActionTime"]),
-                                Action = reader["Action"].ToString()
+                                Username = reader["CreatedBy"]?.ToString() ?? "Anonymous",
+                                ActionTime = taipeiTime, // 修正成台北時間
+                                Action = actionDisplay
                             });
                         }
                     }

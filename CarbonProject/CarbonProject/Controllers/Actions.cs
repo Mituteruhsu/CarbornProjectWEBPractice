@@ -1,4 +1,4 @@
-using CarbonProject.Models;
+ï»¿using CarbonProject.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
@@ -16,31 +16,31 @@ namespace CarbonProject.Controllers
 {
     public class Actions : Controller
     {
-        // ¦Cªí + ¿z¿ï
+        // åˆ—è¡¨ + ç¯©é¸
         public IActionResult Index(int year = -1, string category = "")
         {
             var all = ActionsRepository.GetAll();
             var years = ActionsRepository.GetYears();
 
-            // ¿z¿ï¹w³]¡G­Y¥¼«ü©w¦~¥÷¡A¿ï¾Ü³Ì·s¤@¦~
-            // ¥u¦³¦b¨S¦³¦~¥÷¥B¨S¦³Ãş§O¿z¿ï®É¤~¹w³]³Ì·s¦~¥÷
-            // year = -1 ªí¥Ü©|¥¼«ü©w¦~¥÷ ¡÷ ¨ú³Ì·s¤@¦~
-            // year = 0 ªí¥Ü¨Ï¥ÎªÌ¿ï¾Ü¡u¥ş³¡¦~«×¡v
+            // ç¯©é¸é è¨­ï¼šè‹¥æœªæŒ‡å®šå¹´ä»½ï¼Œé¸æ“‡æœ€æ–°ä¸€å¹´
+            // åªæœ‰åœ¨æ²’æœ‰å¹´ä»½ä¸”æ²’æœ‰é¡åˆ¥ç¯©é¸æ™‚æ‰é è¨­æœ€æ–°å¹´ä»½
+            // year = -1 è¡¨ç¤ºå°šæœªæŒ‡å®šå¹´ä»½ â†’ å–æœ€æ–°ä¸€å¹´
+            // year = 0 è¡¨ç¤ºä½¿ç”¨è€…é¸æ“‡ã€Œå…¨éƒ¨å¹´åº¦ã€
             if (year == -1)
             {
-                year = years.FirstOrDefault(); // ¨ú³Ì·s¦~¥÷
+                year = years.FirstOrDefault(); // å–æœ€æ–°å¹´ä»½
             }
 
             var filtered = all.Where(a => (year == 0 || a.Year == year)
                                         && (string.IsNullOrEmpty(category) || a.Category.Equals(category, StringComparison.OrdinalIgnoreCase)))
                               .ToList();
 
-            // «Ø¥ß ViewModel
+            // å»ºç«‹ ViewModel
             var vm = new ActionsViewModel
             {
                 Actions = filtered,
                 Categories = ActionsRepository.GetCategories(),
-                SelectedYear = year,          // -1 ¤£·|¶Ç¨ì View¡A0 ªí¥Ü¥ş³¡¦~«×
+                SelectedYear = year,          // -1 ä¸æœƒå‚³åˆ° Viewï¼Œ0 è¡¨ç¤ºå…¨éƒ¨å¹´åº¦
                 SelectedCategory = category ?? ""
             };
 
@@ -64,28 +64,28 @@ namespace CarbonProject.Controllers
         // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([FromForm] ESGAction action)    // ¥[¤W [FromForm] ©ú½T«ü©w¨Ó·½
+        public IActionResult Create([FromForm] ESGAction action)    // åŠ ä¸Š [FromForm] æ˜ç¢ºæŒ‡å®šä¾†æº
         {
             if (!ModelState.IsValid)
             {
                 return View(action);
             }
-            // ½T«O¤å¦r¥¿½TÂà¦¨ Unicode
+            // ç¢ºä¿æ–‡å­—æ­£ç¢ºè½‰æˆ Unicode
             action.Title = action.Title?.Trim() ?? "";
             action.Category = action.Category?.Trim() ?? "";
             action.Description = action.Description?.Trim() ?? "";
             action.OwnerDepartment = action.OwnerDepartment?.Trim() ?? "";
 
-            // ¼g¤J DB
+            // å¯«å…¥ DB
             bool ok = ActionsRepository.Add(action);
             if (ok)
             {
-                TempData["Alert"] = "¦æ°Ê¤è®×·s¼W¦¨¥\";
+                TempData["Alert"] = "è¡Œå‹•æ–¹æ¡ˆæ–°å¢æˆåŠŸ";
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                TempData["Alert"] = "¸ê®Æ¼g¤J¥¢±Ñ¡A½Ğ½T»{¸ê®Æ®æ¦¡©Î¸ê®Æ®w³s½u";
+                TempData["Alert"] = "è³‡æ–™å¯«å…¥å¤±æ•—ï¼Œè«‹ç¢ºèªè³‡æ–™æ ¼å¼æˆ–è³‡æ–™åº«é€£ç·š";
                 return View(action);
             }
         }
@@ -101,15 +101,15 @@ namespace CarbonProject.Controllers
         // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromForm] ESGAction action)  // ¥[¤W [FromForm] ©ú½T«ü©w¨Ó·½
+        public IActionResult Edit([FromForm] ESGAction action)  // åŠ ä¸Š [FromForm] æ˜ç¢ºæŒ‡å®šä¾†æº
         {
             if (!ModelState.IsValid)
             {
                 return View(action);
             }
             var ok = ActionsRepository.Update(action);
-            if (!ok) TempData["Alert"] = "§ó·s¥¢±Ñ";
-            else TempData["Alert"] = "§ó·s¦¨¥\";
+            if (!ok) TempData["Alert"] = "æ›´æ–°å¤±æ•—";
+            else TempData["Alert"] = "æ›´æ–°æˆåŠŸ";
 
             return RedirectToAction(nameof(Index));
         }
@@ -120,16 +120,16 @@ namespace CarbonProject.Controllers
         public IActionResult Delete(int id)
         {
             var ok = ActionsRepository.Delete(id);
-            TempData["Alert"] = ok ? "§R°£¦¨¥\" : "§R°£¥¢±Ñ";
+            TempData["Alert"] = ok ? "åˆªé™¤æˆåŠŸ" : "åˆªé™¤å¤±æ•—";
             return RedirectToAction(nameof(Index));
         }
 
-        // ¤U¸ü PDF ³ø§i (¶×¥X·í«e¿z¿ïµ²ªG)
+        // ä¸‹è¼‰ PDF å ±å‘Š (åŒ¯å‡ºç•¶å‰ç¯©é¸çµæœ)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DownloadReport(int year = 0, string category = "")
         {
-            // ¨ú±o¸ê®Æ¡]©M Index ¿z¿ï¤@­P¡^
+            // å–å¾—è³‡æ–™ï¼ˆå’Œ Index ç¯©é¸ä¸€è‡´ï¼‰
             var all = ActionsRepository.GetAll();
 
             var filtered = all
@@ -138,44 +138,44 @@ namespace CarbonProject.Controllers
                                  a.Category.Equals(category, StringComparison.OrdinalIgnoreCase)))
                     .ToList();
 
-            // ÀË¬d¬O§_¦³¸ê®Æ
+            // æª¢æŸ¥æ˜¯å¦æœ‰è³‡æ–™
             if (!filtered.Any())
             {
-                TempData["Alert"] = "¥Ø«e¿z¿ï±ø¥ó¤U¨S¦³¥i¶×¥Xªº¸ê®Æ¡C";
+                TempData["Alert"] = "ç›®å‰ç¯©é¸æ¢ä»¶ä¸‹æ²’æœ‰å¯åŒ¯å‡ºçš„è³‡æ–™ã€‚";
                 return RedirectToAction("Index", new { year, category });
             }
 
             using (var stream = new MemoryStream())
             {
-                // «Ø¥ß¤å¥ó
+                // å»ºç«‹æ–‡ä»¶
                 var doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4, 36, 36, 36, 36);
                 PdfWriter.GetInstance(doc, stream);
                 doc.Open();
 
-                // ======== ¦r«¬³]©w ========
-                // ¨Ï¥Î¨t²Î¤ºªº¡u·L³n¥¿¶ÂÅé¡v©Î¨ä¥L¤ä´©¤¤¤åªº¦r«¬
-                string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "msjh.ttc,0"); // ·L³n¥¿¶ÂÅé
+                // ======== å­—å‹è¨­å®š ========
+                // ä½¿ç”¨ç³»çµ±å…§çš„ã€Œå¾®è»Ÿæ­£é»‘é«”ã€æˆ–å…¶ä»–æ”¯æ´ä¸­æ–‡çš„å­—å‹
+                string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "msjh.ttc,0"); // å¾®è»Ÿæ­£é»‘é«”
                 BaseFont baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
-                // ¥D¦r«¬¡]¼ĞÃD¡^
+                // ä¸»å­—å‹ï¼ˆæ¨™é¡Œï¼‰
                 Font titleFont = new Font(baseFont, 12, Font.BOLD, BaseColor.BLACK);
 
-                // ¤º®e¦r«¬¡]¤@¯ë¸ê®Æ¡^
+                // å…§å®¹å­—å‹ï¼ˆä¸€èˆ¬è³‡æ–™ï¼‰
                 Font textFont = new Font(baseFont, 10, Font.NORMAL, BaseColor.BLACK);
 
-                // ´y­z¤å¦r¦r«¬¡]¦Ç¦â¡^
+                // æè¿°æ–‡å­—å­—å‹ï¼ˆç°è‰²ï¼‰
                 Font descFont = new Font(baseFont, 9, Font.ITALIC, new BaseColor(100, 100, 100));
 
-                // ¤å¥ó¼ĞÃD
-                doc.Add(new Paragraph($"¥ø·~¦æ°Ê¤è®×³ø§i ({year})", titleFont));
+                // æ–‡ä»¶æ¨™é¡Œ
+                doc.Add(new Paragraph($"ä¼æ¥­è¡Œå‹•æ–¹æ¡ˆå ±å‘Š ({year})", titleFont));
                 doc.Add(new Paragraph(" ", textFont));
 
-                // ªí®æ¤º®e
+                // è¡¨æ ¼å…§å®¹
                 var table = new PdfPTable(5) { WidthPercentage = 100 };
                 table.SetWidths(new float[] { 8f, 18f, 25f, 12f, 10f });
 
-                // ¼ĞÃD¦C­I´º¦â
-                string[] headers = { "¦~«×", "Ãş§O", "¦WºÙ / ´y­z", "¹w´Á´îºÒ (¾·/¦~)", "¶i«×" };
+                // æ¨™é¡Œåˆ—èƒŒæ™¯è‰²
+                string[] headers = { "å¹´åº¦", "é¡åˆ¥", "åç¨± / æè¿°", "é æœŸæ¸›ç¢³ (å™¸/å¹´)", "é€²åº¦" };
                 
                 foreach (var header in headers)
                 {
@@ -185,16 +185,16 @@ namespace CarbonProject.Controllers
                     table.AddCell(cell);
                 }
 
-                // ¤º®e¦C
+                // å…§å®¹åˆ—
                 foreach (var a in filtered)
                 {
                     table.AddCell(new Phrase(a.Year.ToString(), textFont));
                     table.AddCell(new Phrase(a.Category, textFont));
 
-                    // Title + Description ¤£¦P¦r«¬
+                    // Title + Description ä¸åŒå­—å‹
                     Phrase phrase = new Phrase();
-                    phrase.Add(new Chunk(a.Title + "\n", textFont));    // ¥D¼ĞÃD
-                    phrase.Add(new Chunk(a.Description ?? "", descFont)); // ´y­z¡]¦Ç¦â¡^
+                    phrase.Add(new Chunk(a.Title + "\n", textFont));    // ä¸»æ¨™é¡Œ
+                    phrase.Add(new Chunk(a.Description ?? "", descFont)); // æè¿°ï¼ˆç°è‰²ï¼‰
                     table.AddCell(phrase);
 
                     table.AddCell(new Phrase(a.ExpectedReductionTon.ToString("N0"), textFont));
@@ -204,7 +204,7 @@ namespace CarbonProject.Controllers
                 doc.Add(table);
                 doc.Close();
 
-                // ======== ÀÉ¦W³]©w ========
+                // ======== æª”åè¨­å®š ========
                 string fileName = year == 0
                     ? "ActionsReport_All.pdf"
                     : $"ActionsReport_{year}.pdf";
@@ -217,34 +217,34 @@ namespace CarbonProject.Controllers
             return View();
         }
 
-        //          ==== ¦³°İÃD°Ï°ì©|¦b±Æ¸Ñ ====
-        //        // °O¿ı Python ¤lµ{§Ç¡]ÀRºAÅÜ¼Æ¡A¾ã­Ó App ¦@¥Î¡^
+        //          ==== æœ‰å•é¡Œå€åŸŸå°šåœ¨æ’è§£ ====
+        //        // è¨˜éŒ„ Python å­ç¨‹åºï¼ˆéœæ…‹è®Šæ•¸ï¼Œæ•´å€‹ App å…±ç”¨ï¼‰
         //        private static Process? _pythonProcess = null;
         //        private static DateTime _lastUsedTime = DateTime.MinValue;
         //        private static readonly object _lock = new object();
-        //        // Åçºâ³ø§i­¶­±
+        //        // é©—ç®—å ±å‘Šé é¢
         //        public async Task<IActionResult> Progress()
         //        {
-        //            string apiUrl = "http://127.0.0.1:8000/verify";  // Python API ªº URL
-        //            string pythonPath = "python";                    // ¥i§ï¦¨ "python3" µø¨t²Î¦Ó©w
+        //            string apiUrl = "http://127.0.0.1:8000/verify";  // Python API çš„ URL
+        //            string pythonPath = "python";                    // å¯æ”¹æˆ "python3" è¦–ç³»çµ±è€Œå®š
         //            string scriptName = "verify_service.py";
         //            string scriptDir = Path.Combine(Directory.GetCurrentDirectory(), "PythonAPI");
         //            string token = Environment.GetEnvironmentVariable("VERIFY_TOKEN");
 
         //            if (string.IsNullOrEmpty(token))
         //            {
-        //                ViewBag.Error = "¦øªA¾¹Àô¹ÒÅÜ¼Æ VERIFY_TOKEN ¥¼³]©w¡C";
+        //                ViewBag.Error = "ä¼ºæœå™¨ç’°å¢ƒè®Šæ•¸ VERIFY_TOKEN æœªè¨­å®šã€‚";
         //                return View(new List<ESGProgress>());
         //            }
 
-        //            // 1.ÀË¬d Python API ¬O§_±Ò°Ê
+        //            // 1.æª¢æŸ¥ Python API æ˜¯å¦å•Ÿå‹•
         //            bool apiRunning = IsPortInUse(8000);
 
         //            if (!apiRunning)
         //            {
         //                lock (_lock)
         //                {
-        //                    // ¦pªG©|¥¼±Ò°Ê¡A©Î¤W¦¸ªº Process ¤w¸gÃö³¬
+        //                    // å¦‚æœå°šæœªå•Ÿå‹•ï¼Œæˆ–ä¸Šæ¬¡çš„ Process å·²ç¶“é—œé–‰
         //                    if (_pythonProcess == null || _pythonProcess.HasExited)
         //                    {
         //                        try
@@ -258,57 +258,57 @@ namespace CarbonProject.Controllers
         //                                CreateNoWindow = true
         //                            };
         //                            _pythonProcess = Process.Start(psi);
-        //                            _lastUsedTime = DateTime.Now;
+        //                            _lastUsedTime = DateTime.UtcNow;
         //                        }
         //                        catch (Exception ex)
         //                        {
-        //                            ViewBag.Error = $"±Ò°Ê Python ÅçºâªA°È¥¢±Ñ¡G{ex.Message}";
+        //                            ViewBag.Error = $"å•Ÿå‹• Python é©—ç®—æœå‹™å¤±æ•—ï¼š{ex.Message}";
         //                            return View(new List<ESGProgress>());
         //                        }
         //                    }
         //                }
-        //                // µ¹ Python ´X¬íÄÁ±Ò°Ê®É¶¡
+        //                // çµ¦ Python å¹¾ç§’é˜å•Ÿå‹•æ™‚é–“
         //                await Task.Delay(3000);
         //            }
 
         //            using var http = new HttpClient();
-        //            // «áºİ­t³d¦w¥ş Token
+        //            // å¾Œç«¯è² è²¬å®‰å…¨ Token
         //            http.DefaultRequestHeaders.Add("X-Verify-Token", Environment.GetEnvironmentVariable("VERIFY_TOKEN"));
         //            try
         //            {                   
-        //                // 2.©I¥s Python Åçºâ API
+        //                // 2.å‘¼å« Python é©—ç®— API
         //                var response = await http.GetAsync(apiUrl);
         //                response.EnsureSuccessStatusCode();
 
         //                var json = await response.Content.ReadAsStringAsync();
 
-        //                // ¤Ï§Ç¦C¤Æ±N Json Âà¦¨ C# ª«¥ó ESGProgress ¼Ò«¬
+        //                // ååºåˆ—åŒ–å°‡ Json è½‰æˆ C# ç‰©ä»¶ ESGProgress æ¨¡å‹
         //                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         //                var result = JsonSerializer.Deserialize<List<ESGProgress>>(json, options);
 
-        //                // §ó·s³Ì«á¨Ï¥Î®É¶¡
-        //                _lastUsedTime = DateTime.Now;
+        //                // æ›´æ–°æœ€å¾Œä½¿ç”¨æ™‚é–“
+        //                _lastUsedTime = DateTime.UtcNow;
 
-        //                // ±Ò°Ê­I´º¥ô°È¡AºÊ±±¬O§_¶¢¸m¤Ó¤[¦Û°ÊÃö³¬
+        //                // å•Ÿå‹•èƒŒæ™¯ä»»å‹™ï¼Œç›£æ§æ˜¯å¦é–’ç½®å¤ªä¹…è‡ªå‹•é—œé–‰
         //                _ = Task.Run(() => AutoShutdownPython());
 
         //                return View(result);
         //            }
         //            catch (Exception ex)
         //            {
-        //                // ­Yµo¥Í¿ù»~¡AÅã¥ÜªÅ­¶¨Ã´£¥Ü°T®§
-        //                ViewBag.Error = $"µLªk³s½u¦ÜÅçºâªA°È¡G{ex.Message}";
+        //                // è‹¥ç™¼ç”ŸéŒ¯èª¤ï¼Œé¡¯ç¤ºç©ºé ä¸¦æç¤ºè¨Šæ¯
+        //                ViewBag.Error = $"ç„¡æ³•é€£ç·šè‡³é©—ç®—æœå‹™ï¼š{ex.Message}";
         //                return View(new List<CarbonProject.Models.ESGProgress>());
         //            }
         //        }
-        //        // ¦Û°ÊÃö³¬ Python ¤lµ{§Ç¡]­Y 10 ¤ÀÄÁ¥¼¨Ï¥Î¡^
+        //        // è‡ªå‹•é—œé–‰ Python å­ç¨‹åºï¼ˆè‹¥ 10 åˆ†é˜æœªä½¿ç”¨ï¼‰
         //        private void AutoShutdownPython()
         //        {
         //            lock (_lock)
         //            {
         //                if (_pythonProcess != null && !_pythonProcess.HasExited)
         //                {
-        //                    TimeSpan idle = DateTime.Now - _lastUsedTime;
+        //                    TimeSpan idle = DateTime.UtcNow - _lastUsedTime;
         //                    if (idle.TotalMinutes > 10)
         //                    {
         //                        try
@@ -322,7 +322,7 @@ namespace CarbonProject.Controllers
         //                }
         //            }
         //        }
-        //        // ÀË¬d«ü©w port ¬O§_¤w³Q¥e¥Î (Python API ¬O§_¦b°õ¦æ)
+        //        // æª¢æŸ¥æŒ‡å®š port æ˜¯å¦å·²è¢«å ç”¨ (Python API æ˜¯å¦åœ¨åŸ·è¡Œ)
         //        private bool IsPortInUse(int port)
         //        {
         //            bool inUse = false;
@@ -334,7 +334,7 @@ namespace CarbonProject.Controllers
         //            }
         //            catch (SocketException)
         //            {
-        //                inUse = true; // µLªkºÊÅ¥ ¡÷ ¤w³Q¦û¥Î
+        //                inUse = true; // ç„¡æ³•ç›£è½ â†’ å·²è¢«ä½”ç”¨
         //            }
         //            finally
         //            {

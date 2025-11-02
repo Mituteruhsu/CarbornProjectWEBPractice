@@ -76,7 +76,7 @@ namespace CarbonProject.Services
             try
             {
                 model.CompanyId = companyId;
-                model.CreatedAt = DateTime.Now;
+                model.CreatedAt = DateTime.UtcNow;
                 _context.CompanyEmissions.Add(model);
                 await _context.SaveChangesAsync();
 
@@ -92,7 +92,7 @@ namespace CarbonProject.Services
                     CompanyId = companyId,
                     ActionType = "Create",
                     ActionCategory = "CompanyEmission",
-                    ActionTime = DateTime.Now,
+                    ActionTime = DateTime.UtcNow,
                     Outcome = "Success",
                     IpAddress = ip,
                     UserAgent = ua,
@@ -100,7 +100,7 @@ namespace CarbonProject.Services
                     CorrelationId = Guid.NewGuid(),
                     Details = $"新增排放資料 Year={model.Year}, Quarter={model.Quarter}, Total={model.TotalEmission}",
                     CreatedBy = $"Member {memberId}",
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
 
                 _context.ActivityLogs.Add(log);
@@ -120,11 +120,11 @@ namespace CarbonProject.Services
                     CompanyId = companyId,
                     ActionType = "Create",
                     ActionCategory = "CompanyEmission",
-                    ActionTime = DateTime.Now,
+                    ActionTime = DateTime.UtcNow,
                     Outcome = "Fail",
                     Details = ex.Message,
                     CreatedBy = $"Member {memberId}",
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 _context.ActivityLogs.Add(failLog);
                 await _context.SaveChangesAsync();
@@ -142,7 +142,7 @@ namespace CarbonProject.Services
             try
             {
                 model.CompanyId = companyId;
-                model.CreatedAt = DateTime.Now;
+                model.CreatedAt = DateTime.UtcNow;
                 _context.CompanyEmissionTargets.Add(model);
                 await _context.SaveChangesAsync();
 
@@ -156,7 +156,7 @@ namespace CarbonProject.Services
                     CompanyId = companyId,
                     ActionType = "Create",
                     ActionCategory = "CompanyEmissionTarget",
-                    ActionTime = DateTime.Now,
+                    ActionTime = DateTime.UtcNow,
                     Outcome = "Success",
                     IpAddress = ip,
                     UserAgent = ua,
@@ -164,7 +164,7 @@ namespace CarbonProject.Services
                     CorrelationId = Guid.NewGuid(),
                     Details = $"新增減碳目標 TargetYear={model.TargetYear}, Reduction={model.ReductionPercent}%",
                     CreatedBy = $"Member {memberId}",
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
 
                 _context.ActivityLogs.Add(log);
@@ -183,11 +183,11 @@ namespace CarbonProject.Services
                     CompanyId = companyId,
                     ActionType = "Create",
                     ActionCategory = "CompanyEmissionTarget",
-                    ActionTime = DateTime.Now,
+                    ActionTime = DateTime.UtcNow,
                     Outcome = "Fail",
                     Details = ex.Message,
                     CreatedBy = $"Member {memberId}",
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 _context.ActivityLogs.Add(failLog);
                 await _context.SaveChangesAsync();

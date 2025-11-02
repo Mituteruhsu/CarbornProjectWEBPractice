@@ -1,8 +1,9 @@
 ﻿// 版本2.0
-using System;
 using CarbonProject.Data; // DbContext 命名空間
+using CarbonProject.Repositories;
 using CarbonProject.Services;  // Services 命名空間
 using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,10 @@ builder.Services.AddDbContext<CarbonDbContext>(options =>
 builder.Services.AddScoped<EmissionService>();
 // 註冊 Service From -> Service/ActivityLogService.cs
 builder.Services.AddScoped<ActivityLogService>();
+// 註冊 Service From -> Repositories/CompanyRepository.cs
+builder.Services.AddScoped<CompanyRepository>();
+// 註冊 Service From -> Repositories/HomeIndexRepository.cs
+builder.Services.AddScoped<HomeIndexRepository>();
 
 // 強化 session 與 cookie 設定
 builder.Services.AddDistributedMemoryCache();   // 存放在新空間

@@ -30,8 +30,8 @@ namespace CarbonProject.Controllers
             if (!ModelState.IsValid)
                 return View("~/Views/Dashboard/CreateEmission.cshtml", model);
 
-            model.CreatedAt = DateTime.Now;
-            model.UpdatedAt = DateTime.Now;
+            model.CreatedAt = DateTime.UtcNow;
+            model.UpdatedAt = DateTime.UtcNow;
             _context.CompanyEmissions.Add(model);
             await _context.SaveChangesAsync();
 
@@ -55,8 +55,8 @@ namespace CarbonProject.Controllers
             if (!ModelState.IsValid)
                 return View("~/Views/Dashboard/CreateTarget.cshtml", model);
 
-            model.CreatedAt = DateTime.Now;
-            model.UpdatedAt = DateTime.Now;
+            model.CreatedAt = DateTime.UtcNow;
+            model.UpdatedAt = DateTime.UtcNow;
             _context.CompanyEmissionTargets.Add(model);
             await _context.SaveChangesAsync();
 
@@ -89,7 +89,7 @@ namespace CarbonProject.Controllers
             existing.Scope2Emission = model.Scope2Emission;
             existing.Scope3Emission = model.Scope3Emission;
             existing.TotalEmission = model.TotalEmission;
-            existing.UpdatedAt = DateTime.Now;
+            existing.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             await LogActivity("EditEmission", $"編輯排放量紀錄：公司ID={model.CompanyId}, 年度={model.Year}");
@@ -120,7 +120,7 @@ namespace CarbonProject.Controllers
             existing.TargetEmission = model.TargetEmission;
             existing.ReductionPercent = model.ReductionPercent;
             existing.Description = model.Description;
-            existing.UpdatedAt = DateTime.Now;
+            existing.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             await LogActivity("EditTarget", $"編輯減碳目標：公司ID={model.CompanyId}, 目標年={model.TargetYear}");
@@ -167,12 +167,12 @@ namespace CarbonProject.Controllers
                 CompanyId = 1,
                 ActionType = action,
                 ActionCategory = "Carbon",
-                ActionTime = DateTime.Now,
+                ActionTime = DateTime.UtcNow,
                 Outcome = "Success",
                 Source = "CarbonController",
                 Details = details,
                 CreatedBy = "System",
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
             _context.ActivityLogs.Add(log);
             await _context.SaveChangesAsync();

@@ -1,26 +1,21 @@
-﻿using Microsoft.Data.SqlClient;
-using static CarbonProject.Models.Members;
+﻿using CarbonProject.Helpers;
+using CarbonProject.Models;
+using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
-namespace CarbonProject.Models
+namespace CarbonProject.Repositories
 {
-    public class HomeIndexViewModel
+    public class HomeIndexRepository
     {
-        public int TotalCompanies { get; set; }
-        public int TotalMembers { get; set; }
-        public int ActiveMembers { get; set; }   // 最近 30 天內登入過
-        public int RecentLogins { get; set; }    // 最近 7 天內登入次數
-        public List<Members.ActivityRecord> RecentActivities { get; set; } = new List<Members.ActivityRecord>();    // 活動紀錄列表
+        private readonly string connStr;
 
-
-        private static string connStr;
-
-        public static void Init(IConfiguration configuration)
+        public HomeIndexRepository(IConfiguration configuration)
         {
             connStr = configuration.GetConnectionString("DefaultConnection");
         }
 
         // 取得 Dashboard 數據
-        public static HomeIndexViewModel GetIndexData()
+        public HomeIndexViewModel GetIndexData()
         {
             var model = new HomeIndexViewModel();
 
@@ -45,7 +40,7 @@ namespace CarbonProject.Models
                     SELECT COUNT(DISTINCT MemberId) 
                     FROM ActivityLog 
                     WHERE ActionType = 'Auth.Login.Success' 
-                      AND ActionTime >= DATEADD(DAY, -30, GETDATE())";
+                      AND ActionTime >= DATEADD(DAY, -30, SYSUTCDATETIME())";
                 using (SqlCommand cmd = new SqlCommand(activeSql, conn))
                 {
                     model.ActiveMembers = (int)cmd.ExecuteScalar();
@@ -56,7 +51,7 @@ namespace CarbonProject.Models
                     SELECT COUNT(*) 
                     FROM ActivityLog 
                     WHERE ActionType = 'Auth.Login.Success' 
-                      AND ActionTime >= DATEADD(DAY, -7, GETDATE())";
+                      AND ActionTime >= DATEADD(DAY, -7, SYSUTCDATETIME())";
                 using (SqlCommand cmd = new SqlCommand(recentSql, conn))
                 {
                     model.RecentLogins = (int)cmd.ExecuteScalar();
@@ -95,11 +90,12 @@ namespace CarbonProject.Models
                             actionDisplay = actionType; // 其他原樣顯示
                         }
 
-                        model.RecentActivities.Add(new ActivityRecord
+                        model.RecentActivities.Add(new HomeIndexViewModel.ActivityRecord
                         {
-                            ActionTime = Convert.ToDateTime(reader["ActionTime"]),
-                            Username = reader["Username"]?.ToString() ?? "匿名",
-                            Action = actionDisplay
+                        // Use -> Helpers/TimeHelper.cs
+                        ActionTime = TimeHelper.ToTaipeiTime(Convert.ToDateTime(reader["ActionTime"])), // UTC -> 台北
+                        Username = reader["Username"]?.ToString() ?? "匿名",
+                        Action = actionDisplay
                         });
                     }
                 }
@@ -112,7 +108,7 @@ namespace CarbonProject.Models
         }
 
         // 取得最近 N 天登入統計給 Chart.js
-        public static (List<string> Labels, List<int> Counts) GetRecentLogins(int days = 7)
+        public (List<string> Labels, List<int> Counts) GetRecentLogins(int days = 7)
         {
             var labels = new List<string>();
             var counts = new List<int>();
@@ -123,7 +119,7 @@ namespace CarbonProject.Models
 
                 for (int i = days - 1; i >= 0; i--)
                 {
-                    DateTime date = DateTime.Today.AddDays(-i);
+                    DateTime date = DateTime.UtcNow.Date.AddDays(-i); // UTC
                     string sql = @"
                         SELECT COUNT(*) 
                         FROM ActivityLog 
@@ -133,14 +129,12 @@ namespace CarbonProject.Models
                     {
                         cmd.Parameters.AddWithValue("@Date", date);
                         int count = (int)cmd.ExecuteScalar();
-                        labels.Add(date.ToString("MM/dd"));
+                        labels.Add(TimeHelper.ToTaipeiTime(date).ToString("MM/dd")); // 顯示台北
                         counts.Add(count);
                     }
                 }
-
                 conn.Close();
             }
-
             return (labels, counts);
         }
     }

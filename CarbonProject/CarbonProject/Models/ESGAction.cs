@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+ï»¿using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using BCrypt.Net;
 using System;
@@ -7,22 +7,22 @@ using System.Data;
 
 namespace CarbonProject.Models
 {
-    // ·s¼W Model¡GESG ¦æ°Ê¤è®×
+    // æ–°å¢ Modelï¼šESG è¡Œå‹•æ–¹æ¡ˆ
     public class ESGAction
     {
         public int Id { get; set; }
         public string Title { get; set; } = "";
-        public string Category { get; set; } = "";          // ½d¨Ò: "¯à·½", "¥æ³q", "³]³Æ"
+        public string Category { get; set; } = "";          // ç¯„ä¾‹: "èƒ½æº", "äº¤é€š", "è¨­å‚™"
         public string Description { get; set; } = "";
-        public decimal ExpectedReductionTon { get; set; }   // ¹w´Á´îºÒ¶q (¾·/¦~)
+        public decimal ExpectedReductionTon { get; set; }   // é æœŸæ¸›ç¢³é‡ (å™¸/å¹´)
         public decimal ProgressPercent { get; set; }        // 0~100
         public string OwnerDepartment { get; set; } = "";
-        public int Year { get; set; }                       // ©ÒÄİ¦~«×
+        public int Year { get; set; }                       // æ‰€å±¬å¹´åº¦
         public bool IsCompleted => ProgressPercent >= 100;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
     }
-    // ¥Î©ó Index View ªº ViewModel
+    // ç”¨æ–¼ Index View çš„ ViewModel
     public class ActionsViewModel
     {
         public List<ESGAction> Actions { get; set; } = new List<ESGAction>();
@@ -30,17 +30,17 @@ namespace CarbonProject.Models
         public int SelectedYear { get; set; }
         public string SelectedCategory { get; set; } = "";
     }
-    // ­×§ï Repository¡A³s½u DB¡C
+    // ä¿®æ”¹ Repositoryï¼Œé€£ç·š DBã€‚
     public static class ActionsRepository
     {
-        // ³s½u¦r¦ê±q appsettings.json ¨ú±o
+        // é€£ç·šå­—ä¸²å¾ appsettings.json å–å¾—
         private static string connStr;
         public static void Init(IConfiguration configuration)
         {
             connStr = configuration.GetConnectionString("DefaultConnection");
         }
 
-        // ¨ú±o©Ò¦³ ESGAction
+        // å–å¾—æ‰€æœ‰ ESGAction
         public static List<ESGAction> GetAll()
         {
             var list = new List<ESGAction>();
@@ -62,12 +62,12 @@ namespace CarbonProject.Models
             }
             catch
             {
-                // ¨Ò¥~¥Ñ Controller log
+                // ä¾‹å¤–ç”± Controller log
             }
             return list;
         }
 
-        // ¨Ì¦~¥÷¨ú±o
+        // ä¾å¹´ä»½å–å¾—
         public static List<ESGAction> GetByYear(int year)
         {
             var list = new List<ESGAction>();
@@ -92,7 +92,7 @@ namespace CarbonProject.Models
             return list;
         }
 
-        // ¨ÌÃş§O¨ú±o
+        // ä¾é¡åˆ¥å–å¾—
         public static List<ESGAction> GetByCategory(string category)
         {
             var list = new List<ESGAction>();
@@ -117,7 +117,7 @@ namespace CarbonProject.Models
             return list;
         }
 
-        // ¨Ì Id ¨ú±o
+        // ä¾ Id å–å¾—
         public static ESGAction? GetById(int id)
         {
             ESGAction? action = null;
@@ -142,7 +142,7 @@ namespace CarbonProject.Models
             return action;
         }
 
-        // ·s¼W¦æ°Ê¤è®×
+        // æ–°å¢è¡Œå‹•æ–¹æ¡ˆ
         public static bool Add(ESGAction action)
         {
             try
@@ -152,7 +152,7 @@ namespace CarbonProject.Models
                     conn.Open();
                     string sql = @"INSERT INTO ESGActions
                                    (Title, Category, Description, ExpectedReductionTon, ProgressPercent, OwnerDepartment, Year, CreatedAt)
-                                   VALUES (@Title, @Category, @Description, @ExpectedReductionTon, @ProgressPercent, @OwnerDepartment, @Year, GETDATE())";
+                                   VALUES (@Title, @Category, @Description, @ExpectedReductionTon, @ProgressPercent, @OwnerDepartment, @Year, SYSUTCDATETIME())";
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.Add("@Title", SqlDbType.NVarChar, 200).Value = action.Title;
@@ -172,7 +172,7 @@ namespace CarbonProject.Models
             }
         }
 
-        // §ó·s
+        // æ›´æ–°
         public static bool Update(ESGAction action)
         {
             try
@@ -183,7 +183,7 @@ namespace CarbonProject.Models
                     string sql = @"UPDATE ESGActions SET 
                                    Title=@Title, Category=@Category, Description=@Description, 
                                    ExpectedReductionTon=@ExpectedReductionTon, ProgressPercent=@ProgressPercent, 
-                                   OwnerDepartment=@OwnerDepartment, Year=@Year, UpdatedAt=GETDATE()
+                                   OwnerDepartment=@OwnerDepartment, Year=@Year, UpdatedAt=SYSUTCDATETIME()
                                    WHERE Id=@Id";
                     using (var cmd = new SqlCommand(sql, conn))
                     {
@@ -205,7 +205,7 @@ namespace CarbonProject.Models
             }
         }
 
-        // §R°£
+        // åˆªé™¤
         public static bool Delete(int id)
         {
             try
@@ -227,7 +227,7 @@ namespace CarbonProject.Models
             }
         }
 
-        // ¨ú±o©Ò¦³Ãş§O
+        // å–å¾—æ‰€æœ‰é¡åˆ¥
         public static List<string> GetCategories()
         {
             var list = new List<string>();
@@ -251,7 +251,7 @@ namespace CarbonProject.Models
             return list;
         }
 
-        // ¨ú±o©Ò¦³¦~¥÷
+        // å–å¾—æ‰€æœ‰å¹´ä»½
         public static List<int> GetYears()
         {
             var list = new List<int>();
@@ -273,7 +273,7 @@ namespace CarbonProject.Models
             return list;
         }
 
-        // Åª¨ú SqlDataReader
+        // è®€å– SqlDataReader
         private static ESGAction ReadAction(SqlDataReader reader)
         {
             return new ESGAction

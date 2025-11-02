@@ -41,7 +41,7 @@ namespace CarbonProject.Services
 
             // 自動生成 CorrelationId（每個請求唯一）
             // var correlationId = _httpContextAccessor.HttpContext?.TraceIdentifier ?? Guid.NewGuid().ToString();
-            
+
             // 嘗試用 TraceIdentifier 轉 GUID，如果失敗就生成新的 GUID
             Guid correlationId;
             if (!Guid.TryParse(_httpContextAccessor.HttpContext?.TraceIdentifier, out correlationId))
@@ -77,8 +77,8 @@ namespace CarbonProject.Services
                 CorrelationId = correlationId,
                 Details = detailsJson,
                 CreatedBy = createdBy,
-                ActionTime = DateTime.Now,
-                CreatedAt = DateTime.Now
+                ActionTime = DateTime.UtcNow, // 存 UTC
+                CreatedAt = DateTime.UtcNow, // 存 UTC
             };
 
             _context.ActivityLogs.Add(log);
