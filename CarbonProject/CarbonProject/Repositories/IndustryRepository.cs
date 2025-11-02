@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CarbonProject.Helpers;
+using CarbonProject.Models;
 using Microsoft.Data.SqlClient;
-using System.Linq;
+using System.Diagnostics;
 
-namespace CarbonProject.Models
+namespace CarbonProject.Repositories
 {
-    public class Industry
+    public class IndustryRepository
     {
-        public string Industry_Id { get; set; }
-        public string Major_Category_Code { get; set; }
-        public string Major_Category_Name { get; set; }
-        public string Middle_Category_Code { get; set; }
-        public string Middle_Category_Name { get; set; }
+        private readonly string connStr;
 
-        // 連線字串從 appsettings.json 取得
-        private static string connStr;
-
-        public static void Init(IConfiguration configuration)
+        public IndustryRepository(IConfiguration configuration)
         {
             connStr = configuration.GetConnectionString("DefaultConnection");
         }
-
         // 取得所有產業清單
-        public static List<Industry> GetAll()
+        public List<IndustryViewModel> GetAll()
         {
-            var list = new List<Industry>();
+            var list = new List<IndustryViewModel>();
 
             using (var conn = new SqlConnection(connStr))
             {
@@ -38,7 +30,7 @@ namespace CarbonProject.Models
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    list.Add(new Industry
+                    list.Add(new IndustryViewModel
                     {
                         Industry_Id = reader["Industry_Id"].ToString(),
                         Major_Category_Code = reader["Major_Category_Code"].ToString(),
@@ -53,7 +45,7 @@ namespace CarbonProject.Models
         }
 
         // 依大類分組，供前端顯示
-        public static IEnumerable<object> GetGrouped()
+        public IEnumerable<object> GetGrouped()
         {
             var industries = GetAll();
 
@@ -73,13 +65,13 @@ namespace CarbonProject.Models
         }
 
         // 取得單一產業
-        public static Industry GetById(string id)
+        public IndustryViewModel GetById(string id)
         {
             return GetAll().FirstOrDefault(i => i.Industry_Id == id);
         }
 
         // (預留) 新增產業
-        public static bool AddIndustry(Industry model)
+        public bool AddIndustry(IndustryViewModel model)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -99,7 +91,7 @@ namespace CarbonProject.Models
         }
 
         // (預留) 更新產業
-        public static bool UpdateIndustry(Industry model)
+        public bool UpdateIndustry(IndustryViewModel model)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -122,7 +114,7 @@ namespace CarbonProject.Models
         }
 
         // (預留) 刪除產業
-        public static bool DeleteIndustry(string id)
+        public bool DeleteIndustry(string id)
         {
             using (var conn = new SqlConnection(connStr))
             {

@@ -11,16 +11,26 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using CarbonProject.Repositories; // <- 新增
 
 namespace CarbonProject.Controllers
 {
-    public class Actions : Controller
+    public class ActionsController : Controller
     {
+        private readonly ESGActionRepository _ESGRepo;
+
+        // 建構式注入 Repository
+        // From -> Repositories/ESGActionRepository.cs
+        public ActionsController(ESGActionRepository ESGRepo)
+        {
+            _ESGRepo = ESGRepo;
+        }
+
         // 列表 + 篩選
         public IActionResult Index(int year = -1, string category = "")
         {
-            var all = ActionsRepository.GetAll();
-            var years = ActionsRepository.GetYears();
+            var all = _ESGRepo.GetAll();
+            var years = _ESGRepo.GetYears();
 
             // 篩選預設：若未指定年份，選擇最新一年
             // 只有在沒有年份且沒有類別篩選時才預設最新年份
@@ -39,18 +49,21 @@ namespace CarbonProject.Controllers
             var vm = new ActionsViewModel
             {
                 Actions = filtered,
-                Categories = ActionsRepository.GetCategories(),
+                Categories = _ESGRepo.GetCategories(),
                 SelectedYear = year,          // -1 不會傳到 View，0 表示全部年度
                 SelectedCategory = category ?? ""
             };
 
+            // **把年份也傳到 View**
+            ViewBag.Years = years;
+            
             return View(vm);
         }
 
         // Details
         public IActionResult Details(int id)
         {
-            var item = ActionsRepository.GetById(id);
+            var item = _ESGRepo.GetById(id);
             if (item == null) return NotFound();
             return View(item);
         }
@@ -64,7 +77,7 @@ namespace CarbonProject.Controllers
         // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([FromForm] ESGAction action)    // 加上 [FromForm] 明確指定來源
+        public IActionResult Create([FromForm] ESGActionViewModel action)    // 加上 [FromForm] 明確指定來源
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +90,7 @@ namespace CarbonProject.Controllers
             action.OwnerDepartment = action.OwnerDepartment?.Trim() ?? "";
 
             // 寫入 DB
-            bool ok = ActionsRepository.Add(action);
+            bool ok = _ESGRepo.Add(action);
             if (ok)
             {
                 TempData["Alert"] = "行動方案新增成功";
@@ -93,7 +106,7 @@ namespace CarbonProject.Controllers
         // GET: Edit
         public IActionResult Edit(int id)
         {
-            var item = ActionsRepository.GetById(id);
+            var item = _ESGRepo.GetById(id);
             if (item == null) return NotFound();
             return View(item);
         }
@@ -101,13 +114,13 @@ namespace CarbonProject.Controllers
         // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromForm] ESGAction action)  // 加上 [FromForm] 明確指定來源
+        public IActionResult Edit([FromForm] ESGActionViewModel action)  // 加上 [FromForm] 明確指定來源
         {
             if (!ModelState.IsValid)
             {
                 return View(action);
             }
-            var ok = ActionsRepository.Update(action);
+            var ok = _ESGRepo.Update(action);
             if (!ok) TempData["Alert"] = "更新失敗";
             else TempData["Alert"] = "更新成功";
 
@@ -119,7 +132,7 @@ namespace CarbonProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            var ok = ActionsRepository.Delete(id);
+            var ok = _ESGRepo.Delete(id);
             TempData["Alert"] = ok ? "刪除成功" : "刪除失敗";
             return RedirectToAction(nameof(Index));
         }
@@ -130,7 +143,7 @@ namespace CarbonProject.Controllers
         public IActionResult DownloadReport(int year = 0, string category = "")
         {
             // 取得資料（和 Index 篩選一致）
-            var all = ActionsRepository.GetAll();
+            var all = _ESGRepo.GetAll();
 
             var filtered = all
                     .Where(a => (year == 0 || a.Year == year) &&

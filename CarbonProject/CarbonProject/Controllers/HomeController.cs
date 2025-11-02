@@ -14,12 +14,14 @@ namespace CarbonProject.Controllers
         private readonly IConfiguration _config;
         private readonly ActivityLogService _activityLog;
         private readonly HomeIndexRepository _homeRepo;
-        public HomeController(ILogger<HomeController> logger, IConfiguration config, ActivityLogService activityLog, HomeIndexRepository homeRepo)
+        private readonly MembersRepository _membersRepo;
+        public HomeController(ILogger<HomeController> logger, IConfiguration config, ActivityLogService activityLog, HomeIndexRepository homeRepo, MembersRepository membersRepo)
         {
             _logger = logger;
             _config = config;
             _activityLog = activityLog;
             _homeRepo = homeRepo;
+            _membersRepo = membersRepo;
         }
 
         // 在 Index 記錄瀏覽首頁事件
@@ -28,6 +30,8 @@ namespace CarbonProject.Controllers
         public async Task<IActionResult> Index()
         {
             var model = _homeRepo.GetIndexData();
+            //  MembersRepository 的 RecentActivities
+            model.RecentActivities = _membersRepo.GetRecentActivities(20);
 
             // 取得 nullable MemberId 和 CompanyId
             int? memberId = HttpContext.Session.GetInt32("MemberId");

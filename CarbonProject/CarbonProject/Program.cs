@@ -29,14 +29,21 @@ builder.Services.AddHttpContextAccessor();
 // 註冊 DbContext From -> Data/CarbonDbContext.cs
 builder.Services.AddDbContext<CarbonDbContext>(options =>
     options.UseSqlServer(rawConnStr));
-// 註冊 Service From -> Service/EmissionService.cs
+
+// 註冊 Service
+// 方法          意義                             生命週期
+// AddTransient  每次使用都產生新物件             短暫，request 內每次注入都是新物件
+// AddScoped     每個 HTTP Request                都共用同一個物件	Request 內共用，下一個 Request 會重建
+// AddSingleton  整個應用程式都共用同一個物件     生命週期最長，直到 App 關閉
+// 註冊 Service From -> Service/.
 builder.Services.AddScoped<EmissionService>();
-// 註冊 Service From -> Service/ActivityLogService.cs
 builder.Services.AddScoped<ActivityLogService>();
-// 註冊 Service From -> Repositories/CompanyRepository.cs
+// 註冊 Service From -> Repositories/.
+builder.Services.AddScoped<MembersRepository>();
 builder.Services.AddScoped<CompanyRepository>();
-// 註冊 Service From -> Repositories/HomeIndexRepository.cs
 builder.Services.AddScoped<HomeIndexRepository>();
+builder.Services.AddScoped<ESGActionRepository>();
+builder.Services.AddScoped<IndustryRepository>();
 
 // 強化 session 與 cookie 設定
 builder.Services.AddDistributedMemoryCache();   // 存放在新空間
@@ -51,9 +58,8 @@ builder.Services.AddSession(options =>
 });
 
 // === 初始化資料庫 ===
-// builder.Configuration 內已經是替換後的連線字串
-CarbonProject.Models.Members.Init(builder.Configuration);           // 初始化 Members 連線字串
-CarbonProject.Models.ActionsRepository.Init(builder.Configuration); // 初始化 ActionsRepository 連線字串
+// builder.Configuration 內已經是替換後的連線字串，因為將連線方式改為非 static 改為註冊 Services - Repositories
+//CarbonProject.Models.MembersViewModel.Init(builder.Configuration);           // 初始化 Members 連線字串
 
 // === 啟用 app ===
 var app = builder.Build();

@@ -1,9 +1,12 @@
+﻿using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
+using BCrypt.Net;
 using System;
 using System.Collections.Generic;
 using System.Data;
 
 namespace CarbonProject.Models
-{
+{    
     public class ESGProgress
     {
         public int Year { get; set; }

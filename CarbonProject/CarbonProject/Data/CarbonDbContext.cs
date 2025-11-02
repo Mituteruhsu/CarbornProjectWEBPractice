@@ -1,5 +1,4 @@
-﻿using CarbonProject.Models;
-using CarbonProject.Models.EFModels;
+﻿using CarbonProject.Models.EFModels;
 using Microsoft.EntityFrameworkCore;
 //EF Core
 //[ SQL Server 資料庫 ]

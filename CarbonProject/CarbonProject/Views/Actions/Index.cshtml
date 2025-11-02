@@ -16,7 +16,7 @@
         <form method="get" asp-action="Index" class="d-flex">
             <select class="form-select me-2" name="year" onchange="this.form.submit()">
                 <option value="0" @@(Model.SelectedYear == 0 ? "selected" : "")>全部年度</option>
-                @foreach (var year in CarbonProject.Models.ActionsRepository.GetYears())
+                @foreach (var year in ViewBag.Years as List<int>)
                 {
                     @if (year == Model.SelectedYear)
                     {

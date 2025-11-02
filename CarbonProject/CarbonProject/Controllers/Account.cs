@@ -18,9 +18,11 @@ namespace CarbonProject.Controllers
         private IWebHostEnvironment Environment;
         private readonly ILogger<Account> _logger;
         private readonly IConfiguration _config;
+        private readonly MembersRepository _membersRepository;
         private readonly ActivityLogService _activityLog;
         private readonly CompanyRepository _companyRepository;
-        public Account(IWebHostEnvironment _environment, ILogger<Account> logger, IConfiguration config, ActivityLogService activityLog, CompanyRepository companyRepository)
+        private readonly IndustryRepository _industryRepository;
+        public Account(IWebHostEnvironment _environment, ILogger<Account> logger, IConfiguration config, MembersRepository membersRepository, ActivityLogService activityLog, CompanyRepository companyRepository, IndustryRepository industryRepository)
         {
             // 非 static 用法，需要在Program.cs 註冊，建議使用較不會
             Environment = _environment;
@@ -28,10 +30,8 @@ namespace CarbonProject.Controllers
             _config = config;
             _activityLog = activityLog;
             _companyRepository = companyRepository;
-
-            // static 用法，不須註冊方便呼叫
-            Members.Init(config);       // 初始化 Members DB 連線字串
-            Industry.Init(config);      // 初始化 Industry DB 連線字串
+            _industryRepository = industryRepository;
+            _membersRepository = membersRepository;
         }
         //===============登入===============
         // Include ActivityLogService
@@ -61,7 +61,7 @@ namespace CarbonProject.Controllers
             }
 
             // 驗證帳號密碼
-            var member = Members.CheckLogin(UID, password);
+            var member = _membersRepository.CheckLogin(UID, password);
             if (member != null)
             {
                 // 如果帳號已被鎖定
@@ -71,7 +71,7 @@ namespace CarbonProject.Controllers
                     return View("Login");
                 }
                 // 登入成功：更新最後登入時間、重置錯誤次數
-                Members.UpdateLastLoginAt(member.MemberId);
+                _membersRepository.UpdateLastLoginAt(member.MemberId);
 
                 // 寫入登入成功 EF Core 紀錄
                 // From -> Service/ActivityLogService.cs
@@ -104,7 +104,7 @@ namespace CarbonProject.Controllers
             else
             {
                 // 登入失敗：增加錯誤次數
-                Members.IncrementFailedLogin(UID);
+                _membersRepository.IncrementFailedLogin(UID);
 
                 // 寫入登入失敗 EF Core 紀錄
                 // From -> Service/ActivityLogService.cs
@@ -132,10 +132,10 @@ namespace CarbonProject.Controllers
             var username = HttpContext.Session.GetString("Username");
             if (!string.IsNullOrEmpty(username))
             {
-                int memberId = Members.GetMemberIdByUsername(username);
+                int memberId = _membersRepository.GetMemberIdByUsername(username);
                 if (memberId > 0)
                 {
-                    Members.UpdateLastLogoutAt(memberId);
+                    _membersRepository.UpdateLastLogoutAt(memberId);
 
                     // 登出 EF Core 紀錄
                     // From -> Service/ActivityLogService.cs
@@ -201,7 +201,7 @@ namespace CarbonProject.Controllers
             }
 
             // 3. 建立會員物件
-            var member = new Members
+            var member = new MembersViewModel
             {
                 Username = username,
                 Email = email,
@@ -212,7 +212,7 @@ namespace CarbonProject.Controllers
             };
 
             // 4. 寫入資料表
-            int newMemberId = Members.AddMember(member);
+            int newMemberId = _membersRepository.AddMember(member);
             if (newMemberId == -1)
             {
                 ViewBag.Error = "帳號或Email已存在";
@@ -306,7 +306,7 @@ namespace CarbonProject.Controllers
         [HttpGet]
         public IActionResult GetIndustries()
         {
-            var grouped = Industry.GetGrouped();
+            var grouped = _industryRepository.GetGrouped();
             return Json(grouped);
         }
         [HttpGet]
@@ -345,7 +345,7 @@ namespace CarbonProject.Controllers
                 return RedirectToAction("Login");
             }
 
-            var members = Members.GetAllMembers();
+            var members = _membersRepository.GetAllMembers();
             return View(members);
         }
 
@@ -364,7 +364,7 @@ namespace CarbonProject.Controllers
                 return RedirectToAction("Login");
             }
 
-            bool success = Members.DeleteMember(id);
+            bool success = _membersRepository.DeleteMember(id);
             // 刪除會員寫入 ActivityLog
             await _activityLog.LogAsync(
                 memberId: null,
@@ -396,7 +396,7 @@ namespace CarbonProject.Controllers
                 return RedirectToAction("Login");
             }
 
-            bool success = Members.UpdateMember(id, username, email, fullname);
+            bool success = _membersRepository.UpdateMember(id, username, email, fullname);
             // 編輯會員寫入 ActivityLog
             await _activityLog.LogAsync(
                 memberId: id,

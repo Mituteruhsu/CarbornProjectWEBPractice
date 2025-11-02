@@ -1,42 +1,21 @@
-﻿using BCrypt.Net;
-using Microsoft.Data.SqlClient;
-using CarbonProject.Helpers;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using CarbonProject.Helpers;
 using CarbonProject.Models;
+using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
-// 從上方工具->NuGet套件管理員->管理方案的 NuGet 套件->瀏覽輸入後點選安裝(需選擇專案)
-// 需安裝 MySql.Data
-// 需安裝 BCrypt.Net-Next
-// 需安裝 Microsoft.Data.SqlClient
-
-
-namespace CarbonProject.Models
+namespace CarbonProject.Repositories
 {
-    public class Members
+    public class MembersRepository
     {
-        public int MemberId { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public string FullName { get; set; }
-        public int CompanyId { get; set; }
-        public string Role { get; set; } // Admin / Viewer / Company
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public bool IsActive { get; set; }
-
         // 連線字串從 appsettings.json 取得
-        private static string connStr;
+        private readonly string connStr;
 
-        public static void Init(IConfiguration configuration)
+        public MembersRepository(IConfiguration configuration)
         {
             connStr = configuration.GetConnectionString("DefaultConnection");
         }
         // 新增會員
-        public static int AddMember(Members member)
+        public int AddMember(MembersViewModel member)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -82,7 +61,7 @@ namespace CarbonProject.Models
         }
 
         // 登入驗證
-        public static Members? CheckLogin(string usernameOrEmail, string password)
+        public MembersViewModel? CheckLogin(string usernameOrEmail, string password)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -116,7 +95,7 @@ namespace CarbonProject.Models
                             if (failedAttempts >= 5)
                             {
                                 // 帳號被鎖定，不進行密碼驗證
-                                return new Members
+                                return new MembersViewModel
                                 {
                                     MemberId = Convert.ToInt32(reader["MemberId"]),
                                     Username = reader["Username"].ToString(),
@@ -129,7 +108,7 @@ namespace CarbonProject.Models
                             // 驗證密碼
                             if (BCrypt.Net.BCrypt.Verify(password, hash))
                             {
-                                return new Members
+                                return new MembersViewModel
                                 {
                                     MemberId = memberId,
                                     Username = reader["Username"].ToString(),
@@ -148,7 +127,7 @@ namespace CarbonProject.Models
         }
 
         // 更新最後登入時間
-        public static void UpdateLastLoginAt(int memberId)
+        public void UpdateLastLoginAt(int memberId)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -169,7 +148,7 @@ namespace CarbonProject.Models
         }
 
         // 登入失敗時遞增 FailedLoginAttempts + 更新失敗時間
-        public static void IncrementFailedLogin(string usernameOrEmail)
+        public void IncrementFailedLogin(string usernameOrEmail)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -188,7 +167,7 @@ namespace CarbonProject.Models
             }
         }
         // 登入成功後重設失敗次數
-        public static void ResetFailedLogin(int memberId)
+        public void ResetFailedLogin(int memberId)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -206,7 +185,7 @@ namespace CarbonProject.Models
         }
 
         // 更新最後登出時間
-        public static void UpdateLastLogoutAt(int memberId)
+        public void UpdateLastLogoutAt(int memberId)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -223,7 +202,7 @@ namespace CarbonProject.Models
         }
 
         // 會員名取得會員ID
-        public static int GetMemberIdByUsername(string username)
+        public int GetMemberIdByUsername(string username)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -239,9 +218,9 @@ namespace CarbonProject.Models
         }
 
         // 取得所有會員
-        public static List<Members> GetAllMembers()
+        public List<MembersViewModel> GetAllMembers()
         {
-            var list = new List<Members>();
+            var list = new List<MembersViewModel>();
             using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
@@ -251,7 +230,7 @@ namespace CarbonProject.Models
                 {
                     while (reader.Read())
                     {
-                        list.Add(new Members
+                        list.Add(new MembersViewModel
                         {
                             MemberId = (int)reader["MemberId"],
                             Username = reader["Username"].ToString(),
@@ -269,7 +248,7 @@ namespace CarbonProject.Models
             return list;
         }
         // 刪除會員 by id
-        public static bool DeleteMember(int id)
+        public bool DeleteMember(int id)
         {
 
             using (var conn = new SqlConnection(connStr))
@@ -286,7 +265,7 @@ namespace CarbonProject.Models
             }
         }
         // 更新會員資料
-        public static bool UpdateMember(int id, string username, string email, string fullname)
+        public bool UpdateMember(int id, string username, string email, string fullname)
         {
             using (var conn = new SqlConnection(connStr))
             {
@@ -305,10 +284,9 @@ namespace CarbonProject.Models
                 }
             }
         }
-        // 取得最近 N 筆活動紀錄
-        
 
-        public static List<HomeIndexViewModel.ActivityRecord> GetRecentActivities(int top = 20)
+        // 取得最近 N 筆活動紀錄
+        public List<HomeIndexViewModel.ActivityRecord> GetRecentActivities(int top = 20)
         {
             var list = new List<HomeIndexViewModel.ActivityRecord>();
             using (var conn = new SqlConnection(connStr))
@@ -316,12 +294,12 @@ namespace CarbonProject.Models
                 conn.Open();
                 // 抓取最近20筆資料
                 string sql = @"
-                    SELECT TOP (@Top)
-                        al.ActionTime,
-                        al.ActionType,
-                        al.CreatedBy
-                    FROM ActivityLog al
-                    ORDER BY al.ActionTime DESC";
+                            SELECT TOP (@Top)
+                                al.ActionTime,
+                                al.ActionType,
+                                al.CreatedBy
+                            FROM ActivityLog al
+                            ORDER BY al.ActionTime DESC";
 
                 using (var cmd = new SqlCommand(sql, conn))
                 {
