@@ -8,10 +8,11 @@ namespace CarbonProject.Repositories
     public class HomeIndexRepository
     {
         private readonly string connStr;
-
-        public HomeIndexRepository(IConfiguration configuration)
+        private readonly ActivityLogRepository _activityLogRepository;
+        public HomeIndexRepository(IConfiguration configuration, ActivityLogRepository activityLogRepository)
         {
             connStr = configuration.GetConnectionString("DefaultConnection");
+            _activityLogRepository = activityLogRepository;
         }
 
         // 取得 Dashboard 數據
@@ -56,53 +57,11 @@ namespace CarbonProject.Repositories
                 {
                     model.RecentLogins = (int)cmd.ExecuteScalar();
                 }
-
-                // 5. 最近 20 筆活動紀錄
-                string recentActSql = @"
-                    SELECT TOP 20 al.ActionTime, u.Username, al.ActionType
-                    FROM ActivityLog al
-                    LEFT JOIN Users u ON al.MemberId = u.MemberId
-                    ORDER BY al.ActionTime DESC";
-
-                using (SqlCommand cmd = new SqlCommand(recentActSql, conn))
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        string actionType = reader["ActionType"].ToString();
-
-                        // 轉換為可讀文字 (if/else)
-                        string actionDisplay;
-                        if (actionType == "Auth.Login.Success")
-                        {
-                            actionDisplay = "登入系統";
-                        }
-                        else if (actionType == "Auth.Login.Failed")
-                        {
-                            actionDisplay = "登入失敗";
-                        }
-                        else if (actionType == "Auth.Logout")
-                        {
-                            actionDisplay = "登出系統";
-                        }
-                        else
-                        {
-                            actionDisplay = actionType; // 其他原樣顯示
-                        }
-
-                        model.RecentActivities.Add(new HomeIndexViewModel.ActivityRecord
-                        {
-                        // Use -> Helpers/TimeHelper.cs
-                        ActionTime = TimeHelper.ToTaipeiTime(Convert.ToDateTime(reader["ActionTime"])), // UTC -> 台北
-                        Username = reader["Username"]?.ToString() ?? "匿名",
-                        Action = actionDisplay
-                        });
-                    }
-                }
-
                 conn.Close();
-                return model;
             }
+            // 5. 最近 20 筆活動紀錄
+            //From -> Repositories/ActivityLogRepository.cs
+            model.RecentActivities = _activityLogRepository.GetRecentActivities(20);
 
             return model;
         }

@@ -44,6 +44,7 @@ builder.Services.AddScoped<CompanyRepository>();
 builder.Services.AddScoped<HomeIndexRepository>();
 builder.Services.AddScoped<ESGActionRepository>();
 builder.Services.AddScoped<IndustryRepository>();
+builder.Services.AddScoped<ActivityLogRepository>();
 
 // 強化 session 與 cookie 設定
 builder.Services.AddDistributedMemoryCache();   // 存放在新空間

@@ -30,8 +30,6 @@ namespace CarbonProject.Controllers
         public async Task<IActionResult> Index()
         {
             var model = _homeRepo.GetIndexData();
-            //  MembersRepository 的 RecentActivities
-            model.RecentActivities = _membersRepo.GetRecentActivities(20);
 
             // 取得 nullable MemberId 和 CompanyId
             int? memberId = HttpContext.Session.GetInt32("MemberId");
