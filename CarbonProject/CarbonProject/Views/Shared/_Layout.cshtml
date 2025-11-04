@@ -34,6 +34,16 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav mx-auto">
+                        @* 如果是 Admin 登入，顯示管理入口 *@
+                        @if (isLogin && role == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-bold" asp-controller="Account" asp-action="Admin_read">會員管理</a>
+                            </li>
+                            @* <li class="nav-item">
+                                <a class="nav-link text-dark fw-bold" asp-controller="ActivityLog" asp-action="Index">活動日誌</a>
+                            </li> *@
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>

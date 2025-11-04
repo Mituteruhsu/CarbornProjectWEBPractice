@@ -30,9 +30,9 @@
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#47894b">
     
     <script src="../assets/js/color-modes.js"></script>
-    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/css/dashboard.css" rel="stylesheet" />
-    <link href="~/css/dashboard.rtl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <link rel="stylesheet" href="~/css/dashboard.rtl.css" />
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -541,9 +541,9 @@
         </div>
     </footer>
     <script src="~/assets/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" asp-append-version="true"></script>
     <script src="~/js/dashboard.js" asp-append-version="true"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
