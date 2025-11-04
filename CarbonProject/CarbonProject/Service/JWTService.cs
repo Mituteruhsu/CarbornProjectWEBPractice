@@ -68,6 +68,7 @@ namespace CarbonProject.Services
                 signingCredentials: creds
             );
 
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
