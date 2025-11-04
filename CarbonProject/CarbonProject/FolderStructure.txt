@@ -1,0 +1,156 @@
+列出資料夾 PATH
+磁碟區序號為 3E3F-C5E3
+C:.
++---.config
+|   |       +---cs
+|   |       +---de
+|   |       +---es
+|   |       +---fr
+|   |       +---it
+|   |       +---ja
+|   |       +---ko
+|   |       +---pl
+|   |       +---pt-BR
+|   |       +---ru
+|   |       |   +---browser
+|   |       |   |   \---lib
+|   |       |   +---unix
+|   |       |   |   \---lib
+|   |       |   +---win
+|   |       |   |   \---lib
+|   |       |   +---win-arm64
+|   |       |   |   \---native
+|   |       |   +---win-x64
+|   |       |   |   \---native
+|   |       |   \---win-x86
+|   |       |       \---native
+|   |       +---tr
+|   |       +---zh-Hans
+|   |       \---zh-Hant
+|           +---cs
+|           +---de
+|           +---es
+|           +---fr
+|           +---it
+|           +---ja
+|           +---ko
+|           +---pl
+|           +---pt-BR
+|           +---ru
+|           |   +---browser
+|           |   |   \---lib
+|           |   +---unix
+|           |   |   \---lib
+|           |   +---win
+|           |   |   \---lib
+|           |   +---win-arm64
+|           |   |   \---native
+|           |   +---win-x64
+|           |   |   \---native
+|           |   \---win-x86
+|           |       \---native
+|           +---tr
+|           +---zh-Hans
+|           \---zh-Hant
++---Controllers
++---Data
++---Helpers
++---Models
+|   \---EFModels
+|   |       +---ref
+|   |       +---refint
+|   |       +---scopedcss
+|   |       |   +---bundle
+|   |       |   +---projectbundle
+|   |       |   \---Views
+|   |       |       \---Shared
+|   |       \---staticwebassets
+|           |   \---Out
+|           |       +---cs
+|           |       +---de
+|           |       +---es
+|           |       +---fr
+|           |       +---it
+|           |       +---ja
+|           |       +---ko
+|           |       +---pl
+|           |       +---pt-BR
+|           |       +---ru
+|           |       |   +---browser
+|           |       |   |   \---lib
+|           |       |   +---unix
+|           |       |   |   \---lib
+|           |       |   +---win
+|           |       |   |   \---lib
+|           |       |   +---win-arm64
+|           |       |   |   \---native
+|           |       |   +---win-x64
+|           |       |   |   \---native
+|           |       |   \---win-x86
+|           |       |       \---native
+|           |       +---tr
+|           |       +---wwwroot
+|           |       |   +---assets
+|           |       |   |   +---brand
+|           |       |   |   +---dist
+|           |       |   |   |   +---css
+|           |       |   |   |   \---js
+|           |       |   |   \---js
+|           |       |   +---css
+|           |       |   +---data
+|           |       |   +---img
+|           |       |   +---js
+|           |       |   \---lib
+|           |       |       +---bootstrap
+|           |       |       |   \---dist
+|           |       |       |       +---css
+|           |       |       |       \---js
+|           |       |       +---jquery
+|           |       |       |   \---dist
+|           |       |       +---jquery-validation
+|           |       |       |   \---dist
+|           |       |       \---jquery-validation-unobtrusive
+|           |       +---zh-Hans
+|           |       \---zh-Hant
+|           +---ref
+|           +---refint
+|           +---scopedcss
+|           |   +---bundle
+|           |   +---projectbundle
+|           |   \---Views
+|           |       \---Shared
+|           \---staticwebassets
++---Properties
+|   +---PublishProfiles
+|   \---ServiceDependencies
+|       \---CarbonProject20251022101453 - Web Deploy
++---Repositories
++---Service
++---Views
+|   +---Account
+|   +---Actions
+|   +---Cef
+|   +---Dashboard
+|   +---Home
+|   \---Shared
+\---wwwroot
+    +---assets
+    |   +---brand
+    |   +---dist
+    |   |   +---css
+    |   |   \---js
+    |   \---js
+    +---css
+    +---data
+    +---img
+    +---js
+    \---lib
+        +---bootstrap
+        |   \---dist
+        |       +---css
+        |       \---js
+        +---jquery
+        |   \---dist
+        +---jquery-validation
+        |   \---dist
+        \---jquery-validation-unobtrusive

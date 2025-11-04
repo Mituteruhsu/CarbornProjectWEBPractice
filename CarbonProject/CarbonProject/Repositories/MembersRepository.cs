@@ -147,23 +147,48 @@ namespace CarbonProject.Repositories
             }
         }
 
-        // 登入失敗時遞增 FailedLoginAttempts + 更新失敗時間
-        public void IncrementFailedLogin(string usernameOrEmail)
+        // 登入失敗時遞增 FailedLoginAttempts + 更新失敗時間，若達上限則回傳 true
+        public bool IncrementFailedLogin(string usernameOrEmail)
         {
             using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                string sql = @"
-                    UPDATE Users 
-                    SET 
-                        FailedLoginAttempts = ISNULL(FailedLoginAttempts, 0) + 1,
-                        LastFailedLoginAt = SYSUTCDATETIME()
-                    WHERE Username = @U OR Email = @U";
-                using (var cmd = new SqlCommand(sql, conn))
+                // 先取得目前錯誤次數
+                string selectSql = "SELECT FailedLoginAttempts FROM Users WHERE Username=@U OR Email=@U";
+                int currentAttempts = 0;
+
+                using (var selectCmd = new SqlCommand(selectSql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@U", usernameOrEmail);
-                    cmd.ExecuteNonQuery();
+                    selectCmd.Parameters.AddWithValue("@U", usernameOrEmail);
+                    var result = selectCmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                        currentAttempts = Convert.ToInt32(result);
                 }
+
+                currentAttempts++; // 增加一次
+
+                // 若錯誤達 5 次 → 鎖定帳號
+                bool isLocked = currentAttempts >= 5;
+
+                // 更新資料庫
+                string updateSql = @"
+                        UPDATE Users 
+                        SET 
+                            FailedLoginAttempts = @Count,
+                            LastFailedLoginAt = SYSUTCDATETIME(),
+                            IsActive = @IsActive
+                        WHERE Username = @U OR Email = @U";
+
+                using (var updateCmd = new SqlCommand(updateSql, conn))
+                {
+                    updateCmd.Parameters.AddWithValue("@Count", currentAttempts);
+                    updateCmd.Parameters.AddWithValue("@IsActive", !isLocked);
+                    updateCmd.Parameters.AddWithValue("@U", usernameOrEmail);
+                    updateCmd.ExecuteNonQuery();
+                }
+
+                Debug.WriteLine($"[DEBUG] {usernameOrEmail} -> FailedLoginAttempts: {currentAttempts}, Locked: {isLocked}");
+                return isLocked;
             }
         }
         // 登入成功後重設失敗次數

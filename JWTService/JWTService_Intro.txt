@@ -1,0 +1,79 @@
+﻿JwtService 是一個 JWT（JSON Web Token）處理服務，主要負責：
+
+✅ 簽發（生成）Token
+✅ 驗證 Token 的有效性
+✅ 從 Token 解析使用者資訊（如 Username、Role、MemberId）
+
+這通常用在「使用者登入系統」中，讓伺服器和前端之間能以安全的方式維持登入狀態。
+
+一、JWT 是什麼
+
+JWT 是一種「無狀態登入」的安全機制，
+登入成功後伺服器會發一段 Token（像通行證）給前端，
+前端每次呼叫 API 時都帶上它，伺服器就能知道「你是誰」。
+
+二、這個 JwtService 做的事分三部分
+
+(1) 產生 Token → GenerateToken()
+public string GenerateToken(string username, string role, int memberId, bool rememberMe = false)
+
+這個方法會：
+把使用者資訊（帳號、角色、MemberId）放進 Token 的 Claims（聲明）用 _secretKey 進行 HMAC-SHA256 簽章，防止被竄改根據 rememberMe 參數決定 Token 有效期限：
+
+✅ rememberMe = true → 有效 30 天
+❌ rememberMe = false → 有效 24 小時
+
+範例產出的 Token 會長這樣（Base64 編碼後的一串長字串）：
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+(2) 驗證 Token → ValidateToken()
+public ClaimsPrincipal? ValidateToken(string token)
+
+這個方法負責檢查：
+Token 是否由本伺服器簽發（簽章檢查）
+Token 是否過期
+Issuer / Audience 是否符合設定
+
+如果通過，會回傳一個 ClaimsPrincipal 物件 → 裡面就能取出登入使用者的資訊（例如 Username、Role）。
+失敗時會回傳 null。
+
+(3) 取出 Token 裡的資訊
+
+像這幾個輔助方法：
+
+public static string? GetUsername(ClaimsPrincipal? principal)
+public static string? GetRole(ClaimsPrincipal? principal)
+public static int? GetMemberId(ClaimsPrincipal? principal)
+
+讓你輕鬆取出：
+
+使用者名稱
+使用者角色
+會員 ID
+
+在 Controller 或 Middleware 中都可以直接用這些方法取得登入者資訊。
+
+三、對應的設定
+
+這個 Service 用了 appsettings.json 的設定值：
+"JwtSettings": {
+  "SecretKey": "your-super-secret-key-that-is-at-least-32-characters-long",
+  "Issuer": "CarbonProject",
+  "Audience": "CarbonProjectUsers"
+}
+
+這些資訊在簽章與驗證時要一致，否則 Token 無效。
+
+四、實際用途範例
+
+登入成功後：
+string token = _jwtService.GenerateToken(member.Username, member.Role, member.MemberId);
+
+之後前端會收到這個 token，每次呼叫 API 時都帶上：
+Authorization: Bearer <token>
+
+後端在收到請求時，就能透過 JwtService.ValidateToken() 驗證登入身份，不需要靠 Session 或資料庫查詢，速度快又安全。
+
+總結
+
+JwtService 是 CarbonProject 的「無狀態登入金鑰管理員」，負責 簽 Token、驗 Token、解 Token，讓登入驗證能安全又可擴充。

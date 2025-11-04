@@ -176,3 +176,4 @@ C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\Carbon
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\CarbonProject.pdb
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\CarbonProject.genruntimeconfig.cache
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\ref\CarbonProject.dll
+C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

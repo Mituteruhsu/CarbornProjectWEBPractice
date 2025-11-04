@@ -1,7 +1,8 @@
 ﻿using CarbonProject.Models;
 using CarbonProject.Models.EFModels;
-using CarbonProject.Services;
 using CarbonProject.Repositories;
+using CarbonProject.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.Design;
@@ -13,16 +14,27 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 // From -> Service/ActivityLogService.cs
 namespace CarbonProject.Controllers
 {
-    public class Account : Controller
+    public class AccountController : Controller
     {
         private IWebHostEnvironment Environment;
-        private readonly ILogger<Account> _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly IConfiguration _config;
         private readonly MembersRepository _membersRepository;
         private readonly ActivityLogService _activityLog;
         private readonly CompanyRepository _companyRepository;
         private readonly IndustryRepository _industryRepository;
-        public Account(IWebHostEnvironment _environment, ILogger<Account> logger, IConfiguration config, MembersRepository membersRepository, ActivityLogService activityLog, CompanyRepository companyRepository, IndustryRepository industryRepository)
+
+        private readonly JWTService _jwtService;
+        public AccountController(
+            IWebHostEnvironment _environment, 
+            ILogger<AccountController> logger, 
+            IConfiguration config, 
+            MembersRepository membersRepository, 
+            ActivityLogService activityLog, 
+            CompanyRepository companyRepository, 
+            IndustryRepository industryRepository,
+            JWTService jwtService
+            )
         {
             // 非 static 用法，需要在Program.cs 註冊，建議使用較不會
             Environment = _environment;
@@ -32,6 +44,20 @@ namespace CarbonProject.Controllers
             _companyRepository = companyRepository;
             _industryRepository = industryRepository;
             _membersRepository = membersRepository;
+            _jwtService = jwtService;   // 儲存注入物件
+        }
+        //登入前先檢查
+        public IActionResult SomeProtectedPage()
+        {
+            // 檢查 Session
+            var isLogin = HttpContext.Session.GetString("isLogin");
+            Debug.WriteLine($"Session isLogin: {isLogin}");
+
+            // 檢查 JWT Cookie
+            var token = HttpContext.Request.Cookies["AuthToken"];
+            Debug.WriteLine($"AuthToken Cookie: {token}");
+
+            return View();
         }
         //===============登入===============
         // Include ActivityLogService
@@ -43,7 +69,7 @@ namespace CarbonProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string UID, string password)
+        public async Task<IActionResult> Login(string UID, string password, bool rememberMe = false)
         {
             // 正規驗證(UID:至少4位數，password:至少8位數，兩者可包含英文大小寫及數字 0~9)
             var uidRegex = new Regex(@"^[a-zA-Z0-9]{4,}$");
@@ -68,6 +94,18 @@ namespace CarbonProject.Controllers
                 if (!member.IsActive)
                 {
                     ViewBag.Error = "帳號已暫時鎖定，請稍後再試。";
+                    await _activityLog.LogAsync(
+                        memberId: member.MemberId,
+                        companyId: member.CompanyId,
+                        actionType: "Auth.Login.AttemptWhileLocked",
+                        actionCategory: "Auth",
+                        outcome: "Locked",
+                        ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                        userAgent: Request.Headers["User-Agent"].ToString(),
+                        createdBy: member.Username,
+                        detailsObj: new { username = member.Username }
+                    );
+
                     return View("Login");
                 }
                 // 登入成功：更新最後登入時間、重置錯誤次數
@@ -95,16 +133,36 @@ namespace CarbonProject.Controllers
                 if (member.CompanyId > 0)
                     HttpContext.Session.SetInt32("CompanyId", member.CompanyId);
 
+                // === 產生 JWT Token ===
+                string jwtToken = _jwtService.GenerateToken(
+                    username: member.Username,
+                    role: member.Role,
+                    memberId: member.MemberId,
+                    rememberMe
+                );
+
+                //// 你可以選擇存進 Session 或 Cookie（視用途）
+                //HttpContext.Session.SetString("JwtToken", jwtToken);
+
+                // 也可以回傳給前端（如果是前端 AJAX 登入）
+                Response.Cookies.Append("AuthToken", jwtToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = rememberMe ? DateTimeOffset.UtcNow.AddDays(7) : DateTimeOffset.UtcNow.AddHours(2)
+                });
+                
                 // 根據 Role 導向不同頁面
                 if (member.Role == "Admin")
-                    return RedirectToAction("Admin_read", "Account"); // 管理頁
-                else
-                    return RedirectToAction("Index", "Home"); // 一般會員測試頁
+                        return RedirectToAction("Admin_read", "Account");
+                    else
+                        return RedirectToAction("Index", "Home"); // 一般會員測試頁
             }
             else
             {
                 // 登入失敗：增加錯誤次數
-                _membersRepository.IncrementFailedLogin(UID);
+                bool isLocked = _membersRepository.IncrementFailedLogin(UID);
 
                 // 寫入登入失敗 EF Core 紀錄
                 // From -> Service/ActivityLogService.cs
@@ -120,8 +178,28 @@ namespace CarbonProject.Controllers
                     detailsObj: new { username = UID }
                 );
 
-                ViewBag.Error = "帳號或密碼錯誤";
-                return View("Login");
+                // 若錯誤達上限 → 鎖定紀錄
+                if (isLocked)
+                {
+                    await _activityLog.LogAsync(
+                        memberId: null,
+                        companyId: null,
+                        actionType: "Auth.AccountLocked",
+                        actionCategory: "Auth",
+                        outcome: "Locked",
+                        ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                        userAgent: Request.Headers["User-Agent"].ToString(),
+                        createdBy: "System",
+                        detailsObj: new { username = UID, reason = "Too many failed login attempts" }
+                    );
+
+                    ViewBag.Error = "帳號已鎖定，請 30 分鐘後再嘗試登入。";
+                }
+                else 
+                {
+                    ViewBag.Error = "帳號或密碼錯誤";
+                }
+                    return View("Login");
             }
         }
         //===============登出===============
@@ -155,6 +233,7 @@ namespace CarbonProject.Controllers
 
             // 清除 Session
             HttpContext.Session.Clear();
+            Response.Cookies.Delete("AuthToken");
             return RedirectToAction("Login");
         }
         //===============註冊===============
@@ -335,8 +414,16 @@ namespace CarbonProject.Controllers
         }
         //===============Admin 會員管理===============
         //Include ActivityLogService
+        [Authorize(Roles = "Admin")]
         public IActionResult Admin_read()
         {
+            var sessionRole = HttpContext.Session.GetString("Role");
+            Debug.WriteLine($"=========Session Role=========");
+            Debug.WriteLine($"Session Role: {sessionRole}");
+
+            var isLogin = HttpContext.Session.GetString("isLogin");
+            Debug.WriteLine($"isLogin: {isLogin}");
+
             // 檢查是否為 Admin 登入
             if (HttpContext.Session.GetString("isLogin") != "true" ||
                 HttpContext.Session.GetString("Role") != "Admin")
@@ -353,6 +440,7 @@ namespace CarbonProject.Controllers
         //Include ActivityLogService
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteMember(int id)
         {
             Debug.WriteLine($"==========here is ID==========");

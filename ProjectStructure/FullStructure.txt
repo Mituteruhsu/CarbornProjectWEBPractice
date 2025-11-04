@@ -1,0 +1,143 @@
+﻿C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject
+├─CarbonProject.sln
+└─CarbonProject
+   ├─appsettings.Development.json
+   ├─appsettings.json
+   ├─appsettings.Production.json
+   ├─CarbonProject.csproj
+   ├─CarbonProject.csproj.user
+   ├─FolderStructure.txt
+   ├─Program.cs
+   ├─Controllers
+   │  ├─Account.cs
+   │  ├─ActionsController.cs
+   │  ├─CarbonController.cs
+   │  ├─CefController.cs
+   │  ├─DashboardController.cs
+   │  ├─DataGoals.cs
+   │  └─HomeController.cs
+   ├─Data
+   │  ├─CarbonDbContext.cs
+   │  └─UserDbContext.cs
+   ├─Helpers
+   │  └─TimeHelper.cs
+   ├─Models
+   │  ├─CarbonDataViewModel.cs
+   │  ├─CefItems.cs
+   │  ├─ErrorViewModel.cs
+   │  ├─ESGActionViewModel.cs
+   │  ├─ESGProgressViewModel.cs
+   │  ├─HomeIndexViewModel.cs
+   │  ├─IndustryViewModel.cs
+   │  ├─MembersViewModel.cs
+   │  └─EFModels
+   │     ├─ActivityLog.cs
+   │     ├─Company.cs
+   │     ├─CompanyEmission.cs
+   │     ├─CompanyEmissionTarget.cs
+   │     └─YearlyEmissionAverage.cs
+   ├─Properties
+   │  ├─launchSettings.json
+   │  ├─serviceDependencies.CarbonProject20251022101453 - Web Deploy.json
+   │  ├─serviceDependencies.CarbonProject20251022101453 - Web Deploy.json.user
+   │  ├─serviceDependencies.json
+   │  ├─PublishProfiles
+   │  │  ├─CarbonProject20251022101453 - Web Deploy.pubxml
+   │  │  └─CarbonProject20251022101453 - Web Deploy.pubxml.user
+   │  └─ServiceDependencies
+   │     └─CarbonProject20251022101453 - Web Deploy
+   │        ├─mssql1.arm.json
+   │        └─profile.arm.json
+   ├─Repositories
+   │  ├─ActivityLogRepository.cs
+   │  ├─CompanyRepository.cs
+   │  ├─ESGActionRepository.cs
+   │  ├─HomeIndexRepository.cs
+   │  ├─IndustryRepository.cs
+   │  └─MembersRepository.cs
+   ├─Service
+   │  ├─ActivityLogService.cs
+   │  └─EmissionService.cs
+   ├─Views
+   │  ├─_ViewImports.cshtml
+   │  ├─_ViewStart.cshtml
+   │  ├─Account
+   │  │  ├─admin_read.cshtml
+   │  │  ├─login.cshtml
+   │  │  └─register.cshtml
+   │  ├─Actions
+   │  │  ├─Create.cshtml
+   │  │  ├─Details.cshtml
+   │  │  ├─Edit.cshtml
+   │  │  ├─Index.cshtml
+   │  │  └─Progress.cshtml
+   │  ├─Cef
+   │  │  └─Index.cshtml
+   │  ├─Dashboard
+   │  │  ├─_FormStyles.cshtml
+   │  │  ├─CALCULATLINK.cshtml
+   │  │  ├─CreateEmission.cshtml
+   │  │  ├─CreateTarget.cshtml
+   │  │  ├─EditEmission.cshtml
+   │  │  ├─EditTarget.cshtml
+   │  │  ├─Index.cshtml
+   │  │  └─Report.cshtml
+   │  ├─Home
+   │  │  ├─DataGoals.cshtml
+   │  │  ├─Index.cshtml
+   │  │  ├─Privacy.cshtml
+   │  │  └─Refrences.cshtml
+   │  └─Shared
+   │     ├─_Layout.cshtml
+   │     ├─_Layout.cshtml.css
+   │     ├─_LayoutDashboard.cshtml
+   │     ├─_LayoutDashboard.cshtml.css
+   │     ├─_ValidationScriptsPartial.cshtml
+   │     └─Error.cshtml
+   └─wwwroot
+      ├─favicon.ico
+      ├─assets
+      │  ├─brand
+      │  │  ├─bootstrap-logo.svg
+      │  │  └─bootstrap-logo-white.svg
+      │  ├─dist
+      │  │  ├─css
+      │  │  │  ├─bootstrap.min.css
+      │  │  │  ├─bootstrap.min.css.map
+      │  │  │  ├─bootstrap.rtl.min.css
+      │  │  │  └─bootstrap.rtl.min.css.map
+      │  │  └─js
+      │  │     ├─bootstrap.bundle.min.js
+      │  │     └─bootstrap.bundle.min.js.map
+      │  └─js
+      │     └─color-modes.js
+      ├─css
+      │  ├─dashboard.css
+      │  ├─dashboard.rtl.css
+      │  └─site.css
+      ├─data
+      │  └─cef_items.csv
+      ├─img
+      │  ├─TerraCPBanner.png
+      │  └─TerraLogo.png
+      ├─js
+      │  ├─dashboard.js
+      │  └─site.js
+      └─lib
+         ├─jquery
+         │  ├─LICENSE.txt
+         │  └─dist
+         │     ├─jquery.js
+         │     ├─jquery.min.js
+         │     └─jquery.min.map
+         ├─jquery-validation
+         │  ├─LICENSE.md
+         │  └─dist
+         │     ├─additional-methods.js
+         │     ├─additional-methods.min.js
+         │     ├─jquery.validate.js
+         │     └─jquery.validate.min.js
+         └─jquery-validation-unobtrusive
+            ├─jquery.validate.unobtrusive.js
+            ├─jquery.validate.unobtrusive.min.js
+            └─LICENSE.txt

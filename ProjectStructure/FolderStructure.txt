@@ -1,0 +1,37 @@
+﻿C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject
+└─CarbonProject
+   ├─Controllers
+   ├─Data
+   ├─Helpers
+   ├─Models
+   │  └─EFModels
+   ├─Properties
+   │  ├─PublishProfiles
+   │  └─ServiceDependencies
+   │     └─CarbonProject20251022101453 - Web Deploy
+   ├─Repositories
+   ├─Service
+   ├─Views
+   │  ├─Account
+   │  ├─Actions
+   │  ├─Cef
+   │  ├─Dashboard
+   │  ├─Home
+   │  └─Shared
+   └─wwwroot
+      ├─assets
+      │  ├─brand
+      │  ├─dist
+      │  │  ├─css
+      │  │  └─js
+      │  └─js
+      ├─css
+      ├─data
+      ├─img
+      ├─js
+      └─lib
+         ├─jquery
+         │  └─dist
+         ├─jquery-validation
+         │  └─dist
+         └─jquery-validation-unobtrusive

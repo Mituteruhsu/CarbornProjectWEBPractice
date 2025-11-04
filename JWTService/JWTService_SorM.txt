@@ -1,0 +1,82 @@
+﻿JwtService 屬於 Service，不是 Middleware。
+
+一、JwtService 屬於「Service」的原因
+
+特徵：
+它本身不會「攔截 HTTP 請求」或「直接改變 Request/Response 流程」。
+它只是一個「工具類別」，提供：
+
+生成 Token（GenerateToken()）
+驗證 Token（ValidateToken()）
+
+從 Claims 中取出資訊
+
+換句話說：
+它不會自己動作，是別的地方「主動呼叫」它。
+
+二、真正的「Middleware」是什麼
+
+ASP.NET Core 的 Middleware（中介層）是 Request Pipeline（請求管線）的一環，會自動攔截每一次的 HTTP 請求。
+
+例如：
+AuthenticationMiddleware
+AuthorizationMiddleware
+UseJwtBearerAuthentication
+
+你自己寫的 CustomMiddleware Middleware 會長這樣：
+
+public class JwtAuthMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    public JwtAuthMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    public async Task Invoke(HttpContext context, JwtService jwtService)
+    {
+        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        if (token != null)
+        {
+            var principal = jwtService.ValidateToken(token);
+            if (principal != null)
+            {
+                context.User = principal;
+            }
+        }
+        await _next(context);
+    }
+}
+
+
+然後在 Program.cs 中註冊：
+
+app.UseMiddleware<JwtAuthMiddleware>();
+
+這樣每次 Request 都會自動進行 Token 驗證。
+
+三、兩者的差別可以這樣理解
+
+Service：
+職責		- 提供功能（例如：產生或驗證 JWT）
+執行時機	- 被 Controller 或 Middleware 呼叫時
+需要註冊在哪裡	- builder.Services.AddTransient<JwtService>()
+
+Middleware：
+職責		- 攔截 HTTP 請求，檢查 Token、驗證權限
+執行時機	- 每次 HTTP Request 時自動執行
+需要註冊在哪裡	- app.UseMiddleware<YourMiddleware>()
+
+四、實際建議用法
+
+✅ 目前的 JwtService 屬於 Service 層。專門負責 Token 的生成與驗證邏輯。
+
+如果未來想讓所有 API 自動驗證 Token（例如取代 Session），那就可以再加一個「Middleware」或使用 ASP.NET Core 內建的 JwtBearer 驗證。
+
+🧠 簡單一句話：
+
+🔐 JwtService 是「工具」，
+🧱 Middleware 是「自動門」。
+
+前者你主動叫用它；後者會自動攔截每一個 Request。
