@@ -1,3 +1,76 @@
+# 🌿 CarbonProject — ESG 碳足跡管理系統
+
+> 以 ASP.NET Core MVC 架構開發的 ESG 碳足跡管理平台，協助企業追蹤、分析與報告碳排放數據，實現永續發展與 ESG 目標。
+
+![.NET](https://img.shields.io/badge/.NET-8.0-blue?logo=dotnet)
+![C#](https://img.shields.io/badge/Language-C%23-green?logo=csharp)
+![SQL Server](https://img.shields.io/badge/Database-SQL%20Server-red?logo=microsoftsqlserver)
+![Chart.js](https://img.shields.io/badge/Charts-Chart.js-orange?logo=chartdotjs)
+![License](https://img.shields.io/badge/License-Academic-lightgrey)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+
+---
+
+## 📚 目錄
+- [專案簡介](#-專案簡介)
+- [專案目標](#-專案目標)
+- [系統架構](#-系統架構)
+- [核心模組](#-核心模組)
+- [系統安全設計](#-系統安全設計)
+- [資料庫設計](#-資料庫設計-sql-server)
+- [專案亮點](#-專案亮點)
+- [後續發展建議](#-後續發展建議)
+- [專案資訊](#-專案資訊)
+- [License](#-license)
+
+---
+
+## 📖 專案簡介
+
+**CarbonProject** 是一款面向企業的碳排放與 ESG 管理系統。  
+它能協助企業：
+- 🔍 **盤查碳足跡**：自動計算與匯總碳排放數據  
+- 📊 **視覺化分析**：呈現碳排放趨勢與熱點  
+- 📑 **生成 ESG 報告**：符合 GRI、SASB 標準  
+- 👥 **追蹤行動方案**：監控 ESG 進度與目標達成率  
+
+本系統以 **ASP.NET Core MVC 8.0** 為核心，整合 **SQL Server、iTextSharp PDF、Chart.js** 等技術，  
+並特別強調 **使用者體驗 (UX)** 與 **資安防護 (Security)**。
+
+---
+
+## 🧭 專案目標
+
+- 🧩 建立完整的 **碳排放與 ESG 管理解決方案**
+- 🎯 提供簡潔直觀的 **使用者介面**
+- 🛡️ 強化 **企業資料安全與穩定性**
+- 🌱 協助企業達成 **碳排放量降低 30%**
+
+---
+
+## 🏗️ 系統架構
+
+**主要技術堆疊：**
+| 類別 | 技術 |
+|------|------|
+| Framework | ASP.NET Core MVC 8.0 |
+| Language | C# |
+| Database | SQL Server / Azure SQL |
+| ORM | Entity Framework Core |
+| PDF Engine | iTextSharp |
+| Charts | Chart.js |
+| Authentication | Claims-Based + Session + JWT |
+| Logging | ActivityLog 模組 |
+
+```mermaid
+graph TD
+A[User] -->|Request| B[Controller]
+B --> C[Model]
+C --> D[Repository / EF Core]
+B --> E[View (.cshtml)]
+E -->|Render| A
+
+
 # CarbonProject 碳足跡管理系統 - 功能說明報告
   專案文檔資料 / CarbonProject功能說明報告.txt
   建立日期：2025-10-29
