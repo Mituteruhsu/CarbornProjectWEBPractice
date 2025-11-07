@@ -64,11 +64,11 @@
 
 ```mermaid
 graph TD;
-	A[User] -->|Request| B[Controller];
+	A[User] --> B[Controller];
 	B --> C[Model];
 	C --> D[Repository / EF Core];
 	B --> E[View (Index.cshtml)];
-	E -->|Render| A;
+	E --> A;
 ```
 
 # CarbonProject 碳足跡管理系統 - 功能說明報告
