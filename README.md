@@ -63,13 +63,13 @@
 | Logging | ActivityLog 模組 |
 
 ```mermaid
-graph TD
-	A[User] -->|Request| B[Controller]
-	B --> C[Model]
-	C --> D[Repository / EF Core]
-	B --> E[View (.cshtml)]
-	E -->|Render| A
-
+graph TD;
+	A[User] -->|Request| B[Controller];
+	B --> C[Model];
+	C --> D[Repository / EF Core];
+	B --> E[View (Index.cshtml)];
+	E -->|Render| A;
+```
 
 # CarbonProject 碳足跡管理系統 - 功能說明報告
   專案文檔資料 / CarbonProject功能說明報告.txt
