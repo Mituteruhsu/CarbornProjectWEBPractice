@@ -63,18 +63,46 @@
 | Logging | ActivityLog 模組 |
 
 ```mermaid
-graph TD;
-	A[User] -->|Request| B[Controller];
-	B --> C[Model];
-	C --> D[Repository / EF Core];
-	B --> E[View];
-	E -->|Render Response| A;
+---
+config:
+  layout: dagre
+  theme: redux-dark
+  look: neo
+---
+flowchart TD
+ subgraph MVC["ASP.NET Core MVC 應用程式"]
+        C["Controller"]
+        M["Model"]
+        V["View"]
+  end
+ subgraph S["伺服器端"]
+        IIS["IIS Web 伺服器"]
+        MW["Middleware<br>中介層"]
+        MVC
+        SV["Services<br>服務"]
+        RP["Repositories<br>儲存庫"]
+        HP["Helpers<br>輔助類別"]
+  end
+    U["🧑 使用者"] --> B["💻 瀏覽器<br>browser"]
+    U -- 發出 HTTP 請求 --> B
+    B -- HTTP Request --> IIS
+    IIS -- 請求進入管線 --> MW
+    MW -- 轉交至 --> C
+    C -- 呼叫 Model 獲取資料 --> M
+    M -- 執行商業邏輯 --> SV
+    SV -- 資料存取 --> RP
+    RP -- CRUD 操作 --> DB[("💾 SQL Server 資料庫")]
+    DB --> RP
+    RP --> SV
+    SV --> M
+    M --> C
+    C -- 傳遞資料給 View --> V
+    V -- 回傳渲染後 HTML --> B
+    B -- 顯示結果頁面 --> U
+    RP -. 輔助方法：例外處理、格式化 .-> HP
+    SV -. 輔助方法：驗證、轉換 .-> HP
 ```
-```mermaid
-flowchart LR
-  A e1@==> B
-  e1@{ animate: true }
-```
+
 # CarbonProject 碳足跡管理系統 - 功能說明報告
   專案文檔資料 / CarbonProject功能說明報告.txt
   建立日期：2025-10-29
