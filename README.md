@@ -67,7 +67,7 @@ graph TD;
 	A[User] --> B[Controller];
 	B --> C[Model];
 	C --> D[Repository / EF Core];
-	B --> E[View (Index.cshtml)];
+	B --> E[View];
 	E --> A;
 ```
 
