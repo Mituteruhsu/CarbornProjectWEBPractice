@@ -70,7 +70,11 @@ graph TD;
 	B --> E[View];
 	E -->|Render Response| A;
 ```
-
+```mermaid
+flowchart LR
+  A e1@==> B
+  e1@{ animate: true }
+```
 # CarbonProject 碳足跡管理系統 - 功能說明報告
   專案文檔資料 / CarbonProject功能說明報告.txt
   建立日期：2025-10-29
