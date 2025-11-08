@@ -1,8 +1,6 @@
 <p align="center">
   <img src="assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>  
-![CarbonProject - Sustainable Carbon Management System](assets/banner.svg)  
-
 # 🌿 CarbonProject — ESG 碳足跡管理系統
 
 > 以 ASP.NET Core MVC 架構開發的 ESG 碳足跡管理平台，協助企業追蹤、分析與報告碳排放數據，實現永續發展與 ESG 目標。
