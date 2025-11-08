@@ -10,7 +10,11 @@
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
-::: info  
+:::success
+這是綠色的區塊。
+:::
+
+:::info  
   這裡是為了確認重要資訊  
 
 * * *
