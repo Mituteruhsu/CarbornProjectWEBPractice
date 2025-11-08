@@ -44,12 +44,7 @@
 
 ---
 <a name="專案簡介"></a>
-<table width="100%">
-<tr>
-<td><h2>📖 專案簡介</h2></td>
-<td align="right"><a href="#Table_of_Contents" style="font-size:0.8em;">📑 目錄</a></td>
-</tr>
-</table>
+<h2>📖 專案簡介<a href="#Table_of_Contents" align="right" style="font-size:0.8em;">📑 目錄</a></h2>
 
 **CarbonProject** 是一款面向企業的碳排放與 ESG 管理系統。系統以可擴充的多層式架構設計（Controller / Service / Repository / Model），強調安全性與可維護性。  
 它能協助企業：  
