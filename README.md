@@ -386,7 +386,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 <a name="報告與文件"></a>
 ## 📁 報告與文件  
 詳細**功能說明**、**資料庫腳本**與**長篇報告**放在  
-[⬅ 返回主頁](#README)  
+[💒 返回頁首](#README)  
 docs/  
 Report/  
 database/  
