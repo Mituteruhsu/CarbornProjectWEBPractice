@@ -32,7 +32,7 @@
 - [資料庫設計（SQL Server）](#資料庫設計sql-server)
 - [專案亮點](#專案亮點)
 - [後續發展建議](#後續發展建議)
-- [License](#license)
+- [License](#License)
 - [報告與文件](#報告與文件)
 - [聯絡資訊](#聯絡資訊)
 
@@ -353,7 +353,7 @@ erDiagram
 
 ---
 
-<a name="授權條款"></a>
+<a name="License"></a>
 ## 📄 授權條款 (License)
 
 此專案僅供學術與內部開發測試用途，未經授權請勿用於商業目的。
@@ -367,7 +367,7 @@ erDiagram
 ---
 
 <a name="聯絡資訊"></a>
-✉️ 聯絡資訊
+## ✉️ 聯絡資訊
 
 開發者：徐秉群 (Allen Hsu)
 Email：mituteruhsu@gmail.com
