@@ -105,7 +105,7 @@ SV -. 輔助方法：驗證、轉換 .-> HP
 ---
 config:
   layout: dagre
-  theme: forest
+  theme: redux-dark-color
   look: neo
 ---
 erDiagram
