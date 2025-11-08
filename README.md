@@ -366,6 +366,17 @@ erDiagram
 
 此專案僅供學術與內部開發測試用途，未經授權請勿用於商業目的。
 
+Copyright (c) 2025 Allen Hsu
+
+Permission is hereby granted to use, copy, and modify this software 
+for **academic, research, or educational purposes only**, provided 
+that proper credit is given to the original author.
+
+Commercial use, redistribution, or modification for profit is 
+strictly prohibited without explicit written permission.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
 ---
 
 <a name="報告與文件"></a>
