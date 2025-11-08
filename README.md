@@ -119,12 +119,6 @@ SV -. 輔助方法：驗證、轉換 .-> HP
 ---
 <a name="核心模組"></a>
 ## 💡 核心模組  
-- **會員與權限管理**（Admin / Company / Staff / Viewer）  
-- **碳排放記錄與目標**（CompanyEmissions、CompanyEmissionTargets）  
-- **ESG 行動管理**（ESGActions、ESGProgress）  
-- **活動日誌**（ActivityLog）：操作稽核、IP / User-Agent / CorrelationId  
-- **公告系統**（Company 層級）  
-- **報表匯出**：PDF（iTextSharp）、Chart.js 視覺化  
 
 | 模組 | 功能描述 |
 |------|-----------|
@@ -134,6 +128,12 @@ SV -. 輔助方法：驗證、轉換 .-> HP
 | 活動紀錄 | 追蹤登入、更新與資料變更 |
 | 管理者後台 | 查看全公司資料與平均排放狀況 |
 
+- **會員與權限管理**（Admin / Company / Staff / Viewer）  
+- **碳排放記錄與目標**（CompanyEmissions、CompanyEmissionTargets）  
+- **ESG 行動管理**（ESGActions、ESGProgress）  
+- **活動日誌**（ActivityLog）：操作稽核、IP / User-Agent / CorrelationId  
+- **公告系統**（Company 層級）  
+- **報表匯出**：PDF（iTextSharp）、Chart.js 視覺化  
 ---
 <a name="系統安全設計"></a>
 ## 🔐 系統安全設計
