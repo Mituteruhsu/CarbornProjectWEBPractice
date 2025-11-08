@@ -55,7 +55,8 @@
 
 本系統以 **ASP.NET Core MVC 8.0** 為核心，整合 **SQL Server、iTextSharp PDF、Chart.js** 等技術，  
 並特別強調 **使用者體驗 (UX)** 與 **資安防護 (Security)**。  
-<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
+
 ---
 <a name="專案目標"></a>
 ## 🧭 專案目標
