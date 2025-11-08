@@ -10,6 +10,7 @@
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
+::: info
 
 ## 📚 目錄
 - [專案簡介](#-專案簡介)
@@ -23,6 +24,7 @@
 - [專案資訊](#-專案資訊)
 - [License](#-license)
 
+:::
 ---
 
 ## 📖 專案簡介
