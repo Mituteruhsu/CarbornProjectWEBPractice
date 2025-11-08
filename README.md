@@ -125,6 +125,7 @@ SV -. 輔助方法：驗證、轉換 .-> HP
 - **活動日誌**（ActivityLog）：操作稽核、IP / User-Agent / CorrelationId  
 - **公告系統**（Company 層級）  
 - **報表匯出**：PDF（iTextSharp）、Chart.js 視覺化  
+
 | 模組 | 功能描述 |
 |------|-----------|
 | 會員登入 / 註冊 | 支援公司與成員帳號，採 Session 驗證 |
