@@ -99,6 +99,116 @@ B -- 顯示結果頁面 --> U
 RP -. 輔助方法：例外處理、格式化 .-> HP
 SV -. 輔助方法：驗證、轉換 .-> HP
 ```
+---
+## 📀 資料庫設計-sql-server
+```mermaid
+---
+config:
+  layout: dagre
+  theme: forest
+  look: neo
+---
+erDiagram
+    USERS {
+        int MemberId PK
+        nvarchar Username
+        nvarchar Email
+        nvarchar PasswordHash
+        nvarchar FullName
+        int CompanyId FK
+        nvarchar Role
+        bit IsActive
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    ROLES_PERMISSIONS {
+        nvarchar Role PK
+        nvarchar Permission_Key PK
+        nvarchar Description
+    }
+    USERCOMPANYMAP {
+        int Id PK
+        int MemberId FK
+        int CompanyId FK
+        nvarchar Role
+    }
+    COMPANIES {
+        int CompanyId PK
+        nvarchar CompanyName
+        nvarchar TaxId
+        nvarchar Industry_Id FK
+        nvarchar Contact_Email
+        datetime CreatedAt
+        datetime UpdatedAt
+    }
+    INDUSTRIES {
+        nvarchar Industry_Id PK
+        nvarchar Major_Category_Name
+        nvarchar Middle_Category_Name
+    }
+    ESGACTIONS {
+        int Id PK
+        nvarchar Title
+        nvarchar Category
+        decimal ExpectedReductionTon
+        decimal ProgressPercent
+        int MemberId FK
+        int CompanyId FK
+    }
+    ESGPROGRESS {
+        int Id PK
+        int Year
+        decimal TotalReductionTon
+        decimal AverageProgress
+    }
+    COMPANYEMISSIONS {
+        int EmissionId PK
+        int CompanyId FK
+        int Year
+        decimal Scope1Emission
+        decimal Scope2Emission
+        decimal Scope3Emission
+        decimal TotalEmission
+    }
+    COMPANYEMISSIONTARGETS {
+        int TargetId PK
+        int CompanyId FK
+        int BaselineYear
+        int TargetYear
+        decimal BaselineEmission
+        decimal TargetEmission
+    }
+    CARBONRECORDS {
+        int Id PK
+        nvarchar Name
+        decimal Usage
+        nvarchar Unit
+        decimal Factor
+        decimal Emission
+        datetime CreatedAt
+    }
+    ACTIVITYLOG {
+        bigint LogId PK
+        int MemberId FK
+        int CompanyId FK
+        nvarchar ActionType
+        datetime ActionTime
+        nvarchar IpAddress
+        nvarchar Source
+    }
+    USERS ||--o{ USERCOMPANYMAP : "maps"
+    COMPANIES ||--o{ USERCOMPANYMAP : "has"
+    COMPANIES ||--o{ USERS : "employs"
+    COMPANIES ||--o{ COMPANYEMISSIONS : "reports"
+    COMPANIES ||--o{ COMPANYEMISSIONTARGETS : "targets"
+    COMPANIES ||--o{ ESGACTIONS : "initiates"
+    COMPANIES ||--o{ ACTIVITYLOG : "logged by"
+    USERS ||--o{ ACTIVITYLOG : "performs"
+    USERS ||--o{ ESGACTIONS : "creates"
+    INDUSTRIES ||--o{ COMPANIES : "categorized as"
+    USERS ||--o{ ROLES_PERMISSIONS : "authorized"
+
+```
 
 # CarbonProject 碳足跡管理系統 - 功能說明報告
   專案文檔資料 / CarbonProject功能說明報告.txt
