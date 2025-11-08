@@ -214,7 +214,7 @@ erDiagram
 本專案採用 ASP.NET Core MVC 架構與多層式設計原則，結合現代化的技術實踐，打造出高效能、可維護、可擴充的企業級碳管理系統。
 The project is built with ASP.NET Core MVC architecture and modern design principles, focusing on performance, scalability, and maintainability for enterprise-level carbon management.
 
-# 🧩 架構設計 Architecture Design
+### 🧩 架構設計 Architecture Design
 
 - ASP.NET Core MVC Framework
 採用跨平台、高效能的 ASP.NET Core，具備良好的可維護性與可擴展性。
@@ -224,7 +224,7 @@ Built on ASP.NET Core, a high-performance and cross-platform web framework for s
 將應用分為 Controller、Service、Repository、Model 等層，確保職責分離。
 Implements a layered architecture to ensure clear separation of concerns between components.
 
-# 💾 資料存取層 Data Access Layer
+### 💾 資料存取層 Data Access Layer
 
 - Entity Framework Core (EF Core)
 使用 EF Core 進行 ORM 操作，簡化資料庫 CRUD 流程，並支援 LINQ 查詢與 Migration 管理。
@@ -234,7 +234,7 @@ Utilizes EF Core for ORM-based data access, simplifying CRUD operations and supp
 將資料存取邏輯封裝於 Repository，實現資料層與業務邏輯層分離。
 Encapsulates data access logic within repositories for better abstraction and maintainability.
 
-# 🧠 系統設計 System Design
+### 🧠 系統設計 System Design
 
 - Dependency Injection (依賴注入)
 使用 ASP.NET Core 內建的 DI 容器，降低耦合度並提升可測試性。
@@ -248,7 +248,7 @@ Uses ViewModel to transfer data between Controller and View, improving front-end
 透過 Session 儲存登入使用者資訊（如 MemberId, CompanyId），維持使用者狀態。
 Manages user sessions to persist authentication and contextual data between requests.
 
-# 📊 系統紀錄與追蹤 System Logging & Auditing
+### 📊 系統紀錄與追蹤 System Logging & Auditing
 
 - ActivityLog 使用者活動紀錄
 將使用者操作記錄於資料表中，包括登入、登出、修改、刪除等動作，方便後續稽核與行為分析。
@@ -258,7 +258,7 @@ Records all user actions such as login, logout, and updates into the ActivityLog
 每筆活動紀錄包含 IP 位址與使用者代理資訊，以提升安全性與可追溯性。
 Each activity entry stores IP address and User-Agent for enhanced security and traceability.
 
-# 🔐 安全性設計 Security Features
+### 🔐 安全性設計 Security Features
 
 - 角色與權限管理 (Role-Based Access Control)
 使用 Roles_Permissions 表實作角色權限控制，確保不同身分的使用者僅能存取對應功能。
@@ -268,7 +268,7 @@ Implements RBAC (Role-Based Access Control) using the Roles_Permissions table.
 支援電子郵件驗證、登入失敗次數限制與狀態鎖定，保障系統安全。
 Supports email confirmation, login attempt limits, and account locking for enhanced security.
 
-# 🌱 永續發展模組 Sustainability Modules
+### 🌱 永續發展模組 Sustainability Modules
 
 - CompanyEmissions 與 ESGActions 模組整合
 支援公司碳排放紀錄、ESG 行動追蹤與減碳成效統計。
@@ -278,7 +278,7 @@ Integrates company emission data with ESG actions for emission tracking and sust
 使用 SQL 計算欄位自動匯總 Scope 1, 2, 3 排放量，減少重複計算。
 Uses computed SQL columns to automatically aggregate Scope 1–3 emission data.
 
-#🧰 技術總覽 Tech Stack
+### 🧰 技術總覽 Tech Stack
 | 分類 | 技術 |
 |------|-----------|
 | 前端 (Frontend) | Razor Views, HTML5, Bootstrap |
