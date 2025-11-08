@@ -211,7 +211,7 @@ erDiagram
 ```
 ---
 ## 🌟 專案亮點  
-    (Project Highlights)
+    *Project Highlights*
 
   本專案採用 **ASP.NET Core MVC 架構**與**多層式設計**原則，結合現代化的技術實踐，打造出高效能、可維護、可擴充的企業級碳管理系統。  
   The project is built with ASP.NET Core MVC architecture and modern design principles, focusing on performance, scalability, and maintainability for enterprise-level carbon management.
