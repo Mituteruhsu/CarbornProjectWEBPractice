@@ -10,7 +10,6 @@
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
-<dir bgcolor="yellow">背景綠色</dir>
 
 ## 📚 目錄
 - [專案簡介](#-專案簡介)
