@@ -416,18 +416,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 docs/  
 Report/  
 database/  
-> [💒 返回頁首](#README) 
+> [💒 返回頁首](#README)  
   [📑 目錄](#Table_of_Contents)  
 
 ---
 
 <a name="聯絡資訊"></a>
-## ✉️ 聯絡資訊
+## ✉️ 聯絡資訊  
 
-> [📑 目錄](#Table_of_Contents)
-
-開發者：徐秉群 (Allen Hsu)  
-Email：mituteruhsu@gmail.com  
+> 開發者：徐秉群 (Allen Hsu)  
+  Email：mituteruhsu@gmail.com  
 
 ---
 
