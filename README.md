@@ -10,21 +10,7 @@
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
-<table><tr><td bgcolor="green">背景綠色</td></tr></table>
-
-:::info  
-  這裡是為了確認重要資訊  
-
-* * *
-
-***
-
-*****
-
-- - -
-
----------------------------------------
-:::
+<table><tr><td bgcolor="yellow">背景綠色</td></tr></table>
 
 ## 📚 目錄
 - [專案簡介](#-專案簡介)
