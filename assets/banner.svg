@@ -1,0 +1,23 @@
+<svg width="900" height="180" viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f5132"/>
+      <stop offset="100%" stop-color="#198754"/>
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c3f0ca"/>
+      <stop offset="100%" stop-color="#e8ffd6"/>
+    </linearGradient>
+    <style>
+      .title { font-family: 'Segoe UI', sans-serif; font-weight: 700; font-size: 42px; fill: url(#textGradient); }
+      .subtitle { font-family: 'Segoe UI', sans-serif; font-weight: 400; font-size: 18px; fill: #d1ffd1; letter-spacing: 0.5px; }
+      .credit { font-family: 'Segoe UI', sans-serif; font-size: 14px; fill: #b8e7c0; }
+    </style>
+  </defs>
+  <rect width="900" height="180" rx="15" fill="url(#bg)" />
+  <circle cx="780" cy="90" r="55" fill="rgba(255,255,255,0.05)" />
+  <circle cx="820" cy="90" r="25" fill="rgba(255,255,255,0.1)" />
+  <text x="60" y="90" class="title">CarbonProject 碳足跡管理系統</text>
+  <text x="60" y="125" class="subtitle">Sustainable ESG Action Platform · 環保永續智能平台</text>
+  <text x="60" y="155" class="credit">Developed by Allen Hsu</text>
+</svg>
