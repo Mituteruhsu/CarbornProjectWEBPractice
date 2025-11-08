@@ -37,7 +37,7 @@
 - [聯絡資訊](#聯絡資訊)
 
 ---
-
+<a name="專案簡介"></a>
 ## 📖 專案簡介
 
 **CarbonProject** 是一款面向企業的碳排放與 ESG 管理系統。系統以可擴充的多層式架構設計（Controller / Service / Repository / Model），強調安全性與可維護性。  
@@ -51,7 +51,7 @@
 並特別強調 **使用者體驗 (UX)** 與 **資安防護 (Security)**。
 
 ---
-
+<a name="專案目標"></a>
 ## 🧭 專案目標
 
 - 🧩 建立完整的 **碳排放與 ESG 管理解決方案**
@@ -61,7 +61,7 @@
 - ‍🔧 支援雲端部署與擴展（IIS / Azure）
 
 ---
-
+<a name="系統架構"></a>
 ## 🏗️ 系統架構
 
 **技術堆疊（Tech Stack）**
@@ -117,7 +117,7 @@ RP -. 輔助方法：例外處理、格式化 .-> HP
 SV -. 輔助方法：驗證、轉換 .-> HP
 ```
 ---
-
+<a name="核心模組"></a>
 ## 💡 核心模組  
 - **會員與權限管理**（Admin / Company / Staff / Viewer）  
 - **碳排放記錄與目標**（CompanyEmissions、CompanyEmissionTargets）  
@@ -127,7 +127,7 @@ SV -. 輔助方法：驗證、轉換 .-> HP
 - **報表匯出**：PDF（iTextSharp）、Chart.js 視覺化  
 
 ---
-
+<a name="系統安全設計"></a>
 ## 🔐 系統安全設計
 - Claims-based 認證 + Session + JWT（可選「記住我」功能）  
 - 密碼使用 BCrypt 加密（BCrypt.Net-Next）  
@@ -136,7 +136,7 @@ SV -. 輔助方法：驗證、轉換 .-> HP
 - 角色/權限表（Roles_Permissions）實作 RBAC  
 
 ---
-
+<a name="資料庫設計"></a>
 ## 📀 資料庫設計（SQL Server）  
 簡化 ER 圖（主要表格與關聯）：  
 
@@ -249,6 +249,7 @@ erDiagram
 
 ```
 ---
+<a name="專案亮點"></a>
 ## 🌟 專案亮點
 
   本專案採用 **ASP.NET Core MVC 架構**與**多層式設計**原則，結合現代化的技術實踐，打造出高效能、可維護、可擴充的企業級碳管理系統。  
@@ -335,7 +336,7 @@ erDiagram
 | 安全性 | Session, Role-Based Access, Validation |
 
 ---
-
+<a name="後續發展建議"></a>
 ## ⌨️ 後續發展建議  
 - **加入身份驗證和授權：**  
   目前專案沒有實現完整的身份驗證和授權功能，建議使用 ASP.NET Core Identity 來實現更安全的身份驗證和授權。  
@@ -352,17 +353,20 @@ erDiagram
 
 ---
 
+<a name="授權條款"></a>
 ## 📄 授權條款 (License)
 
 此專案僅供學術與內部開發測試用途，未經授權請勿用於商業目的。
 
 ---
 
+<a name="報告與文件"></a>
 ## 📁 報告與文件  
 詳細功能說明、資料庫腳本與長篇報告放在 Report/ 與 database/ 中
 
 ---
 
+<a name="聯絡資訊"></a>
 ✉️ 聯絡資訊
 
 開發者：徐秉群 (Allen Hsu)
