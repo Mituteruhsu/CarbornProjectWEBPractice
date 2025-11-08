@@ -58,22 +58,21 @@
 <p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
 
 ---
+
 <a name="專案目標"></a>
 ## 🧭 專案目標
-
-> [📑 目錄](#Table_of_Contents)
 
 - 🧩 建立完整的 **碳排放與 ESG 管理解決方案**
 - 🎯 提供簡潔直觀的 **使用者介面**
 - 🛡️ 強化 **企業資料安全、資料稽核與可追溯的活動紀錄**
 - 🌱 協助企業達成 **碳排放量降低 30%**
 - ‍🔧 支援雲端部署與擴展（IIS / Azure）
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
 
 ---
+
 <a name="系統架構"></a>
 ## 🏗️ 系統架構
-
-> [📑 目錄](#Table_of_Contents)
 
 **技術堆疊（Tech Stack）**
 | 類別 | 技術 |
@@ -127,11 +126,13 @@ B -- 顯示結果頁面 --> U
 RP -. 輔助方法：例外處理、格式化 .-> HP
 SV -. 輔助方法：驗證、轉換 .-> HP
 ```
+
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
+
 ---
+
 <a name="核心模組"></a>
 ## 💡 核心模組  
-
-> [📑 目錄](#Table_of_Contents)
 
 | 模組 | 功能描述 |
 |------|-----------|
@@ -147,24 +148,24 @@ SV -. 輔助方法：驗證、轉換 .-> HP
 - **活動日誌**（ActivityLog）：操作稽核、IP / User-Agent / CorrelationId  
 - **公告系統**（Company 層級）  
 - **報表匯出**：PDF（iTextSharp）、Chart.js 視覺化  
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
+
 ---
+
 <a name="系統安全設計"></a>
 ## 🔐 系統安全設計
-
-> [📑 目錄](#Table_of_Contents)
 
 - Claims-based 認證 + Session + JWT（可選「記住我」功能）  
 - 密碼使用 BCrypt 加密（BCrypt.Net-Next）  
 - 帳號鎖定機制：連續失敗 5 次鎖定，30 分鐘自動解鎖  
 - CSRF 防護（ValidateAntiForgeryToken）與安全 Cookie（HttpOnly / Secure / SameSite）  
 - 角色/權限表（Roles_Permissions）實作 RBAC  
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
 
 ---
 
 <a name="資料庫設計"></a>
 ## 📀 資料庫設計（SQL Server）  
-
-> [📑 目錄](#Table_of_Contents)
 
 簡化 ER 圖（主要表格與關聯）：  
 
@@ -276,11 +277,13 @@ erDiagram
     USERS ||--o{ ROLES_PERMISSIONS : "authorized"
 
 ```
+
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
+
 ---
+
 <a name="專案亮點"></a>
 ## 🌟 專案亮點
-
-> [📑 目錄](#Table_of_Contents)
 
   本專案採用 **ASP.NET Core MVC 架構**與**多層式設計**原則，結合現代化的技術實踐，打造出高效能、可維護、可擴充的企業級碳管理系統。  
   The project is built with ASP.NET Core MVC architecture and modern design principles, focusing on performance, scalability, and maintainability for enterprise-level carbon management.  
@@ -365,11 +368,11 @@ erDiagram
 | 架構設計 | Repository Pattern, ViewModel, DI |
 | 安全性 | Session, Role-Based Access, Validation |
 
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
+
 ---
 <a name="後續發展建議"></a>
-## ⌨️ 後續發展建議  
-
-> [📑 目錄](#Table_of_Contents)
+## ⌨️ 後續發展建議 
 
 - **加入身份驗證和授權：**  
   目前專案沒有實現完整的身份驗證和授權功能，建議使用 ASP.NET Core Identity 來實現更安全的身份驗證和授權。  
@@ -382,16 +385,15 @@ erDiagram
 - **使用更安全的 Session 管理：**  
   目前專案使用 Session 來管理使用者狀態，建議使用更安全的 Session 管理方式，例如使用 Redis 或 SQL Server 來儲存 Session 資料。  
 - **優化資料庫效能：**  
-  建議對資料庫進行效能優化，例如建立索引、優化查詢語句等，以提高應用程式的效能。
+  建議對資料庫進行效能優化，例如建立索引、優化查詢語句等，以提高應用程式的效能。  
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
 
 ---
 
 <a name="License"></a>
 ## 📄 授權條款 (License)
 
-> [📑 目錄](#Table_of_Contents)
-
-此專案僅供學術與內部開發測試用途，未經授權請勿用於商業目的。
+此專案僅供學術與內部開發測試用途，未經授權請勿用於商業目的。  
 
 Copyright (c) 2025 Allen Hsu
 
@@ -402,20 +404,20 @@ that proper credit is given to the original author.
 Commercial use, redistribution, or modification for profit is 
 strictly prohibited without explicit written permission.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.  
+<p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
 
 ---
 
 <a name="報告與文件"></a>
 ## 📁 報告與文件  
 
-> [📑 目錄](#Table_of_Contents)
-
 詳細**功能說明**、**資料庫腳本**與**長篇報告**放在  
-[💒 返回頁首](#README)  
 docs/  
 Report/  
 database/  
+> [💒 返回頁首](#README) 
+  [📑 目錄](#Table_of_Contents)  
 
 ---
 
