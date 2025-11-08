@@ -2,6 +2,7 @@
 <p align="center">
   <img src="assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>  
+
 # 🌿 CarbonProject — ESG 碳足跡管理系統
 
 > 以 ASP.NET Core MVC 架構開發的 ESG 碳足跡管理平台，協助企業追蹤、分析與報告碳排放數據，實現永續發展與 ESG 目標。
@@ -43,7 +44,9 @@
 
 ---
 <a name="專案簡介"></a>
-## 📖 專案簡介	<h5 align="left"><a href="#Table_of_Contents">📑 目錄</a></h5>
+## 📖 專案簡介  
+
+> [📑 目錄](#Table_of_Contents)
 
 **CarbonProject** 是一款面向企業的碳排放與 ESG 管理系統。系統以可擴充的多層式架構設計（Controller / Service / Repository / Model），強調安全性與可維護性。  
 它能協助企業：  
