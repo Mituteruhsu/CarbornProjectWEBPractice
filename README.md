@@ -1,4 +1,6 @@
-
+<p align="center">
+  <img src="assets/banner.svg" alt="CarbonProject Banner" width="100%">
+</p>  
 ![CarbonProject - Sustainable Carbon Management System](assets/banner.svg)  
 # 🌿 CarbonProject — ESG 碳足跡管理系統
 
