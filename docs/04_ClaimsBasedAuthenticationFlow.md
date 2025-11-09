@@ -66,22 +66,22 @@ flowchart TB
 
 %% 第二階段：後續請求與授權驗證
 
-    U --"2-1 附帶 Cookie
+    U UC2@--"2-1 附帶 Cookie
     發送新請求"--> Controller
 
-    Controller -->|"2-2 送往
+    Controller CCO2@-->|"2-2 送往
     CookieAuth"| CookieAuth
     
-    CookieAuth -->|"2-3 解譯 Cookie
+    CookieAuth COC2@-->|"2-3 解譯 Cookie
     還原使用者 Claims"| Claims
 
-    Claims -->|"2-4 驗證授權屬性
+    Claims CA2@-->|"2-4 驗證授權屬性
     (Authorize)"| Authorize
 
-    Authorize -->|"2-5 若符合 Claims
+    Authorize AC2@-->|"2-5 若符合 Claims
     執行 Action"| Controller
 
-    Controller -->|"2-6 回傳頁面或資料"| U
+    Controller CU2@-->|"2-6 回傳頁面或資料"| U
 
 linkStyle 0,1,2,3,4,5 stroke:#C8E6C9
 linkStyle 6,7,8,9 stroke:#2962FF
@@ -92,6 +92,12 @@ MC1@{ animate: true, curve: linear }
 CC1@{ animate: true, curve: linear }
 CCO1@{ animate: true, curve: natural }
 COU1@{ animate: true, curve: linear }
+UC2@{ curve: linear }
+CCO2@{ curve: natural }
+COC2@{ curve: linear }
+CA2@{ curve: linear }
+AC2@{ curve: linear }
+CU2@{ curve: linear }
 ```
 
 🔹 三、機制特點與優勢
