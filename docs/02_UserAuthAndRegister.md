@@ -63,8 +63,8 @@ Middleware (驗證管線)
   Session 儲存登入使用者基本資訊，供系統後續操作使用。
 
 5. **導向對應頁面**
-  - 管理者 → 後台控制台 (Admin Dashboard)
-  - 一般會員 → 個人資料頁面 (Profile)
+	- 管理者 → 後台控制台 (Admin Dashboard)
+	- 一般會員 → 個人資料頁面 (Profile)
 
 ---
 
