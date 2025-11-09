@@ -4,7 +4,7 @@
 
 [⬅ 返回主頁](../README.md)
 
-# 第四章 Claims-based 認證流程 (Claims-based Authentication Flow)
+# 第四章《Claims-based 認證流程》 (Claims-based Authentication Flow)
 
 本系統採用 **Claims-based Authentication**（**基於宣告的認證**）機制，
 透過使用者登入後建立的 **Claims**（**宣告**）來進行身份驗證與授權控制。
