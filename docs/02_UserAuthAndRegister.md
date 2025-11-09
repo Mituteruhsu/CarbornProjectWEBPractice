@@ -187,6 +187,7 @@ flowchart TD
 
 > 📎 延伸閱讀  
   [第一章《角色權限系統》](../docs/01_RolePermissionSystem.md)  
+  [第三章《JWT 記住我功能》](../docs/03_JWTRememberMe.md)  
   [第四章《Claims-based 認證流程》](../docs/04_ClaimsBasedAuthenticationFlow.md)  
 
 ---

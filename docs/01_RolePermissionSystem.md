@@ -132,6 +132,7 @@ flowchart TB
 
 > 📎 延伸閱讀  
   [第二章《使用者認證與註冊系統》](../docs/02_UserAuthAndRegister.md)  
+  [第三章《JWT 記住我功能》](../docs/03_JWTRememberMe.md)  
   [第四章《Claims-based 認證流程》](../docs/04_ClaimsBasedAuthenticationFlow.md)  
 
 ---

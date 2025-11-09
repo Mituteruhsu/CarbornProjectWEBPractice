@@ -123,4 +123,11 @@ CU2@{ curve: linear }
 
 ---
 
+> 📎 延伸閱讀  
+  [第一章《角色權限系統》](../docs/01_RolePermissionSystem.md)  
+  [第二章《使用者認證與註冊系統》](../docs/02_UserAuthAndRegister.md)  
+  [第三章《JWT 記住我功能》](../docs/03_JWTRememberMe.md)  
+
+---
+
 [🌾頁首](#HEAD)
