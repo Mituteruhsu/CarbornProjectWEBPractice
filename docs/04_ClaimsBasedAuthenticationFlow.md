@@ -88,7 +88,7 @@ flowchart TB
 linkStyle 0,1,2,3,4,5 stroke:#C8E6C9
 linkStyle 6,7,8,9 stroke:#2962FF
 linkStyle 8,10,11 stroke:RED
-UC1@{ animate: true, curve: linear }
+UC1@{ animate: true, curve: natural }
 CM1@{ animate: true, curve: linear }
 MC1@{ animate: true, curve: linear }
 CC1@{ animate: true, curve: linear }
