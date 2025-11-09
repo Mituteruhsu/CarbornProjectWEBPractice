@@ -1,0 +1,139 @@
+﻿資料庫架構（Database Schema）
+│
+└── CarbonProject/
+    │
+    ├── [dbo].[ActivityLog]
+    │    ├─ LogId (bigint)
+    │    ├─ MemberId (int)
+    │    ├─ CompanyId (int)
+    │    ├─ ActionType (nvarchar)
+    │    ├─ ActionCategory (nvarchar)
+    │    ├─ ActionTime (datetime2)
+    │    ├─ Outcome (nvarchar)
+    │    ├─ IpAddress (nvarchar)
+    │    ├─ UserAgent (nvarchar)
+    │    ├─ Source (nvarchar)
+    │    ├─ CorrelationId (uniqueidentifier)
+    │    ├─ Details (nvarchar)
+    │    ├─ CreatedBy (nvarchar)
+    │    └─ CreatedAt (datetime2)
+    │
+    ├── [dbo].[CarbonRecords]
+    │    ├─ Id (int)
+    │    ├─ Name (nvarchar)
+    │    ├─ Usage (decimal)
+    │    ├─ Unit (nvarchar)
+    │    ├─ Factor (decimal)
+    │    ├─ Emission (decimal)
+    │    └─ CreatedAt (datetime)
+    │
+    ├── [dbo].[Companies] [公司資料表]
+    │    ├─ CompanyId (int)
+    │    ├─ CompanyName (nvarchar)
+    │    ├─ TaxId (nvarchar)
+    │    ├─ Industry_Id (nvarchar)
+    │    ├─ Address (nvarchar)
+    │    ├─ Contact_Email (nvarchar)
+    │    ├─ CreatedAt (datetime)
+    │    └─ UpdatedAt (datetime)
+    │
+    ├── [dbo].[CompanyEmissions]
+    │    ├─ EmissionId (int)
+    │    ├─ CompanyId (int)
+    │    ├─ Year (int)
+    │    ├─ Quarter (tinyint)
+    │    ├─ Scope1Emission (decimal)
+    │    ├─ Scope2Emission (decimal)
+    │    ├─ Scope3Emission (decimal)
+    │    ├─ TotalEmission (decimal)
+    │    ├─ Source (nvarchar)
+    │    ├─ CreatedAt (datetime)
+    │    └─ UpdatedAt (datetime)
+    │
+    ├── [dbo].[CompanyEmissionTargets]
+    │    ├─ TargetId (int)
+    │    ├─ CompanyId (int)
+    │    ├─ BaselineYear (int)
+    │    ├─ TargetYear (int)
+    │    ├─ BaselineEmission (decimal)
+    │    ├─ TargetEmission (decimal)
+    │    ├─ ReductionPercent (decimal)
+    │    ├─ Description (nvarchar)
+    │    ├─ CreatedAt (datetime)
+    │    └─ UpdatedAt (datetime)
+    │
+    ├── [dbo].[ESGActions] [ESG 行動表]
+    │    ├─ Id (int)
+    │    ├─ Title (nvarchar)
+    │    ├─ Category (nvarchar)
+    │    ├─ Description (nvarchar)
+    │    ├─ ExpectedReductionTon (decimal)
+    │    ├─ ProgressPercent (decimal)
+    │    ├─ OwnerDepartment (nvarchar)
+    │    ├─ Year (int)
+    │    ├─ CreatedAt (datetime2)
+    │    ├─ UpdatedAt (datetime2)
+    │    ├─ MemberId (int)
+    │    └─ CompanyId (int)
+    │
+    ├── [dbo].[ESGProgress]
+    │    ├─ Id (int)
+    │    ├─ Year (int)
+    │    ├─ TotalActions (int)
+    │    ├─ CompletedCount (int)
+    │    ├─ InProgressCount (int)
+    │    ├─ NotStartedCount (int)
+    │    ├─ TotalReductionTon (decimal)
+    │    └─ AverageProgress (decimal)
+    │
+    ├── [dbo].[Industries]
+    │    ├─ Industry_Id (nvarchar)
+    │    ├─ Major_Category_Code (nvarchar)
+    │    ├─ Major_Category_Name (nvarchar)
+    │    ├─ Middle_Category_Code (nvarchar)
+    │    └─ Middle_Category_Name (nvarchar)
+    │
+    ├── [dbo].[Roles_Permissions]
+    │    ├─ Role (nvarchar)
+    │    ├─ Permission_Key (nvarchar)
+    │    └─ Description (nvarchar)
+    │
+    ├── [dbo].[sysdiagrams]
+    │    ├─ name (sysname)
+    │    ├─ principal_id (int)
+    │    ├─ diagram_id (int)
+    │    ├─ version (int)
+    │    └─ definition (varbinary)
+    │
+    ├── [dbo].[UserCompanyMap]
+    │    ├─ Id (int)
+    │    ├─ MemberId (int)
+    │    ├─ CompanyId (int)
+    │    └─ Role (nvarchar)
+    │
+    └── [dbo].[Users] [使用者資料表] ⭐ 核心表
+          ├─ MemberId (int)
+          ├─ Username (nvarchar)
+          ├─ Email (nvarchar)
+          ├─ PasswordHash (nvarchar)
+          ├─ FullName (nvarchar)
+          ├─ CompanyId (int)
+          ├─ PhoneNumber (nvarchar)
+          ├─ Gender (nvarchar)
+          ├─ Birthday (date)
+          ├─ Address (nvarchar)
+          ├─ ProfileImage (nvarchar)
+          ├─ Role (nvarchar)
+          ├─ IsActive (bit)
+          ├─ EmailConfirmed (bit)
+          ├─ PhoneConfirmed (bit)
+          ├─ MembershipLevel (nvarchar)
+          ├─ Points (int)
+          ├─ Created
+          ├─ UpdatedAt (datetime)
+          ├─ LastLoginAt (datetime)
+          ├─ LastLogoutAt (datetime)
+          ├─ LastFailedLoginAt (datetime)
+          └─ FailedLoginAttempts (int)
+
+完成時間: 2025-11-09T20:39:07.0861239+08:00

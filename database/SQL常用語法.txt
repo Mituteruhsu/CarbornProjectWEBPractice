@@ -1,0 +1,98 @@
+﻿# T-SQL 文字樹狀圖輸出
+
+```sql
+SET NOCOUNT ON;
+
+DECLARE @Result NVARCHAR(MAX) = N'';
+DECLARE @CRLF NCHAR(2) = CHAR(13) + CHAR(10);
+
+WITH ColumnInfo AS (
+    SELECT 
+        s.name AS SchemaName,
+        t.name AS TableName,
+        c.name AS ColumnName,
+        ty.name AS DataType,
+        c.column_id,
+        ROW_NUMBER() OVER (PARTITION BY t.object_id ORDER BY c.column_id) AS rn,
+        COUNT(*) OVER (PARTITION BY t.object_id) AS total
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    JOIN sys.columns c ON t.object_id = c.object_id
+    JOIN sys.types ty ON c.user_type_id = ty.user_type_id
+),
+Tables AS (
+    SELECT DISTINCT SchemaName, TableName
+    FROM ColumnInfo
+),
+TablesWithRow AS (
+    SELECT *, ROW_NUMBER() OVER (ORDER BY TableName) AS rn,
+              COUNT(*) OVER () AS total
+    FROM Tables
+)
+SELECT @Result = @Result +
+    CASE 
+        WHEN ci.rn = ci.total THEN N'    └── [' + ci.SchemaName + '].[' + ci.TableName + ']'  -- 最後一個 table
+        ELSE N'    ├── [' + ci.SchemaName + '].[' + ci.TableName + ']'                       -- 其他 table
+    END +
+    CASE 
+        WHEN TableName = 'Users' THEN N' [使用者資料表] ⭐ 核心表'
+        WHEN TableName = 'Companies' THEN N' [公司資料表]'
+        WHEN TableName = 'ESGActions' THEN N' [ESG 行動表]'
+        ELSE N''
+    END + @CRLF +
+
+    -- columns 區塊
+    CASE 
+        WHEN ci.rn = ci.total THEN  -- 最後一個 table 縮排兩層
+            (SELECT STRING_AGG(
+                N'          ' + 
+                CASE WHEN rn = total THEN N'└─ ' ELSE N'├─ ' END + 
+                ColumnName + N' (' + DataType + N')',
+                @CRLF
+            )
+            FROM ColumnInfo ci2
+            WHERE ci2.TableName = ci.TableName AND ci2.SchemaName = ci.SchemaName)
+        ELSE  -- 其他 table 縮排一層 + 保留 │
+            (SELECT STRING_AGG(
+                N'    │    ' + 
+                CASE WHEN rn = total THEN N'└─ ' ELSE N'├─ ' END + 
+                ColumnName + N' (' + DataType + N')',
+                @CRLF
+            )
+            FROM ColumnInfo ci2
+            WHERE ci2.TableName = ci.TableName AND ci2.SchemaName = ci.SchemaName)
+    END + @CRLF +
+
+    -- table 之間的間隔
+    CASE WHEN ci.rn = ci.total THEN N'' ELSE N'    │' + @CRLF END
+FROM TablesWithRow ci
+ORDER BY ci.rn;
+
+-- 最外層結構
+SET @Result = 
+N'資料庫架構（Database Schema）' + @CRLF +
+N'│' + @CRLF +
+N'└── CarbonProject/' + @CRLF +
+N'    │' + @CRLF +
+@Result;
+
+-- 輸出結果
+-- 分段 PRINT，避免截斷
+DECLARE @Start INT = 1;
+DECLARE @CRLFPos INT;
+DECLARE @Segment NVARCHAR(4000);
+
+WHILE @Start <= LEN(@Result)
+BEGIN
+    -- 找下一個 CRLF 或 4000 字元內的最大段落
+    SET @CRLFPos = CHARINDEX(@CRLF, @Result, @Start + 3999);
+    IF @CRLFPos = 0
+        SET @CRLFPos = LEN(@Result) + 1;
+
+    SET @Segment = SUBSTRING(@Result, @Start, @CRLFPos - @Start);
+    PRINT @Segment;
+
+    SET @Start = @CRLFPos + 2;  -- 跳過 CRLF
+END
+```
+
