@@ -87,9 +87,15 @@ flowchart TB
 ---
 
 ## 🧱 RBAC 四層關係：User → Role → Permission → Capability
-| 層級 | 名稱 | 說明 | 範例 |
-|:-----|:-----|:-----|:-----|
+| 層級 | 名稱 | 說明 |
+|:-----|:-----|:-----|
 | 👤 User（使用者） | 系統中的實際帳號 | Alice、Bob、管理員帳號 |
 | 🎭 Role（角色） | 代表一組職責或身分，擁有一組權限 | Admin、Editor、Viewer |
 | 🔐 Permission（權限） | 對系統資源的操作授權 | Article.Edit, User.Delete |
 | ⚙️ Capability（能力 / 動作細項） | 具體可執行的功能或 API 操作	 | POST /articles/edit, DELETE /users/{id} |
+
+|	使用者	|	角色	|	權限	|	能力	|
+| ----- | ------ | ----------- | ------------------- |
+| Alice | Admin  | ManageUsers | DELETE /users/{id}  |
+| Bob   | Editor | EditArticle | POST /articles/edit |
+| Carol | Viewer | ViewArticle | GET /articles/{id}  |
