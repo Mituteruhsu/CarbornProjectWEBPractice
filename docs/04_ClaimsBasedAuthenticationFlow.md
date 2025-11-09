@@ -1,7 +1,7 @@
 # 第四章 Claims-based 認證流程 (Claims-based Authentication Flow)
 
-本系統採用 **Claims-based Authentication（基於宣告的認證）**機制，
-透過使用者登入後建立的 **Claims（宣告）**來進行身份驗證與授權控制。
+本系統採用 **Claims-based Authentication**（**基於宣告的認證**）機制，
+透過使用者登入後建立的 **Claims**（**宣告**）來進行身份驗證與授權控制。
 此機制結合 **ASP.NET Core MVC** 的 **Cookie** 認證流程，確保登入狀態與授權檢查的安全性與彈性。
 
 ## 一、認證流程階段概述（7 個主要階段）
