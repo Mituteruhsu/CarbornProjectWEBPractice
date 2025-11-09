@@ -7,14 +7,14 @@
 ## 一、認證流程階段概述（7 個主要階段）
 
 | 階段編號 | 階段名稱 | 說明 |
-|------|------|------|
-|     1 | 使用者登入請求 | 使用者透過瀏覽器輸入帳號與密碼，提交至伺服器端 AccountController。 |
-|     2 | 驗證使用者憑證 | Controller 呼叫 Service/Repository，從 Members 資料表驗證帳號密碼是否正確。 |
-|     3 | 建立 ClaimsPrincipal | 驗證成功後，系統建立 ClaimsIdentity，包含使用者屬性（如姓名、Email、角色等），並包裝成 ClaimsPrincipal。 |
-|     4 | 簽發 Cookie | 系統使用 HttpContext.SignInAsync() 將 Claims 打包成 Ticket，加密後存入瀏覽器 Cookie。 |
-|     5 | 帶 Cookie 發送請求 | 使用者在後續請求中自動攜帶此 Cookie，伺服器據此識別使用者。 |
-|     6 | 還原 ClaimsPrincipal | Cookie 驗證中介層（Middleware）會解析 Cookie，還原出使用者的 ClaimsPrincipal。 |
-|     7 | 授權檢查與執行 | [Authorize] 屬性與授權中介層會根據 Claims 驗證權限，若通過則執行對應 Controller Action。 |
+|:----:|:-----|:------|
+| 1 | 使用者登入請求 | 使用者透過瀏覽器輸入帳號與密碼，提交至伺服器端 AccountController。 |
+| 2 | 驗證使用者憑證 | Controller 呼叫 Service/Repository，從 Members 資料表驗證帳號密碼是否正確。 |
+| 3 | 建立 ClaimsPrincipal | 驗證成功後，系統建立 ClaimsIdentity，包含使用者屬性（如姓名、Email、角色等），並包裝成 ClaimsPrincipal。 |
+| 4 | 簽發 Cookie | 系統使用 HttpContext.SignInAsync() 將 Claims 打包成 Ticket，加密後存入瀏覽器 Cookie。 |
+| 5 | 帶 Cookie 發送請求 | 使用者在後續請求中自動攜帶此 Cookie，伺服器據此識別使用者。 |
+| 6 | 還原 ClaimsPrincipal | Cookie 驗證中介層（Middleware）會解析 Cookie，還原出使用者的 ClaimsPrincipal。 |
+| 7 | 授權檢查與執行 | [Authorize] 屬性與授權中介層會根據 Claims 驗證權限，若通過則執行對應 Controller Action。 |
 
 🔹 二、認證與授權互動流程（PlantUML 詳細圖）
 
