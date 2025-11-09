@@ -1,3 +1,4 @@
+<a name="HEAD"></a>
 <p align="center">
   <img src="../assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>
@@ -119,3 +120,7 @@ CU2@{ curve: linear }
 - **安全性提升**：Cookie 內容經過 ASP.NET Data Protection 加密簽章，避免偽造。
 - **擴展性高**：支援與外部身分提供者（如 Azure AD、Google、OAuth 2.0）整合。
 - **授權統一**：可用 [Authorize] 或自訂 Policy（如 RequireClaim("Role", "Admin")）統一控制存取權限。
+
+---
+
+[🌾頁首](#HEAD)
