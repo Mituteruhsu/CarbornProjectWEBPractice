@@ -24,6 +24,7 @@ config:
 flowchart TB
     U["使用者 (User)"]:::actor
     subgraph ASP["ASP.NET Core MVC 應用程式"]
+    direction TB
         Members("Members 資料表
         (驗證帳號密碼)"):::component
 
@@ -32,12 +33,15 @@ flowchart TB
 
         Claims("ClaimsIdentity / ClaimsPrincipal
         (建立使用者身份)"):::component
+        %% 水平排列 CookieAuth
+        subgraph CookieRow [" "]
+            direction LR
+          Authorize("授權屬性 [Authorize]
+          (依 Claims 驗證權限)"):::component
 
-        CookieAuth("Cookie Authentication
-        (簽發登入 Cookie)"):::component
-
-        Authorize("授權屬性 [Authorize]
-        (依 Claims 驗證權限)"):::component
+          CookieAuth("Cookie Authentication
+          (簽發登入 Cookie)"):::component
+        end
     end
     class ASP node
 
@@ -61,17 +65,20 @@ flowchart TB
     登入"| U
 
 %% 第二階段：後續請求與授權驗證
-    
+
     U -->|2-1 附帶 Cookie
     發送新請求| Controller
-    Controller -->|2-2 送往 CookieAuth| CookieAuth
-    CookieAuth -->|2-3 解譯 Cookie
-    還原使用者 Claims| Claims
-    Claims -->|2-4 驗證授權屬性
-    <Authorize>| Authorize
-    Authorize -->|2-5 若符合 Claims
-    執行 Action| Controller
-    Controller -->|2-6 回傳頁面或資料| U
+
+    Controller -->|"2-2 送往 CookieAuth"| CookieAuth
+    
+    CookieAuth -->|"2-3 解譯 Cookie
+    還原使用者 Claims"| Claims
+
+    Claims -->|"2-4 驗證授權屬性
+    (Authorize)"| Authorize
+    Authorize -->|"2-5 若符合 Claims
+    執行 Action"| Controller
+    Controller -->|"2-6 回傳頁面或資料"| U
 ```
 
 🔹 三、機制特點與優勢
