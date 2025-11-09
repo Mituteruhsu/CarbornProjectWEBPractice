@@ -66,113 +66,27 @@ Middleware (驗證管線)
   - 管理者 → 後台控制台 (Admin Dashboard)
   - 一般會員 → 個人資料頁面 (Profile)
 
+---
 
+## 🔐 註冊流程說明
 
-
-#### 一般使用者（Individual User）
-
-- 例：註冊會員、平台個人使用者
-- 權限範圍：僅限個人帳戶、查看個人資料、基本操作
-- 常見角色：Member, Guest
-
-#### 公司使用者（Company User）
-
-- 例：企業帳號、公司登入者
-- 權限根據職位細分：
-  * **主管**（**Manager / Admin**）可審核、管理員工、設定公司目標
-  * **非主管**（**Employee / Staff**）只能上傳、查看自己負責的資料
+1. 填寫註冊表單
+使用者輸入帳號、密碼、公司代碼與基本資訊。  
+2. 驗證唯一性
+系統檢查該 Email 是否已存在於 Members 資料表。  
+3. 建立使用者帳號
+  - 將密碼加密後儲存至資料庫。
+  - 預設指派角色：User。  
+4. 關聯公司資料  
+  若提供公司代碼，會於 Members 表中建立 CompanyId 關聯。
+5. 建立初始 ActivityLog  
+  系統紀錄使用者註冊時間與 IP 位址。
 
 ---
 
-## 🧩 系統架構概念
+## ⚙️ 範例程式碼片段
 
-角色權限系統採用 **Role-Based Access Control (RBAC)** 模型實作，  
-結構如下圖所示：
-
-```mermaid
-flowchart TB
-  subgraph Users["使用者 (Users)"]
-    GU([一般使用者])
-    CU([公司使用者])
-    M([主管])
-    E([非主管])
-  end
-
-  subgraph Roles["角色 (Roles)"]
-    R1[Member]
-    R2[ManagerRole]
-    R3[EmployeeRole]
-  end
-
-  subgraph Permissions["權限 (Permissions)"]
-    P1["ViewProfile / EditProfile"]
-    P2["ApproveReports / ManageEmployee"]
-    P3["UploadReport / ViewTask"]
-  end
-
-  subgraph Capabilities["能力 (Capabilities / API)"]
-    C1["GET /user/profile\nPUT /user/profile"]
-    C2["POST /company/reports/approve\nPUT /company/users/{id}"]
-    C3["POST /company/reports/upload\nGET /company/tasks"]
-  end
-
-  GU --> R1
-  CU --> R2
-  CU --> R3
-  M --> R2
-  E --> R3
-
-  R1 --> P1
-  R2 --> P2
-  R3 --> P3
-
-  P1 --> C1
-  P2 --> C2
-  P3 --> C3
-```
-
----
-
-## 🧱 RBAC 四層關係：User → Role → Permission → Capability
-| 層級 | 名稱 | 說明 |
-|:-----|:-----|:-----|
-| 👤 User（使用者） | 系統中的實際帳號 | Alice、Bob、管理員帳號 |
-| 🎭 Role（角色） | 代表一組職責或身分，擁有一組權限 | Admin、Editor、Viewer |
-| 🔐 Permission（權限） | 對系統資源的操作授權 | Article.Edit, User.Delete |
-| ⚙️ Capability（能力 / 動作細項） | 具體可執行的功能或 API 操作	 | POST /articles/edit, DELETE /users/{id} |
-
-### 範例
-|	使用者	|	角色	|	權限	|	能力	|
-| ----- | ------ | ----------- | ------------------- |
-| Alice | Admin  | ManageUsers | DELETE /users/{id}  |
-| Bob   | Editor | EditArticle | POST /articles/edit |
-| Carol | Viewer | ViewArticle | GET /articles/{id}  |
-
-| 使用者類型 | 角色       | 權限 (Permission) | 能力 (Capability / API)         |
-| ----- | -------- | --------------- | ----------------------------- |
-| 一般使用者 | Member   | ViewProfile     | GET /user/profile             |
-| 一般使用者 | Member   | EditProfile     | PUT /user/profile             |
-| 公司主管  | Manager  | ApproveReports  | POST /company/reports/approve |
-| 公司主管  | Manager  | ManageEmployee  | PUT /company/users/{id}       |
-| 公司員工  | Employee | UploadReport    | POST /company/reports/upload  |
-| 公司員工  | Employee | ViewTask        | GET /company/tasks            |
-
----
-
-## 🧠 為什麼要多一層 Capability？
-
-一般的 RBAC 模型會停在「Role → Permission」，但實際系統中：
-- Permission 是抽象的（邏輯層）
-- Capability 是具體的（技術層 / API 或程式層）
-
-例如：
-> 「文章編輯權限（Permission）」  
-> 對應到實際程式的 POST /api/article/edit（Capability）
-
-這樣能讓：
-- 權限邏輯與程式端操作解耦
-- 更容易對接 REST API、微服務、或行為審計系統
-- 安全審查更細緻：哪個角色觸發了哪個 API
+A backtick-delimited string in a code span: `` `foo` ``
 
 ---
 
