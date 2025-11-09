@@ -187,7 +187,7 @@ flowchart TD
 
 > 📎 延伸閱讀  
   [第一章《角色權限系統》](../docs/01_RolePermissionSystem.md)  
-  [第四章《Claims-based 認證流程》(Claims-based Authentication Flow)](../docs/04_ClaimsBasedAuthenticationFlow.md)  
+  [第四章《Claims-based 認證流程》](../docs/04_ClaimsBasedAuthenticationFlow.md)  
 
 ---
 

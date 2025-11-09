@@ -130,4 +130,10 @@ flowchart TB
 
 ---
 
+> 📎 延伸閱讀  
+  [第二章《使用者認證與註冊系統》](../docs/02_UserAuthAndRegister.md)  
+  [第四章《Claims-based 認證流程》](../docs/04_ClaimsBasedAuthenticationFlow.md)  
+
+---
+
 [🌾頁首](#HEAD)
