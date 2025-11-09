@@ -31,11 +31,12 @@
 <a name="Table_of_Contents"></a>
 ## 📚 目錄 (Table of Contents)
 - [專案簡介](#專案簡介)
+- [專案導覽](#專案導覽)
 - [專案目標](#專案目標)
 - [系統架構](#系統架構)
 - [核心模組](#核心模組)
 - [系統安全設計](#系統安全設計)
-- [資料庫設計（SQL Server）](#資料庫設計sql-server)
+- [資料庫設計（SQL Server）](#資料庫設計)
 - [專案亮點](#專案亮點)
 - [後續發展建議](#後續發展建議)
 - [License](#License)
@@ -58,6 +59,7 @@
 <p align="right" style="font-size:0.8em;"><a href="#Table_of_Contents">📑 目錄</a></p>  
 
 ---
+<a name="專案導覽"></a>
 ## 🧭 專案導覽
 - [第一章《角色權限系統》](docs/01_RolePermissionSystem.md)
 - [第二章《使用者認證與註冊系統》](#)
