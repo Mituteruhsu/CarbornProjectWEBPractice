@@ -7,7 +7,7 @@
 ## 一、認證流程階段概述（7 個主要階段）
 
 | 階段編號 | 階段名稱 | 說明 |
-|:-----:|:----:|:------|
+|:----:|:----|:------|
 | 1 | 使用者登入請求 | 使用者透過瀏覽器輸入帳號與密碼，提交至伺服器端 AccountController。 |
 | 2 | 驗證使用者憑證 | Controller 呼叫 Service/Repository，從 Members 資料表驗證帳號密碼是否正確。 |
 | 3 | 建立 ClaimsPrincipal | 驗證成功後，系統建立 ClaimsIdentity，包含使用者屬性（如姓名、Email、角色等），並包裝成 ClaimsPrincipal。 |
