@@ -90,7 +90,7 @@ UC1@{ animate: true, curve: linear }
 CM1@{ animate: true, curve: linear }
 MC1@{ animate: true, curve: linear }
 CC1@{ animate: true, curve: natural }
-CCO1@{ animate: true, curve: natural }
+CCO1@{ animate: true, curve: linear }
 COU1@{ animate: true, curve: linear }
 ```
 
