@@ -94,8 +94,26 @@ flowchart TB
 | 🔐 Permission（權限） | 對系統資源的操作授權 | Article.Edit, User.Delete |
 | ⚙️ Capability（能力 / 動作細項） | 具體可執行的功能或 API 操作	 | POST /articles/edit, DELETE /users/{id} |
 
+### 範例
 |	使用者	|	角色	|	權限	|	能力	|
 | ----- | ------ | ----------- | ------------------- |
 | Alice | Admin  | ManageUsers | DELETE /users/{id}  |
 | Bob   | Editor | EditArticle | POST /articles/edit |
 | Carol | Viewer | ViewArticle | GET /articles/{id}  |
+
+---
+
+## 🧠 為什麼要多一層 Capability？
+
+一般的 RBAC 模型會停在「Role → Permission」，但實際系統中：
+- Permission 是抽象的（邏輯層）
+- Capability 是具體的（技術層 / API 或程式層）
+
+例如：
+> 「文章編輯權限（Permission）」
+  對應到實際程式的 POST /api/article/edit（Capability）
+
+這樣能讓：
+- 權限邏輯與程式端操作解耦
+- 更容易對接 REST API、微服務、或行為審計系統
+- 安全審查更細緻：哪個角色觸發了哪個 API
