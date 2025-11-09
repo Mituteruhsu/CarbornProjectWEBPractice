@@ -4,7 +4,7 @@
 透過使用者登入後建立的 **Claims**（**宣告**）來進行身份驗證與授權控制。
 此機制結合 **ASP.NET Core MVC** 的 **Cookie** 認證流程，確保登入狀態與授權檢查的安全性與彈性。
 
-## 一、認證流程階段概述（7 個主要階段）
+## 🔹 一、認證流程階段概述（7 個主要階段）
 
 | 階段編號 | 階段名稱 | 說明 |
 |:----:|:----|:------|
@@ -16,7 +16,7 @@
 | 6 | 還原 ClaimsPrincipal | Cookie 驗證中介層（Middleware）會解析 Cookie，還原出使用者的 ClaimsPrincipal。 |
 | 7 | 授權檢查與執行 | [Authorize] 屬性與授權中介層會根據 Claims 驗證權限，若通過則執行對應 Controller Action。 |
 
-🔹 二、認證與授權互動流程（PlantUML 詳細圖）
+## 🔹 二、認證與授權互動流程（PlantUML 詳細圖）
 
 ```mermaid
 ---
@@ -102,12 +102,9 @@ AC2@{ curve: linear }
 CU2@{ curve: linear }
 ```
 
-🔹 三、機制特點與優勢
+## 🔹 三、機制特點與優勢
 
-基於屬性而非角色的授權控制：可根據不同的 Claims（例如部門、職稱、權限層級）進行細粒度控制。
-
-安全性提升：Cookie 內容經過 ASP.NET Data Protection 加密簽章，避免偽造。
-
-擴展性高：支援與外部身分提供者（如 Azure AD、Google、OAuth 2.0）整合。
-
-授權統一：可用 [Authorize] 或自訂 Policy（如 RequireClaim("Role", "Admin")）統一控制存取權限。
+- **基於屬性而非角色的授權控制**：可根據不同的 Claims（例如部門、職稱、權限層級）進行細粒度控制。
+- **安全性提升**：Cookie 內容經過 ASP.NET Data Protection 加密簽章，避免偽造。
+- **擴展性高**：支援與外部身分提供者（如 Azure AD、Google、OAuth 2.0）整合。
+- **授權統一**：可用 [Authorize] 或自訂 Policy（如 RequireClaim("Role", "Admin")）統一控制存取權限。
