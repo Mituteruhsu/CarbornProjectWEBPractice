@@ -86,6 +86,8 @@ Middleware (驗證管線)
 
 ## ⚙️ 範例程式碼片段
 
+### 登入驗證邏輯
+
 ```C#
 [HttpPost]
 public IActionResult Login(string email, string password)
@@ -114,6 +116,82 @@ public IActionResult Login(string email, string password)
     return RedirectToAction("Index", "Home");
 }
 ```
+
+### 註冊邏輯
+
+```C#
+[HttpPost]
+public IActionResult Register(RegisterViewModel model)
+{
+    if (ModelState.IsValid)
+    {
+        var member = new Member
+        {
+            Name = model.Name,
+            Email = model.Email,
+            PasswordHash = HashPassword(model.Password),
+            Role = "User",
+            CompanyId = model.CompanyId
+        };
+
+        _context.Members.Add(member);
+        _context.SaveChanges();
+        _activityLog.LogRegister(member.MemberId);
+        return RedirectToAction("Login");
+    }
+    return View(model);
+}
+
+```
+---
+
+## 📊 資料表結構摘要
+
+| 資料表             | 欄位                                                               | 說明             |
+| --------------- | ---------------------------------------------------------------- | -------------- |
+| **Members**     | `MemberId`, `Name`, `Email`, `PasswordHash`, `Role`, `CompanyId` | 儲存使用者基本資料與角色資訊 |
+| **Companies**   | `CompanyId`, `CompanyName`, `IndustryType`                       | 儲存企業資訊         |
+| **ActivityLog** | `LogId`, `MemberId`, `Action`, `TimeStamp`, `IPAddress`          | 記錄登入、登出、註冊等活動  |
+
+---
+
+## 🧭 認證流程圖
+
+```mermaid
+---
+config:
+  theme: redux-dark
+---
+flowchart TD
+    A[使用者提交登入表單] --> B[伺服器驗證帳號密碼]
+    B -->|成功| C[建立 ClaimsIdentity]
+    B -->|失敗| G[顯示錯誤訊息]
+    C --> D[建立 Session 狀態]
+    D --> E[ActivityLog 紀錄登入事件]
+    E --> F[導向 Dashboard 或 Profile 頁面]
+```
+---
+
+## 🔗 與 Claims-based 認證關聯
+
+本章為 **Claims-based 認證流程** 的前置階段，
+使用者登入後產生的 Claims 將在後續授權與角色控制（第四章）中使用，
+實現 「一次登入，全系統識別」 的安全架構。
+
+---
+
+## 🔍 小結
+
+- 登入與註冊系統為整體安全架構的起點。
+- 透過 Claims 儲存使用者狀態，可搭配中介層授權檢查。
+- 與 角色權限系統、Claims-based 認證流程 深度整合，   
+  提升系統安全性與維護性。
+
+---
+
+> 📎 延伸閱讀
+> [第一章《角色權限系統》](docs/01_RolePermissionSystem.md)
+> [第四章《Claims-based 認證流程》(Claims-based Authentication Flow)](docs/04_ClaimsBasedAuthenticationFlow.md)
 
 ---
 
