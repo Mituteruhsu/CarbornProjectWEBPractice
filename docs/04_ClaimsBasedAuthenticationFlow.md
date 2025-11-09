@@ -2,7 +2,7 @@
   <img src="../assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>
 
-[⬅ 返回主頁](../README.md)
+[專案導覽⬅返回](../README.md#專案導覽)
 
 # 第四章《Claims-based 認證流程》 (Claims-based Authentication Flow)
 

@@ -2,7 +2,7 @@
   <img src="../assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>
 
-[⬅ 返回主頁](../README.md#專案導覽)
+[專案導覽⬅返回](../README.md#專案導覽)
 
 # 第一章《角色權限系統》 (Role & Permission System)
 
