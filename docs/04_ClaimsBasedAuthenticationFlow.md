@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/banner.svg" alt="CarbonProject Banner" width="100%">
+  <img src="../assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>
 
 [⬅ 返回主頁](../README.md)
