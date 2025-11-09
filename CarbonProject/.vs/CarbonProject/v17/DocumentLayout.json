@@ -82,8 +82,7 @@
               "RelativeToolTip": "CarbonProject\\Models\\MembersViewModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T07:23:03.921Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T07:23:03.921Z"
             },
             {
               "$type": "Document",
@@ -108,8 +107,7 @@
               "RelativeToolTip": "CarbonProject\\Repositories\\MembersRepository.cs",
               "ViewState": "AgIAAAoBAAAAAAAAAAAkwPAAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T04:54:44.756Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T04:54:44.756Z"
             },
             {
               "$type": "Document",
@@ -121,8 +119,7 @@
               "RelativeToolTip": "CarbonProject\\Models\\EFModels\\ActivityLog.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T02:21:17.478Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T02:21:17.478Z"
             },
             {
               "$type": "Document",
@@ -134,8 +131,7 @@
               "RelativeToolTip": "CarbonProject\\Repositories\\ActivityLogRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T01:31:35.21Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T01:31:35.21Z"
             },
             {
               "$type": "Document",
@@ -147,8 +143,7 @@
               "RelativeToolTip": "CarbonProject\\Repositories\\CompanyRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T01:31:39.058Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T01:31:39.058Z"
             },
             {
               "$type": "Document",
@@ -160,8 +155,7 @@
               "RelativeToolTip": "CarbonProject\\Repositories\\HomeIndexRepository.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAADwvxYAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T01:31:17.758Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T01:31:17.758Z"
             },
             {
               "$type": "Document",
@@ -173,8 +167,7 @@
               "RelativeToolTip": "CarbonProject\\Controllers\\HomeController.cs",
               "ViewState": "AgIAABwAAAAAAAAAAAAAwDoAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T15:21:55.546Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T15:21:55.546Z"
             },
             {
               "$type": "Document",
@@ -186,8 +179,7 @@
               "RelativeToolTip": "CarbonProject\\Views\\Home\\Index.cshtml",
               "ViewState": "AgIAAHEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-07T01:30:22.104Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T01:30:22.104Z"
             },
             {
               "$type": "Document",
@@ -199,8 +191,7 @@
               "RelativeToolTip": "CarbonProject\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-07T00:46:45.994Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T00:46:45.994Z"
             },
             {
               "$type": "Document",
@@ -212,8 +203,7 @@
               "RelativeToolTip": "CarbonProject\\Models\\EFModels\\CompanyEmissionTarget.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAzwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T02:27:19.153Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T02:27:19.153Z"
             },
             {
               "$type": "Document",
@@ -225,8 +215,7 @@
               "RelativeToolTip": "CarbonProject\\Models\\EFModels\\CompanyEmission.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T02:27:12.82Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T02:27:12.82Z"
             },
             {
               "$type": "Document",
@@ -238,8 +227,7 @@
               "RelativeToolTip": "CarbonProject\\Helpers\\TimeHelper.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-06T08:32:01.864Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-06T08:32:01.864Z"
             },
             {
               "$type": "Document",
@@ -251,8 +239,7 @@
               "RelativeToolTip": "CarbonProject\\wwwroot\\js\\site.js",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-11-04T08:33:02.866Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-04T08:33:02.866Z"
             },
             {
               "$type": "Document",
