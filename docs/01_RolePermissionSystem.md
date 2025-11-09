@@ -102,6 +102,15 @@ flowchart TB
 | Bob   | Editor | EditArticle | POST /articles/edit |
 | Carol | Viewer | ViewArticle | GET /articles/{id}  |
 
+| 使用者類型 | 角色       | 權限 (Permission) | 能力 (Capability / API)         |
+| ----- | -------- | --------------- | ----------------------------- |
+| 一般使用者 | Member   | ViewProfile     | GET /user/profile             |
+| 一般使用者 | Member   | EditProfile     | PUT /user/profile             |
+| 公司主管  | Manager  | ApproveReports  | POST /company/reports/approve |
+| 公司主管  | Manager  | ManageEmployee  | PUT /company/users/{id}       |
+| 公司員工  | Employee | UploadReport    | POST /company/reports/upload  |
+| 公司員工  | Employee | ViewTask        | GET /company/tasks            |
+
 ---
 
 ## 🧠 為什麼要多一層 Capability？
