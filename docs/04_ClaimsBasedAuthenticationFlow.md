@@ -16,79 +16,63 @@ Claims-based 認證流程 (Claims-based Authentication Flow)
 
 🔹 二、認證與授權互動流程（PlantUML 詳細圖）
 
-' Claims-based 認證流程圖 (PlantUML)
-@startuml
-title Claims-based 認證流程圖 - CarbonProject
-top to bottom direction
-skinparam shadowing true
-skinparam defaultFontName 微軟正黑體
-skinparam TitleFontSize 25
-skinparam TitleFontStyle bold
-skinparam NodeFontSize 20
-skinparam NodeFontStyle bold
-skinparam ComponentFontSize 25
-skinparam ComponentFontStyle bold
-skinparam ArrowFontSize 15
-skinparam ArrowFontStyle bold
-skinparam ArrowColor #4A5568
-skinparam ArrowThickness 2
-skinparam ActorFontSize 25
-skinparam ActorFontStyle bold
-skinparam componentStyle rectangle
+```mermaid
+---
+config:
+  theme: redux-dark
+---
+flowchart TB
+    U["使用者 (User)"]:::actor
+    subgraph ASP["ASP.NET Core MVC 應用程式"]
+        Members("Members 資料表
+        (驗證帳號密碼)"):::component
 
-skinparam actor {
-  BackgroundColor #D69E2E
-  BorderColor #D69E2E
-  FontColor #7C3E00
-}
+        Controller("AccountController
+        (處理登入/登出)"):::component
 
-skinparam component {
-  BackgroundColor #E6F0FA
-  BorderColor #1E3A8A
-  FontColor #1E3A8A
-  RoundCorner 15
-}
+        Claims("ClaimsIdentity / ClaimsPrincipal
+        (建立使用者身份)"):::component
 
-skinparam node {
-  BackgroundColor #E0F7F4
-  BorderColor #1D7874
-  FontColor #004C46
-  RoundCorner 20
-}
+        CookieAuth("Cookie Authentication
+        (簽發登入 Cookie)"):::component
 
-actor "使用者 (User)" as U
+        Authorize("授權屬性 [Authorize]
+        (依 Claims 驗證權限)"):::component
+    end
+    class ASP node
 
-node "ASP.NET Core MVC 應用程式" {
-  component "Members 資料表\n(驗證帳號密碼)" as Members
-  component "AccountController\n(處理登入/登出)" as Controller
-  component "ClaimsIdentity / ClaimsPrincipal\n(建立使用者身份)" as Claims
-  component "Cookie Authentication\n(簽發登入 Cookie)" as CookieAuth
-  component "授權屬性 [Authorize]\n(依 Claims 驗證權限)" as Authorize
-}
+%% 第一階段：登入流程
+    
+    U -->|"1-1 輸入帳號密碼登入"| Controller
+    
+    Controller -->|"1-2 驗證使用者資料
+    (比對 Email / 密碼)"| Members
+    
+    Members -->|"1-3 驗證成功
+    回傳使用者資訊"| Controller
 
-'──────────────────────────────
-' 第一階段：登入流程
-'──────────────────────────────
+    Controller -->|"1-4 建立 ClaimsIdentity
+    (Name, Role, Email)"| Claims
+    
+    Claims -->|"1-5 產生登入 Cookie
+    寫入回應"| CookieAuth
+    
+    CookieAuth -->|"1-6 回傳 Cookie
+    登入"| U
 
-U -down-> Controller : 1-1 輸入帳號密碼登入
-Controller -down-> Members : 1-2 驗證使用者資料\n(比對 Email / 密碼)
-Members -up-> Controller : 1-3 驗證成功\n↓\n回傳使用者資訊
-Controller -right-> Claims : 1-4 建立 ClaimsIdentity\n(Name, Role, Email)
-Claims -left-> CookieAuth : 1-5 產生登入 Cookie\n寫入回應
-CookieAuth -up-> U : 1-6 回傳 Cookie 登入
-
-'──────────────────────────────
-' 第二階段：後續請求與授權驗證
-'──────────────────────────────
-
-U --> Controller : 2-1 附帶 Cookie\n發送新請求
-Controller --> CookieAuth : 2-2 送往 CookieAuth
-CookieAuth --> Claims : 2-3 解譯 Cookie\n還原使用者 Claims
-Claims --> Authorize : 2-4 驗證授權屬性\n[Authorize]
-Authorize --> Controller : 2-5 若符合 Claims\n↓\n執行 Action
-Controller --> U : 2-6 回傳頁面或資料
-
-@enduml
+%% 第二階段：後續請求與授權驗證
+    
+    U -->|2-1 附帶 Cookie
+    發送新請求| Controller
+    Controller -->|2-2 送往 CookieAuth| CookieAuth
+    CookieAuth -->|2-3 解譯 Cookie
+    還原使用者 Claims| Claims
+    Claims -->|2-4 驗證授權屬性
+    <Authorize>| Authorize
+    Authorize -->|2-5 若符合 Claims
+    執行 Action| Controller
+    Controller -->|2-6 回傳頁面或資料| U
+```
 
 🔹 三、機制特點與優勢
 
