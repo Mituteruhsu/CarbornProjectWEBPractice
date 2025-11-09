@@ -89,8 +89,8 @@ linkStyle 8,10,11 stroke:RED
 UC1@{ animate: true, curve: linear }
 CM1@{ animate: true, curve: linear }
 MC1@{ animate: true, curve: linear }
-CC1@{ animate: true, curve: natural }
-CCO1@{ animate: true, curve: linear }
+CC1@{ animate: true, curve: linear }
+CCO1@{ animate: true, curve: natural }
 COU1@{ animate: true, curve: linear }
 ```
 
