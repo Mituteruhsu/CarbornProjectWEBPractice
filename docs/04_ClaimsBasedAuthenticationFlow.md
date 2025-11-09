@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="CarbonProject Banner" width="100%">
+  <img src="../assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>
 
 # 第四章 Claims-based 認證流程 (Claims-based Authentication Flow)
