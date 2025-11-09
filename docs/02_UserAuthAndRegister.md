@@ -86,7 +86,35 @@ Middleware (驗證管線)
 
 ## ⚙️ 範例程式碼片段
 
-A backtick-delimited string in a code span: `` `foo` ``
+A backtick-delimited string in a code span:
+
+		``		[HttpPost]
+public IActionResult Login(string email, string password)
+{
+    var member = _context.Members.FirstOrDefault(m => m.Email == email);
+    if (member == null || !VerifyPassword(password, member.PasswordHash))
+    {
+        ModelState.AddModelError("", "帳號或密碼錯誤");
+        return View();
+    }
+
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, member.Name),
+        new Claim(ClaimTypes.Email, member.Email),
+        new Claim(ClaimTypes.Role, member.Role),
+        new Claim("MemberId", member.MemberId.ToString()),
+        new Claim("CompanyId", member.CompanyId.ToString())
+    };
+
+    var identity = new ClaimsIdentity(claims, "Login");
+    var principal = new ClaimsPrincipal(identity);
+    HttpContext.SignInAsync(principal);
+
+    _activityLog.LogLogin(member.MemberId, Request.HttpContext.Connection.RemoteIpAddress?.ToString());
+    return RedirectToAction("Index", "Home");
+}
+		``
 
 ---
 
