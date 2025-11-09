@@ -110,7 +110,7 @@ flowchart TB
 - Capability 是具體的（技術層 / API 或程式層）
 
 例如：
-> 「文章編輯權限（Permission）」
+> 「文章編輯權限（Permission）」  
 > 對應到實際程式的 POST /api/article/edit（Capability）
 
 這樣能讓：
