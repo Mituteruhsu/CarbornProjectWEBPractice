@@ -1,3 +1,4 @@
+<a name="HEAD"></a>
 <p align="center">
   <img src="../assets/banner.svg" alt="CarbonProject Banner" width="100%">
 </p>
@@ -117,3 +118,8 @@ flowchart TB
 - 權限邏輯與程式端操作解耦
 - 更容易對接 REST API、微服務、或行為審計系統
 - 安全審查更細緻：哪個角色觸發了哪個 API
+
+---
+
+
+[🧭頁首](#HEAD)
