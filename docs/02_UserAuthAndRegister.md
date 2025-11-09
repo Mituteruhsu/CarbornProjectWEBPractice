@@ -50,21 +50,17 @@ Middleware (驗證管線)
 
 ## 🧠 使用者登入流程說明
 
-1. **使用者輸入帳號密碼**
-  前端送出 POST /Account/Login 請求至伺服器。
-
-2. **伺服器驗證帳號與密碼**
-  系統利用 Members 資料表比對帳號密碼（密碼以 SHA256 或 Identity 加密）。
-
-3. **建立 ClaimsIdentity**
-  登入成功後，系統會建立一組 Claims（包含使用者 ID、角色、公司 ID）。
-
-4. **設定 Session 狀態**
-  Session 儲存登入使用者基本資訊，供系統後續操作使用。
-
-5. **導向對應頁面**
-    - 管理者 → 後台控制台 (Admin Dashboard)
-    - 一般會員 → 個人資料頁面 (Profile)
+1. **使用者輸入帳號密碼**  
+  前端送出 POST /Account/Login 請求至伺服器。  
+2. **伺服器驗證帳號與密碼**  
+  系統利用 Members 資料表比對帳號密碼（密碼以 SHA256 或 Identity 加密）。  
+3. **建立 ClaimsIdentity**  
+  登入成功後，系統會建立一組 Claims（包含使用者 ID、角色、公司 ID）。  
+4. **設定 Session 狀態**  
+  Session 儲存登入使用者基本資訊，供系統後續操作使用。  
+5. **導向對應頁面**  
+  - 管理者 → 後台控制台 (Admin Dashboard)
+  - 一般會員 → 個人資料頁面 (Profile)
 
 ---
 
