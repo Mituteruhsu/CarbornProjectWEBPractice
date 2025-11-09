@@ -84,12 +84,12 @@ flowchart TB
     Controller -->|"2-6 回傳頁面或資料"| U
 
 linkStyle 0,1,2,3,4,5 stroke:#C8E6C9
-UC1@{ animate: true, curve: natural }
-CM1@{ animate: true, curve: natural }
-MC1@{ animate: true, curve: natural }
+UC1@{ animate: true, curve: linear }
+CM1@{ animate: true, curve: linear }
+MC1@{ animate: true, curve: linear }
 CC1@{ animate: true, curve: natural }
 CCO1@{ animate: true, curve: natural }
-COU1@{ animate: true, curve: natural }
+COU1@{ animate: true, curve: linear }
 ```
 
 🔹 三、機制特點與優勢
