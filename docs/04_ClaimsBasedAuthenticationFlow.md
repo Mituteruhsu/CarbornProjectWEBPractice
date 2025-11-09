@@ -49,7 +49,7 @@ flowchart TB
 
 %% 第一階段：登入流程
     
-    U UC1@=="1-1 輸入帳號密碼登入"===> Controller
+    U UC1@=="1-1 輸入帳號密碼登入"====> Controller
     
     Controller CM1@==>|"1-2 驗證使用者資料
     (比對 Email / 密碼)"| Members
