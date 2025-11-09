@@ -86,9 +86,8 @@ Middleware (驗證管線)
 
 ## ⚙️ 範例程式碼片段
 
-A backtick-delimited string in a code span:
-
-		``		[HttpPost]
+```C#
+[HttpPost]
 public IActionResult Login(string email, string password)
 {
     var member = _context.Members.FirstOrDefault(m => m.Email == email);
@@ -114,7 +113,7 @@ public IActionResult Login(string email, string password)
     _activityLog.LogLogin(member.MemberId, Request.HttpContext.Connection.RemoteIpAddress?.ToString());
     return RedirectToAction("Index", "Home");
 }
-		``
+```
 
 ---
 
