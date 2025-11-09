@@ -47,38 +47,49 @@ flowchart TB
 
 %% 第一階段：登入流程
     
-    U -->|"1-1 輸入帳號密碼登入"| Controller
+    U UC1@=="1-1 輸入帳號密碼登入"==> Controller
     
-    Controller -->|"1-2 驗證使用者資料
+    Controller CM1@==>|"1-2 驗證使用者資料
     (比對 Email / 密碼)"| Members
     
-    Members -->|"1-3 驗證成功
+    Members MC1@==>|"1-3 驗證成功
     回傳使用者資訊"| Controller
 
-    Controller -->|"1-4 建立 ClaimsIdentity
+    Controller CC1@==>|"1-4 建立 ClaimsIdentity
     (Name, Role, Email)"| Claims
     
-    Claims -->|"1-5 產生登入 Cookie
+    Claims CCO1@==>|"1-5 產生登入 Cookie
     寫入回應"| CookieAuth
     
-    CookieAuth -->|"1-6 回傳 Cookie
-    登入"| U
+    CookieAuth COU1@=="1-6 回傳 Cookie
+    登入"=====> U
 
 %% 第二階段：後續請求與授權驗證
 
-    U -->|2-1 附帶 Cookie
-    發送新請求| Controller
+    U --"2-1 附帶 Cookie
+    發送新請求"--> Controller
 
-    Controller -->|"2-2 送往 CookieAuth"| CookieAuth
+    Controller -->|"2-2 送往
+    CookieAuth"| CookieAuth
     
     CookieAuth -->|"2-3 解譯 Cookie
     還原使用者 Claims"| Claims
 
     Claims -->|"2-4 驗證授權屬性
     (Authorize)"| Authorize
+
     Authorize -->|"2-5 若符合 Claims
     執行 Action"| Controller
+
     Controller -->|"2-6 回傳頁面或資料"| U
+
+linkStyle 0,1,2,3,4,5 stroke:#C8E6C9
+UC1@{ animate: true, curve: natural }
+CM1@{ animate: true, curve: natural }
+MC1@{ animate: true, curve: natural }
+CC1@{ animate: true, curve: natural }
+CCO1@{ animate: true, curve: natural }
+COU1@{ animate: true, curve: natural }
 ```
 
 🔹 三、機制特點與優勢
