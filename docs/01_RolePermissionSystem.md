@@ -111,7 +111,7 @@ flowchart TB
 
 例如：
 > 「文章編輯權限（Permission）」
-  對應到實際程式的 POST /api/article/edit（Capability）
+> 對應到實際程式的 POST /api/article/edit（Capability）
 
 這樣能讓：
 - 權限邏輯與程式端操作解耦
