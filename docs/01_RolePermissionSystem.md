@@ -86,6 +86,60 @@ flowchart TB
 ```
 
 ---
+## 🧩 RBAC（角色導向存取控制）整合資料庫關聯圖（ERD）
+```mermaid
+erDiagram
+    Members {
+        int MemberId PK
+        string Name
+        string Email
+        string PasswordHash
+        datetime CreatedAt
+    }
+
+    Roles {
+        int RoleId PK
+        string RoleName
+        string Description
+    }
+
+    UserRole {
+        int MemberId FK
+        int RoleId FK
+    }
+
+    Permissions {
+        int PermissionId PK
+        string PermissionKey
+        string Description
+    }
+
+    RolePermission {
+        int RoleId FK
+        int PermissionId FK
+    }
+
+    Capabilities {
+        int CapabilityId PK
+        string CapabilityKey
+        string Description
+    }
+
+    PermissionCapability {
+        int PermissionId FK
+        int CapabilityId FK
+    }
+
+    %% 關聯關係
+    Members ||--o{ UserRole : "擁有"
+    Roles ||--o{ UserRole : "被指派"
+    Roles ||--o{ RolePermission : "擁有"
+    Permissions ||--o{ RolePermission : "被包含"
+    Permissions ||--o{ PermissionCapability : "具備"
+    Capabilities ||--o{ PermissionCapability : "屬於"
+
+```
+---
 
 ## 🧱 RBAC 四層關係：User → Role → Permission → Capability
 | 層級 | 名稱 | 說明 |
