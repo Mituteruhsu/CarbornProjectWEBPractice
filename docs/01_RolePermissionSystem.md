@@ -141,6 +141,67 @@ erDiagram
 ```
 ---
 
+## 🧩 RBAC 授權流程圖
+```mermaid
+---
+config:
+  theme: redux-dark
+---
+flowchart TB
+    U[User] 
+    subgraph Middleware["ASP.NET Core Middleware Pipeline"]
+        direction LR
+        AuthM["Authentication Middleware<br>(驗證 JWT / Cookies)"]
+        PolicyM["Authorization Middleware<br>(比對角色與權限 Policy)"]
+    end    
+    subgraph Controllers["Controllers 層"]
+        direction LR
+        AuthC["AuthController<br>(登入 / 登出 / Token 發行)"]
+        AC["ActionsController<br>(企業碳行動管理)"]
+        DG["DataGoalsController<br>(碳目標設定與查詢)"]
+    end
+    
+    subgraph Services["Service & Repository 層"]
+        direction LR
+        AuthS["AuthService<br>(帳密驗證 / Token 簽發)"]
+        RoleS["RoleService<br>(角色 / 權限查詢)"]
+        Repo["Repository<br>(資料庫存取層)"]
+    end
+    subgraph Database["Database (SQL Server)"]
+        direction LR
+        DB_M["Members"]
+        DB_R["Roles / RolePermissions"]
+        DB_P["Permissions / Capabilities"]
+    end
+    U -->|登入請求 /login| AuthC:::green
+    AuthC -->|驗證帳號密碼| AuthS:::green
+    AuthS -->|查詢角色與權限| RoleS:::green
+    RoleS --> DB_R:::green
+    RoleS --> DB_P:::green
+    AuthS -->|回傳簽發 JWT Token| AuthC:::green
+    AuthC -->|回傳 Token| U:::purple
+    U -->|帶 JWT Token 請求| AuthM:::blue
+    AuthM -->|還原 ClaimsPrincipal| PolicyM:::blue
+    PolicyM -->|"若符合 Policy(Action.Create)"| AC:::blue
+    PolicyM -->|"若符合 Policy(DataGoals.View)"| DG:::blue
+    PolicyM -.->|查詢或更新資料| Repo:::blue
+    Repo --> DB_M:::blue
+    Repo --> DB_R:::blue
+    Repo --> DB_P:::blue
+    Repo --> AC:::purple
+    Repo --> DG:::purple
+    AC -->|回傳資料| U:::purple
+    DG -->|回傳資料| U:::purple
+    PolicyM -.->|"403 Forbidden (權限不足)"| U:::red
+    classDef green stroke:#2ecc71,stroke-width:2px,color:#2ecc71;
+    classDef blue stroke:#3498db,stroke-width:2px,color:#3498db;
+    classDef purple stroke:#9b59b6,stroke-width:2px,color:#9b59b6;
+    classDef red stroke:#e74c3c,stroke-width:2px,color:#e74c3c;
+
+```
+
+---
+
 ## 🧱 RBAC 四層關係：User → Role → Permission → Capability
 | 層級 | 名稱 | 說明 |
 |:-----|:-----|:-----|
