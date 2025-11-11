@@ -9,7 +9,7 @@
    ├─FolderStructure.txt
    ├─Program.cs
    ├─Controllers
-   │  ├─Account.cs
+   │  ├─AccountController.cs
    │  ├─ActionsController.cs
    │  ├─CarbonController.cs
    │  ├─CefController.cs
@@ -21,6 +21,8 @@
    │  └─UserDbContext.cs
    ├─Helpers
    │  └─TimeHelper.cs
+   ├─Middleware
+   │  └─RememberMeMiddleware.cs
    ├─Models
    │  ├─CarbonDataViewModel.cs
    │  ├─CefItems.cs
@@ -35,7 +37,16 @@
    │     ├─Company.cs
    │     ├─CompanyEmission.cs
    │     ├─CompanyEmissionTarget.cs
-   │     └─YearlyEmissionAverage.cs
+   │     ├─YearlyEmissionAverage.cs
+   │     └─RBAC
+   │        ├─Capability.cs
+   │        ├─Permission.cs
+   │        ├─PermissionCapability.cs
+   │        ├─Role.cs
+   │        ├─RolePermission.cs
+   │        ├─User.cs
+   │        ├─UserCompanyRole.cs
+   │        └─UserRole.cs
    ├─Properties
    │  ├─launchSettings.json
    │  ├─serviceDependencies.CarbonProject20251022101453 - Web Deploy.json
@@ -57,7 +68,8 @@
    │  └─MembersRepository.cs
    ├─Service
    │  ├─ActivityLogService.cs
-   │  └─EmissionService.cs
+   │  ├─EmissionService.cs
+   │  └─JWTService.cs
    ├─Views
    │  ├─_ViewImports.cshtml
    │  ├─_ViewStart.cshtml

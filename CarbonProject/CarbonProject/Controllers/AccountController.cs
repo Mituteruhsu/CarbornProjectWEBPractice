@@ -51,6 +51,8 @@ namespace CarbonProject.Controllers
         {
             // 檢查 Session
             var isLogin = HttpContext.Session.GetString("isLogin");
+            Debug.WriteLine("===== Controllers/AccountController.cs =====");
+            Debug.WriteLine("--- SomeProtectedPage ---");
             Debug.WriteLine($"Session isLogin: {isLogin}");
 
             // 檢查 JWT Cookie
@@ -418,7 +420,8 @@ namespace CarbonProject.Controllers
         public IActionResult Admin_read()
         {
             var sessionRole = HttpContext.Session.GetString("Role");
-            Debug.WriteLine($"=========Session Role=========");
+            Debug.WriteLine("===== Controllers/AccountController.cs =====");
+            Debug.WriteLine("--- Admin_read ---");
             Debug.WriteLine($"Session Role: {sessionRole}");
 
             var isLogin = HttpContext.Session.GetString("isLogin");
@@ -443,9 +446,10 @@ namespace CarbonProject.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteMember(int id)
         {
-            Debug.WriteLine($"==========here is ID==========");
-            Debug.WriteLine(id);
-            Debug.WriteLine($"==========here is ID==========");
+            Debug.WriteLine("===== Controllers/AccountController.cs =====");
+            Debug.WriteLine("--- DeleteMember ---");
+            Debug.WriteLine($"=== ID : {id} ===");
+
             if (HttpContext.Session.GetString("Role") != "Admin")
             {
                 TempData["AdminError"] = "無權限操作";

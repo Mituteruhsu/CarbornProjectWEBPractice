@@ -186,7 +186,8 @@ namespace CarbonProject.Repositories
                     updateCmd.Parameters.AddWithValue("@U", usernameOrEmail);
                     updateCmd.ExecuteNonQuery();
                 }
-
+                Debug.WriteLine("===== Repositories/MembersRepository.cs =====");
+                Debug.WriteLine("--- IncrementFailedLogin ---");                
                 Debug.WriteLine($"[DEBUG] {usernameOrEmail} -> FailedLoginAttempts: {currentAttempts}, Locked: {isLocked}");
                 return isLocked;
             }

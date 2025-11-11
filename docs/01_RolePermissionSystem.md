@@ -40,6 +40,9 @@
 
 ## 🧩 系統架構概念
 
+### Role-Based Access Control（RBAC，基於角色的存取控制）  
+是一種管理系統資源存取權限的方法，核心概念是把權限（Permissions）分配給角色（Roles），再把角色分配給使用者（Users），而不是直接把權限分配給每個使用者。這樣做可以大幅簡化權限管理，特別是當使用者數量多或權限複雜時。
+
 角色權限系統採用 **Role-Based Access Control (RBAC)** 模型實作，  
 結構如下圖所示：
 

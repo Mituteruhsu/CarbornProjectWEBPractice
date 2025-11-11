@@ -1,11 +1,5 @@
-﻿using BCrypt.Net;
-using Microsoft.Data.SqlClient;
-using CarbonProject.Helpers;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
-using CarbonProject.Models;
 
 // 從上方工具->NuGet套件管理員->管理方案的 NuGet 套件->瀏覽輸入後點選安裝(需選擇專案)
 // 需安裝 MySql.Data

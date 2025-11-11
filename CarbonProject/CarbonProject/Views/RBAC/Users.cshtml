@@ -1,0 +1,30 @@
+﻿@model IEnumerable<CarbonProject.Models.EFModels.RBAC.User>
+@{
+    ViewData["Title"] = "會員管理";
+}
+
+<h2>使用者列表</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>帳號</th>
+            <th>姓名</th>
+            <th>角色</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.FullName</td>
+                <td>
+                    @foreach (var ur in user.UserRoles)
+                    {
+                        <span>@ur.Role.RoleName</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

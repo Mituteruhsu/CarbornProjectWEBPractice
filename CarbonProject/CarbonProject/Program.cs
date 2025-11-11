@@ -5,20 +5,39 @@ using CarbonProject.Repositories;
 using CarbonProject.Services;  // Services 命名空間
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // === 環境偵測 ===
 var environment = builder.Environment.EnvironmentName;
-Console.WriteLine($"[Environment] ASPNETCORE_ENVIRONMENT = {environment}");
+Debug.WriteLine("===== Program.cs =====");
+Debug.WriteLine($"[Environment] ASPNETCORE_ENVIRONMENT = {environment}");
+
+// 判斷是否為開發環境
+var isDevelopment = builder.Environment.IsDevelopment();
+Debug.WriteLine($"[Environment] 是否為開發環境 = {isDevelopment}");
+
+// === 調整 ASP.NET Core Logging Filter ===
+// --- 減少偵錯輸出 ---
+//builder.Logging.ClearProviders(); // 清空 ASP.NET Core 預設的所有 Logging Provider。
+//builder.Logging.AddConsole();
+// 以下兩項是常見的
+Debug.WriteLine("--- Microsoft.Hosting.Lifetime --- ");
+builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
+Debug.WriteLine("--- Microsoft.EntityFrameworkCore.Database.Command --- ");
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
 
 // === 讀取環境變數 ===
 var AZURE_SQL_USER = Environment.GetEnvironmentVariable("AZURE_SQL_USER");
 var AZURE_SQL_PWD = Environment.GetEnvironmentVariable("AZURE_SQL_PWD");
 
+// === 建立連線 (使用環境變數) ===
 var rawConnStr = builder.Configuration.GetConnectionString("DefaultConnection")
     .Replace("{SQL_USER}", AZURE_SQL_USER)
     .Replace("{SQL_PWD}", AZURE_SQL_PWD);
@@ -30,11 +49,42 @@ builder.Configuration["ConnectionStrings:DefaultConnection"] = rawConnStr;
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
+// === 註冊 DbContext 依環境設定日誌===
 // 註冊 DbContext From -> Data/CarbonDbContext.cs
 builder.Services.AddDbContext<CarbonDbContext>(options =>
-    options.UseSqlServer(rawConnStr));
+{
+    options.UseSqlServer(rawConnStr);
+    if (isDevelopment)
+    {
+        // 開發環境：顯示 SQL 指令與參數
+        options.EnableSensitiveDataLogging(false);   // 可選，避免輸出參數 (true), (false)
+        options.LogTo(Console.WriteLine, LogLevel.Error); // 輸出 LogLevel.Information, LogLevel.Warning 可改成想要的輸出
+    }
+    else
+    {
+        // 生產環境：只顯示 Warning 以上，或完全不輸出
+        options.LogTo(_ => { }, LogLevel.None);     // 完全不輸出
+    }
+});
 
-// 註冊 Service
+// 註冊 DbContext From -> Data/RbacDbContext.cs
+builder.Services.AddDbContext<RbacDbContext>(options =>
+{
+    options.UseSqlServer(rawConnStr);
+    if (isDevelopment)
+    {
+        // 開發環境：顯示 SQL 指令與參數
+        options.EnableSensitiveDataLogging(false);   // 可選，避免輸出參數 (true), (false)
+        options.LogTo(Console.WriteLine, LogLevel.Error); // 輸出 LogLevel.Information, LogLevel.Warning, LogLevel.Error 可改成想要的輸出
+    }
+    else
+    {
+        // 生產環境：只顯示 Warning 以上，或完全不輸出
+        options.LogTo(_ => { }, LogLevel.None);     // 完全不輸出
+    }
+});
+
+// === 註冊 Service ===
 // 方法          意義                             生命週期
 // AddTransient  每次使用都產生新物件             短暫，request 內每次注入都是新物件
 // AddScoped     每個 HTTP Request                都共用同一個物件	Request 內共用，下一個 Request 會重建
@@ -53,6 +103,7 @@ builder.Services.AddScoped<EmissionService>();
 builder.Services.AddScoped<ActivityLogService>();
 // 注冊為 singleton（stateless）或 transient 都可；singleton 比較省資源且安全
 builder.Services.AddSingleton<JWTService>();
+builder.Services.AddScoped<RBACService>();
 
 builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", options =>
@@ -113,10 +164,37 @@ builder.Services.AddSession(options =>
 // === 啟用 app ===
 var app = builder.Build();
 
-// === 啟動時輸出連線資訊（非敏感部分）===
-Console.WriteLine($"[Connection] Using database: {builder.Configuration.GetConnectionString("DefaultConnection")?.Split(';')[1]}");
-Console.WriteLine($"[Connection] SQL User: {AZURE_SQL_USER}");
+// === 初始化 RBAC 資料 ===
+// 由 appsettings.json 來操作啟動，可開啟或關閉每次執行
+var seedEnabled = builder.Configuration.GetValue<bool>("EnableRbacSeed");
+if (seedEnabled)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var rbacContext = scope.ServiceProvider.GetRequiredService<RbacDbContext>();
+            Debug.WriteLine("===== Program.cs =====");
+            Debug.WriteLine("--- RBAC 資料初始化 --- ");
+            Debug.WriteLine("[RBAC] Database 初始化-開始...");
+            RbacDbInitializer.Initialize(rbacContext);
+            Debug.WriteLine("[RBAC] 已初始化-完成");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[RBAC] 初始化-失敗: {ex.Message}");
+            Debug.WriteLine(ex.StackTrace);
+        }
+    }
+}
 
+// === 啟動時輸出連線資訊（非敏感部分）===
+Debug.WriteLine("===== Program.cs - 連線資訊 =====");
+Debug.WriteLine("--- 連線資訊 ---");
+Debug.WriteLine($"[Connection] Using database: {builder.Configuration.GetConnectionString("DefaultConnection")?.Split(';')[1]}");
+Debug.WriteLine($"[Connection] SQL User: {AZURE_SQL_USER}");
+
+// === Pipeline 中介層 ===
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

@@ -1,0 +1,34 @@
+﻿@model CarbonProject.Models.EFModels.RBAC.Role
+
+@{
+    ViewData["Title"] = "角色權限";
+}
+
+<h2>@Model.RoleName 的權限</h2>
+
+@if (Model.RolePermissions != null && Model.RolePermissions.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Permission Key</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rp in Model.RolePermissions)
+            {
+                <tr>
+                    <td>@rp.Permission?.PermissionKey</td>
+                    <td>@rp.Permission?.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>此角色尚未設定任何權限。</p>
+}
+
+<a asp-action="Roles" class="btn btn-secondary">返回角色列表</a>

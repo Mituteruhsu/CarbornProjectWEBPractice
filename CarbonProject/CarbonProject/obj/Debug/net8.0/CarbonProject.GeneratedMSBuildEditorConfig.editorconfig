@@ -104,6 +104,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWZyZW5jZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/RolePermissions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xSb2xlUGVybWlzc2lvbnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/Roles.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xSb2xlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/Users.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xVc2Vycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
