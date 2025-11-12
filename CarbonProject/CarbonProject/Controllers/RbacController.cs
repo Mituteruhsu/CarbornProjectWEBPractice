@@ -1,6 +1,6 @@
 ﻿using CarbonProject.Data;
 using CarbonProject.Models.EFModels.RBAC;
-using CarbonProject.Services;
+using CarbonProject.Service.RBAC;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -11,14 +11,39 @@ namespace CarbonProject.Controllers
     {
         private readonly RbacDbContext _context;
         private readonly RBACService _rbacService;
+        private readonly RoleService _roleService;
+        private readonly PermissionService _permissionService;
+        private readonly CapabilityService _capabilityService;
 
-        public RbacController(RbacDbContext context, RBACService rbacservice)
+        public RbacController(RbacDbContext context, RBACService rbacservice, RoleService roleService, PermissionService permissionService, CapabilityService capabilityService)
         {
             _context = context;
             _rbacService = rbacservice;
-
+            _roleService = roleService;
+            _permissionService = permissionService;
+            _capabilityService = capabilityService;
         }
-
+        // 使用 RoleService 範例
+        // From -> Service/RoleService.cs
+        public async Task<IActionResult> Index()
+        {
+            var roles = await _roleService.GetAllRolesAsync();
+            return View(roles);
+        }
+        // 使用 PermissionService 範例
+        // From -> Service/PermissionService.cs
+        public async Task<IActionResult> Permissions()
+        {
+            var permissions = await _permissionService.GetAllPermissionsAsync();
+            return View(permissions);
+        }
+        // 使用 CapabilityService 範例
+        // From -> Service/CapabilityService.cs
+        public async Task<IActionResult> Capabilities()
+        {
+            var caps = await _capabilityService.GetAllCapabilitiesAsync();
+            return View(caps);
+        }
         // 顯示所有角色
         public async Task<IActionResult> Roles()
         {

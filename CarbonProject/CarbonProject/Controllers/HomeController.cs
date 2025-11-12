@@ -1,6 +1,6 @@
 ﻿using CarbonProject.Models;
 using CarbonProject.Repositories;
-using CarbonProject.Services;
+using CarbonProject.Service.Logging;
 using Microsoft.AspNetCore.Mvc;
 using System.Configuration;
 using System.Diagnostics;

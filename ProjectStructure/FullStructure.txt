@@ -8,6 +8,8 @@
    ├─CarbonProject.csproj.user
    ├─FolderStructure.txt
    ├─Program.cs
+   ├─Attributes
+   │  └─AuthorizeRoleAttribute.cs
    ├─Controllers
    │  ├─AccountController.cs
    │  ├─ActionsController.cs
@@ -15,14 +17,16 @@
    │  ├─CefController.cs
    │  ├─DashboardController.cs
    │  ├─DataGoals.cs
-   │  └─HomeController.cs
+   │  ├─HomeController.cs
+   │  └─RbacController.cs
    ├─Data
    │  ├─CarbonDbContext.cs
-   │  └─UserDbContext.cs
+   │  ├─RbacDbContext.cs
+   │  └─RbacDbInitializer.cs
    ├─Helpers
    │  └─TimeHelper.cs
    ├─Middleware
-   │  └─RememberMeMiddleware.cs
+   │  └─RBACMiddleware.cs
    ├─Models
    │  ├─CarbonDataViewModel.cs
    │  ├─CefItems.cs
@@ -67,9 +71,16 @@
    │  ├─IndustryRepository.cs
    │  └─MembersRepository.cs
    ├─Service
-   │  ├─ActivityLogService.cs
    │  ├─EmissionService.cs
-   │  └─JWTService.cs
+   │  ├─JWTService.cs
+   │  ├─Auth
+   │  ├─Logging
+   │  │  └─ActivityLogService.cs
+   │  └─RBAC
+   │     ├─CapabilityService.cs
+   │     ├─PermissionService.cs
+   │     ├─RBACService.cs
+   │     └─RoleService.cs
    ├─Views
    │  ├─_ViewImports.cshtml
    │  ├─_ViewStart.cshtml
@@ -99,6 +110,10 @@
    │  │  ├─Index.cshtml
    │  │  ├─Privacy.cshtml
    │  │  └─Refrences.cshtml
+   │  ├─RBAC
+   │  │  ├─RolePermissions.cshtml
+   │  │  ├─Roles.cshtml
+   │  │  └─Users.cshtml
    │  └─Shared
    │     ├─_Layout.cshtml
    │     ├─_Layout.cshtml.css

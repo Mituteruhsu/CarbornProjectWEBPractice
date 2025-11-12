@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 // 這裡架構 ActivityLogService (非靜態，用 DI 注入) Accont.cs
 // Use -> Models/EFModels/ActivityLog.cs
 // 須將以下這些規則加入 Controller
-namespace CarbonProject.Services
+namespace CarbonProject.Service.Logging
 {
     public class ActivityLogService
     {

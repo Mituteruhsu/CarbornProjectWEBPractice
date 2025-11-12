@@ -1,6 +1,8 @@
-﻿using CarbonProject.Models;
+﻿using CarbonProject.Attributes;
+using CarbonProject.Models;
 using CarbonProject.Models.EFModels;
 using CarbonProject.Repositories;
+using CarbonProject.Service.Logging;
 using CarbonProject.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -416,7 +418,7 @@ namespace CarbonProject.Controllers
         }
         //===============Admin 會員管理===============
         //Include ActivityLogService
-        [Authorize(Roles = "Admin")]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "ViewMember" })]
         public IActionResult Admin_read()
         {
             var sessionRole = HttpContext.Session.GetString("Role");
@@ -443,7 +445,7 @@ namespace CarbonProject.Controllers
         //Include ActivityLogService
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "DeleteMember" })]
         public async Task<IActionResult> DeleteMember(int id)
         {
             Debug.WriteLine("===== Controllers/AccountController.cs =====");
@@ -480,6 +482,7 @@ namespace CarbonProject.Controllers
         //Include ActivityLogService
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "EditMember" })]
         public async Task<IActionResult> EditMember(int id, string username, string email, string fullname)
         {
             if (HttpContext.Session.GetString("Role") != "Admin")

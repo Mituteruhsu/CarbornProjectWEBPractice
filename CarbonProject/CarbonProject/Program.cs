@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Text;
+using CarbonProject.Service.Logging;
+using CarbonProject.Service.RBAC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,9 +103,13 @@ builder.Services.AddScoped<ActivityLogRepository>();
 // 註冊 Service From -> Service/.
 builder.Services.AddScoped<EmissionService>();
 builder.Services.AddScoped<ActivityLogService>();
-// 注冊為 singleton（stateless）或 transient 都可；singleton 比較省資源且安全
-builder.Services.AddSingleton<JWTService>();
 builder.Services.AddScoped<RBACService>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<PermissionService>();
+builder.Services.AddScoped<CapabilityService>();
+
+// 注冊 Service 為 singleton（stateless）或 transient 都可；singleton 比較省資源且安全
+builder.Services.AddSingleton<JWTService>();
 
 builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", options =>
@@ -209,10 +215,10 @@ app.UseRouting();
 app.UseSession();   //使用 session 必須在 UseRouting 後、UseEndpoints 前
 app.UseAuthentication(); // JWT middleware
 app.UseAuthorization();
-app.UseRememberMe();               // 自動恢復 Session
+app.UseRBAC(); // 自動恢復 Session, 放在 UseRouting() 之前或之後都可，但必須在 Controller 執行前
 
-// 註冊自訂 Remember Me Middleware
-app.UseMiddleware<RememberMeMiddleware>();
+// 註冊自訂 RBACMiddleware
+app.UseMiddleware<RBACMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

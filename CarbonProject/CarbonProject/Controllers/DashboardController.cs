@@ -1,6 +1,7 @@
 ﻿using CarbonProject.Data;
 using CarbonProject.Models;
 using CarbonProject.Models.EFModels;
+using CarbonProject.Service.Logging;
 using CarbonProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
