@@ -21,8 +21,9 @@ namespace CarbonProject.Models.EFModels.RBAC
         public int? AssignedBy { get; set; }
         public DateTime? AssignedAt { get; set; }
         public DateTime? RevokedAt { get; set; }
+        public string? Notes { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
-        public bool IsActive { get; set; } = true;
     }
 }

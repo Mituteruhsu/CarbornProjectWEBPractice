@@ -1,9 +1,13 @@
 ﻿using CarbonProject.Data;
+using CarbonProject.Models.EFModels;
 using CarbonProject.Service.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using MySqlX.XDevAPI;
+using System.Diagnostics;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CarbonProject.Attributes
 {
@@ -11,44 +15,67 @@ namespace CarbonProject.Attributes
     public class AuthorizeRoleAttribute : Attribute, IAuthorizationFilter
     {
         private readonly string[] _roles;
+        private readonly string[] _permissions;
         private readonly string[] _capabilities;
 
-        public AuthorizeRoleAttribute(string[] roles = null, string[] capabilities = null)
+        public AuthorizeRoleAttribute(string[] roles = null, string[] capabilities = null, string[] permissions = null)
         {
             _roles = roles ?? Array.Empty<string>();
+            _permissions = permissions ?? Array.Empty<string>();
             _capabilities = capabilities ?? Array.Empty<string>();
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            Debug.WriteLine("===== Attributes/AuthorizationFilterContext.cs =====");
+            Debug.WriteLine("--- OnAuthorization ---");
+            Debug.WriteLine($"開始角色驗證");
             var httpContext = context.HttpContext;
 
             // 1️ 檢查 Session 登入狀態
+            
             var isLogin = httpContext.Session.GetString("isLogin");
             var username = httpContext.Session.GetString("Username");
+            Debug.WriteLine("--- 檢查 Session 登入狀態 ---");
+            
+            Debug.WriteLine($"isLogin : {isLogin}");
+            Debug.WriteLine($"username : {username}");
+            var sessionData = httpContext.Session.Keys.ToDictionary(
+                key => key,
+                key => httpContext.Session.GetString(key)
+            );
+            var sessionData_json = System.Text.Json.JsonSerializer.Serialize(sessionData, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            Debug.WriteLine("___ Session 全部內容 ___");
+            Debug.WriteLine(sessionData_json);
+
             if (isLogin != "true" || string.IsNullOrEmpty(username))
             {
+                Debug.WriteLine("驗證錯誤-回到 Login 頁面");
                 context.Result = new RedirectToActionResult("Login", "Account", null);
                 return;
             }
 
             // 2️ 取得 DbContext 與 ActivityLogService
             var db = httpContext.RequestServices.GetService(typeof(RbacDbContext)) as RbacDbContext;
-            var logger = httpContext.RequestServices.GetService(typeof(CarbonProject.Service.Logging.ActivityLogService)) as ActivityLogService;
-
+            var logger = httpContext.RequestServices.GetService(typeof(ActivityLogService)) as ActivityLogService;
+            Debug.WriteLine("--- 2 取得 DbContext 與 ActivityLogService ---");
+            Debug.WriteLine($"db : {db}");
+            Debug.WriteLine($"logger : {logger}");
             if (db == null || logger == null)
             {
+                Debug.WriteLine("db || logger 錯誤-回到 Login 頁面");
                 context.Result = new RedirectToActionResult("Login", "Account", null);
                 return;
             }
 
-            // 3️ 取得使用者角色與功能
+            // 3️-1 取得使用者角色與功能
             var member = db.Users
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
                         .ThenInclude(r => r.RolePermissions)
                             .ThenInclude(rp => rp.Permission)
                                 .ThenInclude(p => p.PermissionCapabilities)
+                                    .ThenInclude(pc => pc.Capability)
                 .Include(u => u.UserCompanyRoles)
                     .ThenInclude(ucr => ucr.Role)
                         .ThenInclude(r => r.RolePermissions)
@@ -56,33 +83,90 @@ namespace CarbonProject.Attributes
                                 .ThenInclude(p => p.PermissionCapabilities)
                 .FirstOrDefault(u => u.Username == username);
 
+            Debug.WriteLine("--- 取得使用者角色與功能 ---");
+            var options = new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true,
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+            };
+            var member_json = System.Text.Json.JsonSerializer.Serialize(member, options);
+            Debug.WriteLine(member_json);
+
             if (member == null)
             {
+                Debug.WriteLine("取得 Users 錯誤-回到 Login 頁面");
                 context.Result = new RedirectToActionResult("Login", "Account", null);
                 return;
             }
 
-            // 4️ 檢查 Role
+            // 3-2 檢查 Role
             bool roleMatch = _roles.Length == 0 || member.UserRoles.Any(ur => _roles.Contains(ur.Role.RoleName)) ||
                              member.UserCompanyRoles.Any(ucr => _roles.Contains(ucr.Role.RoleName));
+            Debug.WriteLine("--- 檢查 Role ---");
+            Debug.WriteLine($"roleMatch : {roleMatch}");
 
-            // 5️ 檢查 Capability
+            // 4-1 取得使用者 Capability
             var userCapabilities = member.UserRoles
-                                        .SelectMany(ur => ur.Role.RolePermissions)
-                                        .SelectMany(rp => rp.Permission.PermissionCapabilities)
-                                        .Select(pc => pc.Capability.Name)
-                                    .Union(member.UserCompanyRoles
-                                        .SelectMany(ucr => ucr.Role.RolePermissions)
-                                        .SelectMany(rp => rp.Permission.PermissionCapabilities)
-                                        .Select(pc => pc.Capability.Name))
-                                    .ToList();
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .SelectMany(rp => rp.Permission.PermissionCapabilities)
+                .Where(pc => pc.Capability != null)
+                .Select(pc => pc.Capability.Name)
+                .Distinct()
+                .ToList();
+            foreach (var ur in member.UserRoles)
+            {
+                Debug.WriteLine($"=== Role: {ur.Role?.RoleName} ===");
+                if (ur.Role?.RolePermissions != null)
+                {
+                    Debug.WriteLine($"RolePermissions Count: {ur.Role.RolePermissions.Count}");
+                    foreach (var rp in ur.Role.RolePermissions)
+                    {
+                        Debug.WriteLine($"  -> PermissionId: {rp.PermissionId}");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("RolePermissions is NULL");
+                }
+            }
+            Debug.WriteLine("--- 取得使用者 Capability ---");
+            var userCapabilities_json = System.Text.Json.JsonSerializer.Serialize(userCapabilities, options);
+            Debug.WriteLine(userCapabilities_json);
 
-            bool capabilityMatch = _capabilities.Length == 0 || _capabilities.Any(c => userCapabilities.Contains(c));
+            // 4-2 將 Permissions 轉成 Capability
+            var requiredCapabilities = db.Capabilities
+                .Where(c => c.PermissionCapabilities
+                    .Any(pc => _permissions.Contains(pc.Permission.PermissionKey)))
+                .Select(c => c.Name)
+                .Distinct()
+                .ToList();
 
-            // 6️ 不符合授權 → Redirect Login
+            Debug.WriteLine("--- Permissions 轉成 Capability ---");
+            foreach (var cap in requiredCapabilities)
+            {
+                Debug.WriteLine($"Capability: {cap}");
+            }
+
+            // 4-3 將 Attribute 指定的 capabilities 也加入比對
+            requiredCapabilities.AddRange(_capabilities);
+            Debug.WriteLine("--- Attribute 指定的 capabilities 也加入比對 ---");
+            var requiredPermissionCapabilities_json = System.Text.Json.JsonSerializer.Serialize(requiredCapabilities, options);
+            Debug.WriteLine(requiredPermissionCapabilities_json);
+
+            // 4-4 檢查 Capability
+            bool capabilityMatch = requiredCapabilities.Count == 0
+                                    || requiredCapabilities.Any(c => userCapabilities.Contains(c));
+
+            Debug.WriteLine("--- 檢查 Capability ---");
+            Debug.WriteLine(requiredCapabilities.Count);
+            Debug.WriteLine(requiredCapabilities.Any(c => userCapabilities.Contains(c)));
+            Debug.WriteLine($"capabilityMatch : {capabilityMatch}");
+
+            // 5 不符合授權 → Redirect Login
             if (!roleMatch || !capabilityMatch)
             {
                 // 記錄 ActivityLog
+                Debug.WriteLine("--- Role/Capability 不符合授權-記錄 ActivityLog ---");
                 logger.LogAsync(
                     memberId: member.MemberId,
                     companyId: member.CompanyId,
@@ -95,9 +179,22 @@ namespace CarbonProject.Attributes
                     detailsObj: new { roles = _roles, capabilities = _capabilities }
                 ).Wait();
 
+                Debug.WriteLine("記錄 ActivityLog 完成-回到 Login 頁面");
                 context.Result = new RedirectToActionResult("Login", "Account", null);
                 return;
             }
         }
     }
 }
+
+// 1️ 單純用 Role
+//[AuthorizeRole(roles: new[] { "Admin" })]
+
+// 2️ 用單一 Capability
+//[AuthorizeRole(capabilities: new[] { "View" })]
+
+// 3️ 用 Permission（自動包含對應 CRUD Capability）
+//[AuthorizeRole(permissions: new[] { "ManageUsers" })]
+
+// 4️ 混合使用
+//[AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "ManageUsers" })]

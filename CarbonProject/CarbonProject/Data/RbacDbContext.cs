@@ -31,6 +31,7 @@ namespace CarbonProject.Data
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.MemberId, ur.RoleId });
 
+            modelBuilder.Entity<UserCompanyRole>().ToTable("UserCompanyRole");
             // UserCompanyRole FK
             modelBuilder.Entity<UserCompanyRole>()
                 .HasOne(ucr => ucr.User)

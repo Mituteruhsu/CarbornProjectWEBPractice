@@ -1,7 +1,9 @@
-﻿using CarbonProject.Data;
+﻿using CarbonProject.Attributes;
+using CarbonProject.Data;
 using CarbonProject.Models;
 using CarbonProject.Models.EFModels;
 using CarbonProject.Service.Logging;
+using CarbonProject.Service.RBAC;
 using CarbonProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -13,17 +15,20 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CarbonProject.Controllers
 {
+    
     // DashboardController 負責數據顯示、統計分析
     public class DashboardController : Controller
     {
         private readonly CarbonDbContext _context;          // From -> Data/CarbonDbContext.cs
         private readonly EmissionService _emissionService;  // From -> Service/EmissionService.cs
         private readonly ActivityLogService _activityLog;
-        public DashboardController(CarbonDbContext context, EmissionService emissionService, ActivityLogService activityLog)
+        private readonly CapabilityService _capabilityService;
+        public DashboardController(CarbonDbContext context, EmissionService emissionService, ActivityLogService activityLog, CapabilityService capabilityService)
         {
             _context = context;
             _emissionService = emissionService;
             _activityLog = activityLog;
+            _capabilityService = capabilityService;
         }
 
         // ---------- ViewModel ----------
@@ -60,6 +65,34 @@ namespace CarbonProject.Controllers
                 detailsObj: new { Controller = "Dashboard", Action = actionType }
             );
         }
+        // >>>>> 測試用頁面 <<<<<
+        [AuthorizeRole(new[] { "Admin", "Manager", "Staff", "User" })]
+        public IActionResult Index1()
+        {
+            var role = HttpContext.Session.GetString("Role");
+
+            return role switch
+            {
+                "Admin" => View("AdminDashboard"),
+                "Manager" or "Staff" => View("CompanyDashboard"),
+                _ => View("UserDashboard")
+            };
+        }
+        [AuthorizeRole(new[] { "Admin", "Manager", "Staff"})]
+        public async Task<IActionResult> CompanyDashboard()
+        {
+            int memberId = HttpContext.Session.GetInt32("MemberId") ?? 0;
+
+            var model = new CompanyDashboardViewModel
+            {
+                CanEditCompany = await _capabilityService.UserHasCapabilityAsync(memberId, "EditCompany"),
+                CanEditEmployee = await _capabilityService.UserHasCapabilityAsync(memberId, "EditEmployee"),
+                CanSubmitReport = await _capabilityService.UserHasCapabilityAsync(memberId, "SubmitReport")
+            };
+
+            return View(model);
+        }
+        // ↑↑↑↑↑ 測試用頁面 ↑↑↑↑↑
         public async Task<IActionResult> Index()
         {
             // 取得前 1000 筆資料

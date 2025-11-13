@@ -215,8 +215,8 @@ app.UseRouting();
 app.UseSession();   //使用 session 必須在 UseRouting 後、UseEndpoints 前
 app.UseAuthentication(); // JWT middleware
 app.UseAuthorization();
-app.UseRBAC(); // 自動恢復 Session, 放在 UseRouting() 之前或之後都可，但必須在 Controller 執行前
 
+app.UseRBAC(); // 自動恢復 Session, 放在 UseRouting() 之前或之後都可，但必須在 Controller 執行前
 // 註冊自訂 RBACMiddleware
 app.UseMiddleware<RBACMiddleware>();
 

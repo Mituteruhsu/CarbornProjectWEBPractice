@@ -2,6 +2,10 @@
 │
 └── CarbonProject/
     │
+    ├── [dbo].[__EFMigrationsHistory]
+    │    ├─ MigrationId (nvarchar)
+    │    └─ ProductVersion (nvarchar)
+    │
     ├── [dbo].[ActivityLog]
     │    ├─ LogId (bigint)
     │    ├─ MemberId (int)
@@ -17,6 +21,11 @@
     │    ├─ Details (nvarchar)
     │    ├─ CreatedBy (nvarchar)
     │    └─ CreatedAt (datetime2)
+    │
+    ├── [dbo].[Capabilities]
+    │    ├─ CapabilityId (int)
+    │    ├─ Name (nvarchar)
+    │    └─ Description (nvarchar)
     │
     ├── [dbo].[CarbonRecords]
     │    ├─ Id (int)
@@ -93,9 +102,22 @@
     │    ├─ Middle_Category_Code (nvarchar)
     │    └─ Middle_Category_Name (nvarchar)
     │
-    ├── [dbo].[Roles_Permissions]
-    │    ├─ Role (nvarchar)
-    │    ├─ Permission_Key (nvarchar)
+    ├── [dbo].[PermissionCapabilities]
+    │    ├─ PermissionId (int)
+    │    └─ CapabilityId (int)
+    │
+    ├── [dbo].[Permissions]
+    │    ├─ PermissionId (int)
+    │    ├─ PermissionKey (nvarchar)
+    │    └─ Description (nvarchar)
+    │
+    ├── [dbo].[RolePermissions]
+    │    ├─ RoleId (int)
+    │    └─ PermissionId (int)
+    │
+    ├── [dbo].[Roles]
+    │    ├─ RoleId (int)
+    │    ├─ RoleName (nvarchar)
     │    └─ Description (nvarchar)
     │
     ├── [dbo].[sysdiagrams]
@@ -105,11 +127,23 @@
     │    ├─ version (int)
     │    └─ definition (varbinary)
     │
-    ├── [dbo].[UserCompanyMap]
+    ├── [dbo].[UserCompanyRole]
     │    ├─ Id (int)
     │    ├─ MemberId (int)
     │    ├─ CompanyId (int)
-    │    └─ Role (nvarchar)
+    │    ├─ RoleId (int)
+    │    ├─ IsPrimary (bit)
+    │    ├─ Stat
+    │    ├─ AssignedBy (int)
+    │    ├─ AssignedAt (datetime2)
+    │    ├─ RevokedAt (datetime2)
+    │    ├─ Notes (nvarchar)
+    │    ├─ CreatedAt (datetime2)
+    │    └─ UpdatedAt (datetime2)
+    │
+    ├── [dbo].[UserRoles]
+    │    ├─ MemberId (int)
+    │    └─ RoleId (int)
     │
     └── [dbo].[Users] [使用者資料表] ⭐ 核心表
           ├─ MemberId (int)
@@ -129,11 +163,11 @@
           ├─ PhoneConfirmed (bit)
           ├─ MembershipLevel (nvarchar)
           ├─ Points (int)
-          ├─ Created
+          ├─ CreatedAt (datetime)
           ├─ UpdatedAt (datetime)
           ├─ LastLoginAt (datetime)
           ├─ LastLogoutAt (datetime)
           ├─ LastFailedLoginAt (datetime)
           └─ FailedLoginAttempts (int)
 
-完成時間: 2025-11-09T20:39:07.0861239+08:00
+完成時間: 2025-11-13T09:12:25.9670642+08:00

@@ -30,6 +30,7 @@
    ├─Models
    │  ├─CarbonDataViewModel.cs
    │  ├─CefItems.cs
+   │  ├─CompanyDashboardViewModel.cs
    │  ├─ErrorViewModel.cs
    │  ├─ESGActionViewModel.cs
    │  ├─ESGProgressViewModel.cs
@@ -97,14 +98,22 @@
    │  ├─Cef
    │  │  └─Index.cshtml
    │  ├─Dashboard
+   │  │  ├─_DashboardLayout.cshtml
    │  │  ├─_FormStyles.cshtml
+   │  │  ├─AdminDashboard.cshtml
    │  │  ├─CALCULATLINK.cshtml
+   │  │  ├─CompanyDashboard.cshtml
    │  │  ├─CreateEmission.cshtml
    │  │  ├─CreateTarget.cshtml
    │  │  ├─EditEmission.cshtml
    │  │  ├─EditTarget.cshtml
    │  │  ├─Index.cshtml
-   │  │  └─Report.cshtml
+   │  │  ├─Index1.cshtml
+   │  │  ├─Report.cshtml
+   │  │  ├─UserDashboard.cshtml
+   │  │  └─Partials
+   │  │     ├─_CompanyManagerPanel.cshtml
+   │  │     └─_CompanyStaffPanel.cshtml
    │  ├─Home
    │  │  ├─DataGoals.cshtml
    │  │  ├─Index.cshtml

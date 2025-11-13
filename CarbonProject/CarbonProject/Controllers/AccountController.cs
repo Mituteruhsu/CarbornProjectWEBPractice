@@ -75,6 +75,9 @@ namespace CarbonProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string UID, string password, bool rememberMe = false)
         {
+            Debug.WriteLine("===== Controllers/AccountController.cs =====");
+            Debug.WriteLine("--- Login ---");
+            Debug.WriteLine($"UID: {UID}, 是否有rememberMe: {rememberMe}");
             // 正規驗證(UID:至少4位數，password:至少8位數，兩者可包含英文大小寫及數字 0~9)
             var uidRegex = new Regex(@"^[a-zA-Z0-9]{4,}$");
             var pwdRegex = new Regex(@"^[a-zA-Z0-9]{8,}$");
@@ -89,14 +92,21 @@ namespace CarbonProject.Controllers
                 ViewBag.Error = "密碼至少8位，且僅能包含英文與數字";
                 return View("Login");
             }
-
+            Debug.WriteLine("--- Login-正規驗證 ---");
+            Debug.WriteLine($"uidRegex: 驗證通過");
+            Debug.WriteLine($"pwdRegex: 驗證通過");
             // 驗證帳號密碼
+            Debug.WriteLine("--- Login-驗證帳號密碼-member ---");
             var member = _membersRepository.CheckLogin(UID, password);
+            Debug.WriteLine("===== Controllers/AccountController.cs =====");
+            Debug.WriteLine("--- Login ---");
             if (member != null)
             {
+                Debug.WriteLine("member 不是 null");
                 // 如果帳號已被鎖定
                 if (!member.IsActive)
                 {
+                    Debug.WriteLine($"帳號是否鎖定 :{member.IsActive}");
                     ViewBag.Error = "帳號已暫時鎖定，請稍後再試。";
                     await _activityLog.LogAsync(
                         memberId: member.MemberId,
@@ -109,11 +119,12 @@ namespace CarbonProject.Controllers
                         createdBy: member.Username,
                         detailsObj: new { username = member.Username }
                     );
-
+                    Debug.WriteLine($"跳轉 Login 頁面");
                     return View("Login");
                 }
                 // 登入成功：更新最後登入時間、重置錯誤次數
                 _membersRepository.UpdateLastLoginAt(member.MemberId);
+                Debug.WriteLine("登入成功：更新最後登入時間、重置錯誤次數");
 
                 // 寫入登入成功 EF Core 紀錄
                 // From -> Service/ActivityLogService.cs
@@ -128,27 +139,36 @@ namespace CarbonProject.Controllers
                     createdBy: member.Username,
                     detailsObj: new { username = member.Username }
                 );
+                Debug.WriteLine("登入成功：寫入登入成功 EF Core 紀錄");
 
                 // 設定 Session
+                Debug.WriteLine("--- 設定 Session ---");
                 HttpContext.Session.SetString("isLogin", "true");
                 HttpContext.Session.SetString("Role", member.Role);
                 HttpContext.Session.SetString("Username", member.Username);
                 HttpContext.Session.SetInt32("MemberId", member.MemberId);
+                Debug.WriteLine($"isLogin : true");
+                Debug.WriteLine($"Role : {member.Role}");
+                Debug.WriteLine($"Username : {member.Username}");
+                Debug.WriteLine($"MemberId : {member.MemberId}");
                 if (member.CompanyId > 0)
                     HttpContext.Session.SetInt32("CompanyId", member.CompanyId);
+                Debug.WriteLine($"持有 CompanyId : {member.CompanyId}");
 
                 // === 產生 JWT Token ===
+                Debug.WriteLine("--- 產生 JWT Token ---");
                 string jwtToken = _jwtService.GenerateToken(
                     username: member.Username,
                     role: member.Role,
                     memberId: member.MemberId,
                     rememberMe
                 );
-
+                Debug.WriteLine($"JWT Token : {jwtToken}");
                 //// 你可以選擇存進 Session 或 Cookie（視用途）
                 //HttpContext.Session.SetString("JwtToken", jwtToken);
 
                 // 也可以回傳給前端（如果是前端 AJAX 登入）
+                Debug.WriteLine($"回傳給前端");
                 Response.Cookies.Append("AuthToken", jwtToken, new CookieOptions
                 {
                     HttpOnly = true,
@@ -156,18 +176,33 @@ namespace CarbonProject.Controllers
                     SameSite = SameSiteMode.Strict,
                     Expires = rememberMe ? DateTimeOffset.UtcNow.AddDays(7) : DateTimeOffset.UtcNow.AddHours(2)
                 });
-                
+
                 // 根據 Role 導向不同頁面
-                if (member.Role == "Admin")
+                Debug.WriteLine($"根據 Role 導向不同頁面: {member.Role}");
+                switch (member.Role)
+                {
+                    case "Admin":
+                        Debug.WriteLine($"Account/Admin_read.cshtml");
                         return RedirectToAction("Admin_read", "Account");
-                    else
-                        return RedirectToAction("Index", "Home"); // 一般會員測試頁
+                    case "Manager":
+                        Debug.WriteLine($"Dashboard/CompanyDashboard.cshtml");
+                        return RedirectToAction("CompanyDashboard", "Dashboard");
+                    case "Staff":
+                        Debug.WriteLine($"Dashboard/CompanyDashboard.cshtml");
+                        return RedirectToAction("CompanyDashboard", "Dashboard");
+                    case "Company":
+                        Debug.WriteLine($"Dashboard/CompanyDashboard.cshtml");
+                        return RedirectToAction("CompanyDashboard", "Dashboard");
+                    default:
+                        Debug.WriteLine($"Account/UserDashboard.cshtml");
+                        return RedirectToAction("Index", "UserDashboard");
+                }
             }
             else
             {
                 // 登入失敗：增加錯誤次數
                 bool isLocked = _membersRepository.IncrementFailedLogin(UID);
-
+                Debug.WriteLine($"登入失敗：增加錯誤次數");
                 // 寫入登入失敗 EF Core 紀錄
                 // From -> Service/ActivityLogService.cs
                 await _activityLog.LogAsync(
@@ -181,10 +216,12 @@ namespace CarbonProject.Controllers
                     createdBy: "System",
                     detailsObj: new { username = UID }
                 );
+                Debug.WriteLine($"登入失敗：寫入登入失敗 EF Core 紀錄");
 
                 // 若錯誤達上限 → 鎖定紀錄
                 if (isLocked)
                 {
+                    Debug.WriteLine("錯誤達上限 → 鎖定紀錄");
                     await _activityLog.LogAsync(
                         memberId: null,
                         companyId: null,
@@ -202,8 +239,10 @@ namespace CarbonProject.Controllers
                 else 
                 {
                     ViewBag.Error = "帳號或密碼錯誤";
+                    Debug.WriteLine("ViewBag.Error : 帳號或密碼錯誤");
                 }
-                    return View("Login");
+                Debug.WriteLine("回到 Login 頁面");
+                return View("Login");
             }
         }
         //===============登出===============
@@ -418,7 +457,7 @@ namespace CarbonProject.Controllers
         }
         //===============Admin 會員管理===============
         //Include ActivityLogService
-        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "ViewMember" })]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         public IActionResult Admin_read()
         {
             var sessionRole = HttpContext.Session.GetString("Role");
@@ -445,7 +484,7 @@ namespace CarbonProject.Controllers
         //Include ActivityLogService
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "DeleteMember" })]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Delete" })]
         public async Task<IActionResult> DeleteMember(int id)
         {
             Debug.WriteLine("===== Controllers/AccountController.cs =====");
@@ -482,7 +521,7 @@ namespace CarbonProject.Controllers
         //Include ActivityLogService
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "EditMember" })]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
         public async Task<IActionResult> EditMember(int id, string username, string email, string fullname)
         {
             if (HttpContext.Session.GetString("Role") != "Admin")

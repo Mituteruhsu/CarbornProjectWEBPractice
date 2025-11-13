@@ -56,8 +56,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2VmXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/AdminDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEFkbWluRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/CALCULATLINK.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXENBTENVTEFUTElOSy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/CompanyDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXENvbXBhbnlEYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/CreateEmission.cshtml]
@@ -80,8 +88,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/Index1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4MS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/Partials/_CompanyManagerPanel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFBhcnRpYWxzXF9Db21wYW55TWFuYWdlclBhbmVsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/Partials/_CompanyStaffPanel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFBhcnRpYWxzXF9Db21wYW55U3RhZmZQYW5lbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/Report.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFJlcG9ydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/UserDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFVzZXJEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/_DashboardLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXF9EYXNoYm9hcmRMYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Dashboard/_FormStyles.cshtml]

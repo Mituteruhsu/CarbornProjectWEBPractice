@@ -75,6 +75,9 @@ namespace CarbonProject.Repositories
                     {
                         if (reader.Read())
                         {
+                            Debug.WriteLine("===== Repositories/MembersRepository.cs =====");
+                            Debug.WriteLine("--- CheckLogin(string usernameOrEmail, string password) ---");
+                            Debug.WriteLine($"連線 DB 比對");
                             string hash = reader["PasswordHash"].ToString();
                             int memberId = Convert.ToInt32(reader["MemberId"]);
                             int companyId = reader["CompanyId"] != DBNull.Value ? Convert.ToInt32(reader["CompanyId"]) : 0;
@@ -82,6 +85,7 @@ namespace CarbonProject.Repositories
                             //登入錯誤嘗試紀錄
                             int failedAttempts = reader["FailedLoginAttempts"] != DBNull.Value ? Convert.ToInt32(reader["FailedLoginAttempts"]) : 0;
                             DateTime? lastFailedLoginAt = reader["LastFailedLoginAt"] != DBNull.Value ? Convert.ToDateTime(reader["LastFailedLoginAt"]) : null;
+                            Debug.WriteLine($"登入錯誤嘗試紀錄: {failedAttempts}");
 
                             // 自動解鎖：若已鎖住且 30 分鐘已過
                             if (failedAttempts >= 5 && lastFailedLoginAt.HasValue &&
@@ -94,6 +98,7 @@ namespace CarbonProject.Repositories
                             // 如果錯誤次數 >= 5，（30 分鐘內）
                             if (failedAttempts >= 5)
                             {
+                                Debug.WriteLine($"登入錯誤次數 >= 5，（30 分鐘內）");
                                 // 帳號被鎖定，不進行密碼驗證
                                 return new MembersViewModel
                                 {
@@ -108,6 +113,7 @@ namespace CarbonProject.Repositories
                             // 驗證密碼
                             if (BCrypt.Net.BCrypt.Verify(password, hash))
                             {
+                                Debug.WriteLine($"BCrypt 驗證密碼完成");
                                 return new MembersViewModel
                                 {
                                     MemberId = memberId,

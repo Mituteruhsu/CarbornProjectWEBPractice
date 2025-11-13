@@ -75,7 +75,6 @@ namespace CarbonProject.Service.RBAC
             await _context.SaveChangesAsync();
             return true;
         }
-
         // ===== 功能點與權限關聯 =====
         
         // -- C 將功能點綁定到權限 --
@@ -128,6 +127,38 @@ namespace CarbonProject.Service.RBAC
                 .Where(pc => pc.CapabilityId == capabilityId)
                 .Select(pc => pc.Permission)
                 .ToListAsync();
+        }
+
+        // ===== 檢查使用者是否有某個 Capability =====
+        public async Task<bool> UserHasCapabilityAsync(int memberId, string capabilityName)
+        {
+            // 找出使用者角色
+            var roles = await _context.UserRoles
+                .Where(ur => ur.MemberId == memberId)
+                .Select(ur => ur.RoleId)
+                .ToListAsync();
+
+            if (!roles.Any())
+                return false;
+
+            // 找出 Capability 與對應 Permission
+            var capability = await _context.Capabilities
+                .Include(c => c.PermissionCapabilities)
+                .ThenInclude(pc => pc.Permission)
+                .FirstOrDefaultAsync(c => c.Name == capabilityName);
+
+            if (capability == null)
+                return false;
+
+            // 找出所有有權限的 Role
+            var permittedRoleIds = capability.PermissionCapabilities
+                .SelectMany(pc => _context.RolePermissions
+                    .Where(rp => rp.PermissionId == pc.PermissionId)
+                    .Select(rp => rp.RoleId))
+                .Distinct()
+                .ToList();
+
+            return roles.Any(rid => permittedRoleIds.Contains(rid));
         }
     }
 }
