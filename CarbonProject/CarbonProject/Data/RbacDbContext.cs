@@ -21,6 +21,12 @@ namespace CarbonProject.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // User → Company 關聯
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Company)
+                .WithMany()  // 如果不需要 Company 對應多個 User，可以用 WithMany()
+                .HasForeignKey(u => u.CompanyId)
+                .OnDelete(DeleteBehavior.SetNull);  // 停用 Company 不會刪掉 User
             // 多對多 PKs
             modelBuilder.Entity<RolePermission>()
                 .HasKey(rp => new { rp.RoleId, rp.PermissionId });

@@ -1,0 +1,221 @@
+﻿/* 基本色系 - 春天綠 */
+:root {
+    --spring-green: #68BE8D;
+    --spring-green-dark: #5d9e5d;
+    --spring-bg: #f3fdf3;
+    --dark-bg: #2b2b2b;
+    --navbar-height: 56px;
+}
+
+/* Light Mode */
+body.light-mode {
+    background: var(--spring-bg);
+    color: #333;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background: #1b1b1b;
+    color: #f5f5f5;
+}
+
+/* Navbar */
+.spring-nav {
+    background: var(--spring-green);
+}
+
+/* Sidebar */
+.spring-sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #e9f7e9;
+    position: fixed;
+    top: 56px;
+    left: -260px;
+    transition: 0.3s ease; /* 基本色系 - 春天綠 */
+    :root {
+        --spring-green: #68BE8D;
+        --spring-green-dark: #5d9e5d;
+        --spring-bg: #f3fdf3;
+        --dark-bg: #2b2b2b;
+    }
+/* Light Mode */
+body.light-mode {
+    background: var(--spring-bg);
+    color: #333;
+}
+/* Dark Mode */
+body.dark-mode {
+    background: #1b1b1b;
+    color: #f5f5f5;
+}
+/* Navbar */
+.spring-nav {
+    background: var(--spring-green);
+    height: var(--navbar-height);       /* ⭐ 固定高度 */
+    line-height: var(--navbar-height);  /* ⭐ 讓文字垂直置中 */
+}
+/* Sidebar */
+.spring-sidebar {
+    width: 250px;
+    height: calc(100vh - var(--navbar-height)); /* ⭐ 扣除 navbar */
+    background: #e9f7e9;
+    position: fixed;
+    top: var(--navbar-height); /* ⭐ 讓 Sidebar 正好貼在 Navbar 下 */
+    left: -260px;
+    transition: 0.3s ease;
+    overflow-y: auto;
+    z-index: 2000;
+}
+
+.spring-sidebar.open {
+    left: 0;
+}
+
+/* Sidebar links */
+.sidebar-link {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    color: #2d4d2d;
+    transition: 0.2s;
+}
+
+.sidebar-link:hover {
+    background: var(--spring-green);
+    color: white;
+}
+/* Content area */
+.content-area {
+    margin-left: 0;
+    transition: margin-left .3s ease;
+}
+
+@media (min-width: 768px) {
+    .spring-sidebar {
+        left: 0;
+    }
+
+    .content-area {
+        margin-left: 250px;
+    }
+}
+/* Dark Mode 強化 */
+body.dark-mode .spring-sidebar {
+    background: #333;
+}
+
+body.dark-mode .sidebar-link {
+    color: #dcdcdc;
+}
+
+body.dark-mode .sidebar-link:hover {
+    background: var(--spring-green-dark);
+}
+
+    overflow-y: auto;
+    z-index: 2000;
+}
+
+.spring-sidebar.open {
+    left: 0;
+}
+
+/*Sidebar links */
+.sidebar-link {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    color: var(--spring-green);
+    transition: 0.2s;
+}
+
+.sidebar-link:hover {
+    background: var(--spring-green);
+    color: white;
+}
+/*Content area */
+.content-area {
+    margin-left: 0;
+    transition: margin-left .3s ease;
+}
+
+@media (min-width: 768px) {
+    .spring-sidebar {
+        left: 0;
+    }
+
+    .content-area {
+        margin-top: var(--navbar-height);
+        margin-left: 250px;
+    }
+}
+/* Dark Mode 强化 */
+body.dark-mode .spring-sidebar {
+    background: #333;
+}
+
+body.dark-mode .sidebar-link {
+    color: #dcdcdc;
+}
+
+body.dark-mode .sidebar-link:hover {
+    background: var(--spring-green-dark);
+}
+
+/* ============================
+   🌙 dark-mode 顏色覆蓋
+   ============================ */
+body.dark-mode table {
+    color: #e9ecef !important; /* table 文字改亮色 */
+}
+
+body.dark-mode .table-light,
+body.dark-mode .table thead.table-light {
+    background-color: #2c2c2c !important;
+    color: #e9ecef !important; /* 標題變亮色 */
+}
+
+body.dark-mode .table-hover tbody tr:hover {
+    background-color: #3a3a3a !important;
+}
+
+/* ============================
+   Chart.js CSS 變數
+   ============================ */
+:root {
+    --chart-text: #212529;
+    --chart-grid: #dee2e6;
+    --chart-line: #198754; /* 綠色 */
+    --chart-line-bg: rgba(25,135,84,0.1);
+}
+
+/* Dark Mode */
+body.dark-mode {
+    --chart-text: #e9ecef;
+    --chart-grid: #555;
+    --chart-line: #4ade80; /* 偏亮綠 */
+    --chart-line-bg: rgba(74,222,128,0.1);
+}
+
+/* Dark Mode hover */
+    body.dark-mode .table-hover tbody tr:hover {
+        background-color: #BDDDC4 !important;
+        transition: background-color .15s;
+    }
+
+/* Light Mode hover */
+body.light-mode .table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    transition: background-color .15s;
+}
+
+/* Light Mode – 使用深綠 */
+body.light-mode .navbar .navbar-brand {
+    color: #333 !important;
+}
+
+/* Dark Mode – 使用對比白色 */
+body.dark-mode .navbar .navbar-brand {
+    color: #e9ecef !important;
+}

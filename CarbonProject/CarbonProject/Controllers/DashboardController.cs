@@ -69,7 +69,7 @@ namespace CarbonProject.Controllers
         [AuthorizeRole(new[] { "Admin", "Manager", "Staff", "User" })]
         public IActionResult Index1()
         {
-            var role = HttpContext.Session.GetString("Role");
+            var role = HttpContext.Session.GetString("Roles");
 
             return role switch
             {

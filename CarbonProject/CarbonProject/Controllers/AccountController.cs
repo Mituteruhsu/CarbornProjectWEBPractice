@@ -3,6 +3,7 @@ using CarbonProject.Models;
 using CarbonProject.Models.EFModels;
 using CarbonProject.Repositories;
 using CarbonProject.Service.Logging;
+using CarbonProject.Service.RBAC;
 using CarbonProject.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace CarbonProject.Controllers
         private readonly IConfiguration _config;
         private readonly MembersRepository _membersRepository;
         private readonly ActivityLogService _activityLog;
+        private readonly RBACService _rbacService;
         private readonly CompanyRepository _companyRepository;
         private readonly IndustryRepository _industryRepository;
 
@@ -30,7 +32,8 @@ namespace CarbonProject.Controllers
         public AccountController(
             IWebHostEnvironment _environment, 
             ILogger<AccountController> logger, 
-            IConfiguration config, 
+            IConfiguration config,
+            RBACService rbacService,
             MembersRepository membersRepository, 
             ActivityLogService activityLog, 
             CompanyRepository companyRepository, 
@@ -45,6 +48,7 @@ namespace CarbonProject.Controllers
             _activityLog = activityLog;
             _companyRepository = companyRepository;
             _industryRepository = industryRepository;
+            _rbacService = rbacService;
             _membersRepository = membersRepository;
             _jwtService = jwtService;   // 儲存注入物件
         }
@@ -141,33 +145,40 @@ namespace CarbonProject.Controllers
                 );
                 Debug.WriteLine("登入成功：寫入登入成功 EF Core 紀錄");
 
-                // 設定 Session
+                // 設定 Session (RBAC 核心)
                 Debug.WriteLine("--- 設定 Session ---");
+                var rbac = await _rbacService.GetUserRBACAsync(member.MemberId);
+                Debug.WriteLine("===== 使用 RBACService 聚合角色、權限、功能點 =====");
+                                
                 HttpContext.Session.SetString("isLogin", "true");
-                HttpContext.Session.SetString("Role", member.Role);
                 HttpContext.Session.SetString("Username", member.Username);
                 HttpContext.Session.SetInt32("MemberId", member.MemberId);
                 Debug.WriteLine($"isLogin : true");
-                Debug.WriteLine($"Role : {member.Role}");
                 Debug.WriteLine($"Username : {member.Username}");
                 Debug.WriteLine($"MemberId : {member.MemberId}");
+
                 if (member.CompanyId > 0)
                     HttpContext.Session.SetInt32("CompanyId", member.CompanyId);
                 Debug.WriteLine($"持有 CompanyId : {member.CompanyId}");
+                HttpContext.Session.SetString("Roles", string.Join(",", rbac.Roles));
+                HttpContext.Session.SetString("Permissions", string.Join(",", rbac.Permissions));
+                HttpContext.Session.SetString("Capabilities", string.Join(",", rbac.Capabilities));
+                Debug.WriteLine($"Roles : {string.Join(",", rbac.Roles)}");
+                Debug.WriteLine($"Permissions : {string.Join(",", rbac.Permissions)}");
+                Debug.WriteLine($"Capabilities : {string.Join(",", rbac.Capabilities)}");
 
-                // === 產生 JWT Token ===
-                Debug.WriteLine("--- 產生 JWT Token ---");
+
+                // === JWT **只作為 RememberMe 補充** ===
+                Debug.WriteLine("--- 產生 JWT 只作為 RememberMe 補充 ---");
                 string jwtToken = _jwtService.GenerateToken(
                     username: member.Username,
-                    role: member.Role,
+                    roles: rbac.Roles,
+                    permissions: rbac.Permissions,
+                    capabilities: rbac.Capabilities,
                     memberId: member.MemberId,
-                    rememberMe
+                    rememberMe: rememberMe
                 );
                 Debug.WriteLine($"JWT Token : {jwtToken}");
-                //// 你可以選擇存進 Session 或 Cookie（視用途）
-                //HttpContext.Session.SetString("JwtToken", jwtToken);
-
-                // 也可以回傳給前端（如果是前端 AJAX 登入）
                 Debug.WriteLine($"回傳給前端");
                 Response.Cookies.Append("AuthToken", jwtToken, new CookieOptions
                 {
@@ -178,25 +189,25 @@ namespace CarbonProject.Controllers
                 });
 
                 // 根據 Role 導向不同頁面
-                Debug.WriteLine($"根據 Role 導向不同頁面: {member.Role}");
-                switch (member.Role)
+                // === 多角色導向改這裡 ===
+                // Admin 優先
+                if (rbac.Roles.Contains("Admin"))
                 {
-                    case "Admin":
-                        Debug.WriteLine($"Account/Admin_read.cshtml");
-                        return RedirectToAction("Admin_read", "Account");
-                    case "Manager":
-                        Debug.WriteLine($"Dashboard/CompanyDashboard.cshtml");
-                        return RedirectToAction("CompanyDashboard", "Dashboard");
-                    case "Staff":
-                        Debug.WriteLine($"Dashboard/CompanyDashboard.cshtml");
-                        return RedirectToAction("CompanyDashboard", "Dashboard");
-                    case "Company":
-                        Debug.WriteLine($"Dashboard/CompanyDashboard.cshtml");
-                        return RedirectToAction("CompanyDashboard", "Dashboard");
-                    default:
-                        Debug.WriteLine($"Account/UserDashboard.cshtml");
-                        return RedirectToAction("Index", "UserDashboard");
+                    Debug.WriteLine($"Roles 包含 Admin, 轉向 Dashboard, Admin ");
+                    return RedirectToAction("Dashboard", "Admin");
                 }
+
+                // 公司管理角色
+                if (rbac.Roles.Contains("Manager") || rbac.Roles.Contains("Staff") || rbac.Roles.Contains("Company"))
+                {
+                    Debug.WriteLine($"Roles 包含 Manager,Staff,或 Company , 轉向 CompanyDashboard, Dashboard ");
+                    return RedirectToAction("CompanyDashboard", "Dashboard");
+                }
+
+                // 一般用戶
+                Debug.WriteLine($"Roles 不包含任何角色，轉向 Index, UserDashboard ");
+                return RedirectToAction("Index", "UserDashboard");
+
             }
             else
             {
@@ -217,31 +228,9 @@ namespace CarbonProject.Controllers
                     detailsObj: new { username = UID }
                 );
                 Debug.WriteLine($"登入失敗：寫入登入失敗 EF Core 紀錄");
+                
+                ViewBag.Error = isLocked ? "帳號已鎖定，請 30 分鐘後再嘗試登入。" : "帳號或密碼錯誤";
 
-                // 若錯誤達上限 → 鎖定紀錄
-                if (isLocked)
-                {
-                    Debug.WriteLine("錯誤達上限 → 鎖定紀錄");
-                    await _activityLog.LogAsync(
-                        memberId: null,
-                        companyId: null,
-                        actionType: "Auth.AccountLocked",
-                        actionCategory: "Auth",
-                        outcome: "Locked",
-                        ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
-                        userAgent: Request.Headers["User-Agent"].ToString(),
-                        createdBy: "System",
-                        detailsObj: new { username = UID, reason = "Too many failed login attempts" }
-                    );
-
-                    ViewBag.Error = "帳號已鎖定，請 30 分鐘後再嘗試登入。";
-                }
-                else 
-                {
-                    ViewBag.Error = "帳號或密碼錯誤";
-                    Debug.WriteLine("ViewBag.Error : 帳號或密碼錯誤");
-                }
-                Debug.WriteLine("回到 Login 頁面");
                 return View("Login");
             }
         }
@@ -458,9 +447,9 @@ namespace CarbonProject.Controllers
         //===============Admin 會員管理===============
         //Include ActivityLogService
         [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
-        public IActionResult Admin_read()
+        public IActionResult Index()
         {
-            var sessionRole = HttpContext.Session.GetString("Role");
+            var sessionRole = HttpContext.Session.GetString("Roles");
             Debug.WriteLine("===== Controllers/AccountController.cs =====");
             Debug.WriteLine("--- Admin_read ---");
             Debug.WriteLine($"Session Role: {sessionRole}");
@@ -470,7 +459,7 @@ namespace CarbonProject.Controllers
 
             // 檢查是否為 Admin 登入
             if (HttpContext.Session.GetString("isLogin") != "true" ||
-                HttpContext.Session.GetString("Role") != "Admin")
+                HttpContext.Session.GetString("Roles") != "Admin")
             {
                 TempData["LoginAlert"] = "您沒有管理權限";
                 return RedirectToAction("Login");
@@ -491,7 +480,7 @@ namespace CarbonProject.Controllers
             Debug.WriteLine("--- DeleteMember ---");
             Debug.WriteLine($"=== ID : {id} ===");
 
-            if (HttpContext.Session.GetString("Role") != "Admin")
+            if (HttpContext.Session.GetString("Roles") != "Admin")
             {
                 TempData["AdminError"] = "無權限操作";
                 return RedirectToAction("Login");
@@ -524,7 +513,7 @@ namespace CarbonProject.Controllers
         [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
         public async Task<IActionResult> EditMember(int id, string username, string email, string fullname)
         {
-            if (HttpContext.Session.GetString("Role") != "Admin")
+            if (HttpContext.Session.GetString("Roles") != "Admin")
             {
                 TempData["AdminError"] = "無權限操作";
                 return RedirectToAction("Login");

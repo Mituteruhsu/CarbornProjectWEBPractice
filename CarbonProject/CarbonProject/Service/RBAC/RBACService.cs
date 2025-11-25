@@ -33,7 +33,33 @@ namespace CarbonProject.Service.RBAC
                                     .ThenInclude(pc => pc.Capability)
                 .FirstOrDefaultAsync(u => u.MemberId == memberId);
         }
+        // ===== 使用者登入 RBAC 聚合 =====
+        // -- R-3 回傳角色列表、權限列表、功能點列表 --
+        public async Task<(List<string> Roles, List<string> Permissions, List<string> Capabilities)> GetUserRBACAsync(int memberId)
+        {
+            var user = await GetUserByIdAsync(memberId);
+            if (user == null) return (new List<string>(), new List<string>(), new List<string>());
 
+            var roles = user.UserRoles
+                .Select(ur => ur.Role.RoleName)
+                .Distinct()
+                .ToList();
+
+            var permissions = user.UserRoles
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .Select(rp => rp.Permission.PermissionKey)
+                .Distinct()
+                .ToList();
+
+            var capabilities = user.UserRoles
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .SelectMany(rp => rp.Permission.PermissionCapabilities)
+                .Select(pc => pc.Capability.Name)
+                .Distinct()
+                .ToList();
+
+            return (roles, permissions, capabilities);
+        }
         // ===== 授權檢查 =====
         // -- Check-1 檢查使用者是否擁有特定 PermissionKey --
         public async Task<bool> UserHasPermissionAsync(int memberId, string permissionKey)

@@ -1,0 +1,107 @@
+﻿@model IEnumerable<CarbonProject.Models.MembersViewModel>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "會員管理";
+}
+
+
+<!-- 捲動容器 -->
+<div class="card shadow-sm bg-transparent border-0">
+    <h2 class="pt-1">使用者管理列表</h2>
+    <div class="card-body p-0" style="max-height: 550px; overflow-y: auto;">
+        <table class="table table-hover align-middle text-nowrap" style="border-collapse: separate; border-spacing: 0; font-size: clamp(12px, 1.2vw, 15px);">
+            <thead class="table bg-success text-white" style="position: sticky; top: 0; z-index: 1;">
+                <tr>
+                    <th class="text-center">操作</th>
+                    <th>帳號 (Username)</th>
+                    <th>Email</th>
+                    <th>姓名</th>
+                    <th>角色(Role)</th>
+                    <th>所屬公司</th>
+                    <th>啟用狀態</th>
+                    <th>是否驗證</th>
+                    <th>最後登入</th>
+                    <th>錯誤登入數</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <!-- 操作按钮 -->
+                        <td>
+                            <a asp-controller="Users" asp-action="Detail" asp-route-id="@user.MemberId" class="btn btn-sm btn-outline-primary">查看</a>
+                        </td>
+                        <!-- 帳號 -->
+                        <td>@user.Username</td>
+
+                        <!-- Email -->
+                        <td>@user.Email</td>
+
+                        <!-- 姓名 -->
+                        <td>@user.FullName</td>
+
+                        <!-- 多角色 -->
+                        <td>
+                            @foreach (var ur in user.UserRoles)
+                            {
+                                <span class="badge bg-primary me-1">@ur.Role.RoleName</span>
+                            }
+                        </td>
+
+                        <!-- 公司名稱 (CompanyId + Join Company.Name) -->
+                        <td>
+                            @if (user.Company != null)
+                            {
+                                @user.Company.CompanyName
+                            }
+                            else
+                            {
+                                <span class="text-muted">未設定</span>
+                            }
+                        </td>
+
+                        <!-- 啟用狀態 -->
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge bg-success">啟用</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">停用</span>
+                            }
+                        </td>
+
+                        <!-- Email / Phone 是否驗證 -->
+                        <td>
+                            <span class="badge @(user.EmailConfirmed ? "bg-success" : "bg-secondary")">
+                                Email
+                            </span>
+
+                            <span class="badge @(user.PhoneConfirmed ? "bg-success" : "bg-secondary")">
+                                Phone
+                            </span>
+                        </td>
+
+                        <!-- 最後登入 -->
+                        <td>
+                            @if (user.LastLoginAt.HasValue)
+                            {
+                                @user.LastLoginAt.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">未登入</span>
+                            }
+                        </td>
+
+                        <!-- 登入錯誤次數 -->
+                        <td>@user.FailedLoginAttempts</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,6 +1,9 @@
 ﻿using CarbonProject.Helpers;
 using CarbonProject.Models;
+using CarbonProject.Models.EFModels;
+using CarbonProject.Models.EFModels.RBAC;
 using Microsoft.Data.SqlClient;
+using System.Data;
 using System.Diagnostics;
 
 namespace CarbonProject.Repositories
@@ -111,18 +114,29 @@ namespace CarbonProject.Repositories
                                 };
                             }
                             // 驗證密碼
-                            if (BCrypt.Net.BCrypt.Verify(password, hash))
+                            bool checkloginvalidity = BCrypt.Net.BCrypt.Verify(password, hash);
+                            Debug.WriteLine($"BCrypt 驗證密碼{checkloginvalidity}");
+                            if (checkloginvalidity)
                             {
-                                Debug.WriteLine($"BCrypt 驗證密碼完成");
+                                Debug.WriteLine($"BCrypt 驗證密碼成功");
+
+                                var roles = GetRolesByMemberId(memberId, conn);
+
                                 return new MembersViewModel
                                 {
                                     MemberId = memberId,
                                     Username = reader["Username"].ToString(),
                                     Email = reader["Email"].ToString(),
                                     FullName = reader["FullName"].ToString(),
-                                    Role = reader["Role"].ToString(),
                                     CompanyId = companyId,
-                                    IsActive = true
+                                    IsActive = true,
+
+                                    UserRoles = roles.Select(r => new UserRole
+                                    {
+                                        MemberId = memberId,
+                                        RoleId = r.RoleId,
+                                        Role = new Role { RoleId = r.RoleId, RoleName = r.RoleName }
+                                    }).ToList()
                                 };
                             }
                         }
@@ -139,12 +153,12 @@ namespace CarbonProject.Repositories
             {
                 conn.Open();
                 string sql = @"
-                    UPDATE Users 
-                    SET 
-                        LastLoginAt = SYSUTCDATETIME(),
-                        FailedLoginAttempts = 0,
-                        LastFailedLoginAt = NULL
-                    WHERE MemberId = @MemberId";
+                                UPDATE Users 
+                                SET 
+                                    LastLoginAt = SYSUTCDATETIME(),
+                                    FailedLoginAttempts = 0,
+                                    LastFailedLoginAt = NULL
+                                WHERE MemberId = @MemberId";
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@MemberId", memberId);
@@ -215,6 +229,36 @@ namespace CarbonProject.Repositories
                 }
             }
         }
+        // 協助 MembersRepository.CheckLogin() 取得 roles
+        private List<Role> GetRolesByMemberId(int memberId, SqlConnection conn)
+        {
+            var roles = new List<Role>();
+            string sql = @"
+                            SELECT r.RoleId, r.RoleName
+                            FROM UserRoles ur
+                            JOIN Roles r ON ur.RoleId = r.RoleId
+                            WHERE ur.MemberId = @MemberId;
+                        ";
+
+            using (var cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MemberId", memberId);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        roles.Add(new Role
+                        {
+                            RoleId = Convert.ToInt32(reader["RoleId"]),
+                            RoleName = reader["RoleName"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return roles;
+        }
 
         // 更新最後登出時間
         public void UpdateLastLogoutAt(int memberId)
@@ -252,33 +296,210 @@ namespace CarbonProject.Repositories
         // 取得所有會員
         public List<MembersViewModel> GetAllMembers()
         {
-            var list = new List<MembersViewModel>();
+            var dict = new Dictionary<int, MembersViewModel>();
+
             using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                string sql = "SELECT * FROM Users";
+                string sql = @"
+                                SELECT 
+                                    u.*, 
+                                    c.CompanyId, c.CompanyName, c.TaxId, c.Industry_Id, c.Address, c.Contact_Email,
+                                    ur.RoleId, r.RoleName
+                                FROM Users u
+                                LEFT JOIN Companies c ON u.CompanyId = c.CompanyId
+                                LEFT JOIN UserRoles ur ON ur.MemberId = u.MemberId
+                                LEFT JOIN Roles r ON r.RoleId = ur.RoleId
+                                ORDER BY u.MemberId;
+                            ";
+
                 using (var cmd = new SqlCommand(sql, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        list.Add(new MembersViewModel
+                        int memberId = Convert.ToInt32(reader["MemberId"]);
+
+                        // 若不存在，先建立主物件
+                        if (!dict.ContainsKey(memberId))
                         {
-                            MemberId = (int)reader["MemberId"],
-                            Username = reader["Username"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            PasswordHash = reader["PasswordHash"].ToString(),
-                            FullName = reader["FullName"].ToString(),
-                            Role = reader["Role"].ToString(),
-                            CreatedAt = TimeHelper.ToTaipeiTime(Convert.ToDateTime(reader["CreatedAt"])),
-                            UpdatedAt = TimeHelper.ToTaipeiTime(Convert.ToDateTime(reader["UpdatedAt"])),
-                            IsActive = Convert.ToBoolean(reader["IsActive"])
+                            dict[memberId] = new MembersViewModel
+                            {
+                                MemberId = memberId,
+                                Username = reader["Username"].ToString(),
+                                Email = reader["Email"].ToString(),
+                                PasswordHash = reader["PasswordHash"].ToString(),
+                                FullName = reader["FullName"].ToString(),
+                                Role = reader["Role"].ToString(),
+
+                                EmailConfirmed = Convert.ToBoolean(reader["EmailConfirmed"]),
+                                PhoneConfirmed = Convert.ToBoolean(reader["PhoneConfirmed"]),
+
+                                FailedLoginAttempts = reader["FailedLoginAttempts"] != DBNull.Value
+                                    ? Convert.ToInt32(reader["FailedLoginAttempts"]) : 0,
+
+                                LastLoginAt = reader["LastLoginAt"] != DBNull.Value
+                                    ? Convert.ToDateTime(reader["LastLoginAt"]) : null,
+
+                                CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
+                                UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"]),
+                                IsActive = Convert.ToBoolean(reader["IsActive"]),
+
+                                Company = reader["CompanyId"] != DBNull.Value ? new Company
+                                {
+                                    CompanyId = Convert.ToInt32(reader["CompanyId"]),
+                                    CompanyName = reader["CompanyName"].ToString(),
+                                    TaxId = reader["TaxId"].ToString(),
+                                    Industry_Id = reader["Industry_Id"].ToString(),
+                                    Address = reader["Address"].ToString(),
+                                    Contact_Email = reader["Contact_Email"].ToString()
+                                } : null,
+
+                                UserRoles = new List<UserRole>()
+                            };
+                        }
+
+                        // 處理多角色
+                        if (reader["RoleId"] != DBNull.Value)
+                        {
+                            dict[memberId].UserRoles.Add(new UserRole
+                            {
+                                MemberId = memberId,
+                                RoleId = Convert.ToInt32(reader["RoleId"]),
+                                Role = new Role
+                                {
+                                    RoleId = Convert.ToInt32(reader["RoleId"]),
+                                    RoleName = reader["RoleName"].ToString()
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            return dict.Values.ToList();
+        }
+        // 取得單一會員資料 by ID
+        public MembersViewModel? GetMemberById(int memberId)
+        {
+            MembersViewModel? member = null;
+
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = @"
+                                SELECT 
+                                    u.*, 
+                                    c.CompanyId, c.CompanyName, c.TaxId, c.Industry_Id, c.Address AS CompanyAddress, c.Contact_Email,
+                                    ur.RoleId, r.RoleName
+                                FROM Users u
+                                LEFT JOIN Companies c ON u.CompanyId = c.CompanyId
+                                LEFT JOIN UserRoles ur ON ur.MemberId = u.MemberId
+                                LEFT JOIN Roles r ON r.RoleId = ur.RoleId
+                                WHERE u.MemberId=@MemberId;
+                            ";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MemberId", memberId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (member == null)
+                            {
+                                member = new MembersViewModel
+                                {
+                                    MemberId = Convert.ToInt32(reader["MemberId"]),
+                                    Username = reader["Username"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    FullName = reader["FullName"].ToString(),
+                                    Role = reader["Role"].ToString(),
+                                    PasswordHash = reader["PasswordHash"].ToString(),
+                                    IsActive = Convert.ToBoolean(reader["IsActive"]),
+                                    EmailConfirmed = Convert.ToBoolean(reader["EmailConfirmed"]),
+                                    PhoneConfirmed = Convert.ToBoolean(reader["PhoneConfirmed"]),
+                                    FailedLoginAttempts = reader["FailedLoginAttempts"] != DBNull.Value ? Convert.ToInt32(reader["FailedLoginAttempts"]) : 0,
+                                    LastLoginAt = reader["LastLoginAt"] != DBNull.Value ? Convert.ToDateTime(reader["LastLoginAt"]) : null,
+                                    LastLogoutAt = reader["LastLogoutAt"] != DBNull.Value ? Convert.ToDateTime(reader["LastLogoutAt"]) : null,
+                                    LastFailedLoginAt = reader["LastFailedLoginAt"] != DBNull.Value ? Convert.ToDateTime(reader["LastFailedLoginAt"]) : null,
+                                    CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
+                                    UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"]),
+                                    Company = reader["CompanyId"] != DBNull.Value ? new Company
+                                    {
+                                        CompanyId = Convert.ToInt32(reader["CompanyId"]),
+                                        CompanyName = reader["CompanyName"].ToString(),
+                                        TaxId = reader["TaxId"].ToString(),
+                                        Industry_Id = reader["Industry_Id"].ToString(),
+                                        Address = reader["CompanyAddress"].ToString(),
+                                        Contact_Email = reader["Contact_Email"].ToString()
+                                    } : null,
+                                    UserRoles = new List<UserRole>()
+                                };
+                            }
+
+                            // 多角色處理
+                            if (reader["RoleId"] != DBNull.Value)
+                            {
+                                member.UserRoles.Add(new UserRole
+                                {
+                                    MemberId = memberId,
+                                    RoleId = Convert.ToInt32(reader["RoleId"]),
+                                    Role = new Role
+                                    {
+                                        RoleId = Convert.ToInt32(reader["RoleId"]),
+                                        RoleName = reader["RoleName"].ToString()
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+
+                // 取得該會員的 Activity Log
+                member.ActivityLogs = GetActivityLogsByMemberId(memberId, conn);
+            }
+
+            return member;
+        }
+
+        // 取得會員操作紀錄
+        private List<ActivityLog> GetActivityLogsByMemberId(int memberId, SqlConnection conn)
+        {
+            var logs = new List<ActivityLog>();
+            string sql = @"
+                            SELECT * FROM ActivityLog 
+                            WHERE MemberId=@MemberId
+                            ORDER BY CreatedAt DESC;
+                        ";
+
+            using (var cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MemberId", memberId);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        logs.Add(new ActivityLog
+                        {
+                            LogId = Convert.ToInt32(reader["LogId"]),
+                            MemberId = Convert.ToInt32(reader["MemberId"]),
+                            ActionType = reader["ActionType"].ToString(),
+                            ActionCategory = reader["ActionCategory"].ToString(),
+                            Outcome = reader["Outcome"].ToString(),
+                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
+                            CreatedBy = reader["CreatedBy"].ToString(),
+                            IpAddress = reader["IpAddress"].ToString(),
+                            UserAgent = reader["UserAgent"].ToString(),
+                            Details = reader["Details"].ToString()
                         });
                     }
                 }
             }
-            return list;
+            return logs;
         }
+
         // 刪除會員 by id
         public bool DeleteMember(int id)
         {

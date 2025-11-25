@@ -1,0 +1,137 @@
+﻿@model CarbonProject.Models.MembersViewModel
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "會員詳情";
+}
+
+<div class="card shadow-sm border-1 border-success bg-transparent">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">會員詳情 - @Model.Username</h3>
+        <a href="@Url.Action("Index")" class="btn btn-sm btn-light">返回列表</a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- 左側：頭像 -->
+            <div class="col-md-3 text-center">
+                @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                {
+                    <img src="@Model.ProfileImage" class="img-fluid rounded-circle mb-3" alt="Profile Image">
+                }
+                else
+                {
+                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:150px; height:150px; font-size: 2rem;">
+                        N/A
+                    </div>
+                }
+            </div>
+
+            <!-- 右側：會員資訊 -->
+            <div class="col-md-9">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th style="width:150px;">帳號</th>
+                            <td>@Model.Username</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>@Model.Email</td>
+                        </tr>
+                        <tr>
+                            <th>姓名</th>
+                            <td>@Model.FullName</td>
+                        </tr>
+                        <tr>
+                            <th>角色</th>
+                            <td>
+                                @foreach (var ur in Model.UserRoles)
+                                {
+                                    <span class="badge bg-primary me-1">@ur.Role.RoleName</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>所屬公司</th>
+                            <td>
+                                @if (Model.Company != null)
+                                {
+                                    @Model.Company.CompanyName
+                                }
+                                else
+                                {
+                                    <span class="text-muted">未設定</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>啟用狀態</th>
+                            <td>
+                                @if (Model.IsActive)
+                                {
+                                    <span class="badge bg-success">啟用</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">停用</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Email / Phone 驗證</th>
+                            <td>
+                                <span class="badge @(Model.EmailConfirmed ? "bg-success" : "bg-secondary")">Email</span>
+                                <span class="badge @(Model.PhoneConfirmed ? "bg-success" : "bg-secondary")">Phone</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>生日</th>
+                            <td>@(Model.Birthday?.ToString("yyyy-MM-dd") ?? "未填寫")</td>
+                        </tr>
+                        <tr>
+                            <th>性別</th>
+                            <td>@(Model.Gender ?? "未填寫")</td>
+                        </tr>
+                        <tr>
+                            <th>地址</th>
+                            <td>@(Model.Address ?? "未填寫")</td>
+                        </tr>
+                        <tr>
+                            <th>會員等級</th>
+                            <td>@(Model.MembershipLevel ?? "無")</td>
+                        </tr>
+                        <tr>
+                            <th>積分</th>
+                            <td>@Model.Points</td>
+                        </tr>
+                        <tr>
+                            <th>最後登入</th>
+                            <td>@(Model.LastLoginAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "未登入")</td>
+                        </tr>
+                        <tr>
+                            <th>最後登出</th>
+                            <td>@(Model.LastLogoutAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "未紀錄")</td>
+                        </tr>
+                        <tr>
+                            <th>最後登入錯誤</th>
+                            <td>@(Model.LastFailedLoginAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "無")</td>
+                        </tr>
+                        <tr>
+                            <th>登入錯誤次數</th>
+                            <td>@Model.FailedLoginAttempts</td>
+                        </tr>
+                        <tr>
+                            <th>建立時間</th>
+                            <td>@Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                        </tr>
+                        <tr>
+                            <th>更新時間</th>
+                            <td>@Model.UpdatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

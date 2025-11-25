@@ -1,5 +1,7 @@
 ﻿using CarbonProject.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace CarbonProject.Middleware
@@ -30,6 +32,18 @@ namespace CarbonProject.Middleware
 
             // 2. 檢查 Cookie 中的 JWT Token
             var jwtToken = context.Request.Cookies["AuthToken"];
+            Debug.WriteLine($"嘗試從 Cookie 取 JWT : {jwtToken}");
+
+            // 3. 如果 Cookie 沒有，檢查 Authorization header (Bearer)
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                var authHeader = context.Request.Headers["Authorization"].ToString();
+                if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                {
+                    jwtToken = authHeader.Substring("Bearer ".Length).Trim();
+                }
+            }
+
             if (!string.IsNullOrEmpty(jwtToken))
             {
                 try
@@ -40,28 +54,43 @@ namespace CarbonProject.Middleware
                     if (principal != null)
                     {
                         var username = JWTService.GetUsername(principal);
-                        var role = JWTService.GetRole(principal);
                         var memberId = JWTService.GetMemberId(principal);
+                        // 從 JWT 取 Roles / Permissions / Capabilities
+                        var roles = JWTService.GetRoles(principal);
+                        var permissions = JWTService.GetPermissions(principal);
+                        var capabilities = JWTService.GetCapabilities(principal);
 
-                        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(role))
+                        if (!string.IsNullOrEmpty(username) && roles.Any())
                         {
                             // 補 Session
                             context.Session.SetString("isLogin", "true");
                             context.Session.SetString("Username", username);
-                            context.Session.SetString("Role", role);
                             context.Session.SetInt32("MemberId", memberId);
+                            context.Session.SetString("Roles", string.Join(",", roles));
+                            context.Session.SetString("Permissions", string.Join(",", permissions));
+                            context.Session.SetString("Capabilities", string.Join(",", capabilities));
+
+                            _logger.LogDebug("[RBACMiddleware] Session restored from JWT for user {username}", username);
+                        }
+                        else
+                        {
+                            // 權限或 username 不足 -> 清除 cookie，避免無限嘗試
+                            context.Response.Cookies.Delete("AuthToken");
+                            context.Session.Clear();
                         }
                     }
                     else
                     {
                         // JWT 無效 → 清除 Cookie
                         context.Response.Cookies.Delete("AuthToken");
+                        context.Session.Clear();
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "JWT token validation failed");
                     context.Response.Cookies.Delete("AuthToken");
+                    context.Session.Clear();
                 }
             }
             // 進入下一個 Middleware

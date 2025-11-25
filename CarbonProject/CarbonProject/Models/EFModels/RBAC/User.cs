@@ -28,6 +28,7 @@ namespace CarbonProject.Models.EFModels.RBAC
         public DateTime? LastLogoutAt { get; set; }
         public DateTime? LastFailedLoginAt { get; set; }
         public int FailedLoginAttempts { get; set; }
+        public Company? Company { get; set; }
 
         public ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = new List<UserCompanyRole>();
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();

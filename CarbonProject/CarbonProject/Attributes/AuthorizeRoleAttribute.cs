@@ -1,6 +1,8 @@
 ﻿using CarbonProject.Data;
 using CarbonProject.Models.EFModels;
 using CarbonProject.Service.Logging;
+using CarbonProject.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
@@ -27,26 +29,62 @@ namespace CarbonProject.Attributes
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            Debug.WriteLine("===== Attributes/AuthorizationFilterContext.cs =====");
+            Debug.WriteLine("===== Attributes/AuthorizeRoleAttribute.cs =====");
             Debug.WriteLine("--- OnAuthorization ---");
             Debug.WriteLine($"開始角色驗證");
-            var httpContext = context.HttpContext;
 
             // 1️ 檢查 Session 登入狀態
-            
-            var isLogin = httpContext.Session.GetString("isLogin");
-            var username = httpContext.Session.GetString("Username");
+            var httpContext = context.HttpContext;
+            var session = httpContext.Session;                       
+            var isLogin = session.GetString("isLogin");
+            var username = session.GetString("Username");
+            var roles = session.GetString("Roles")?.Split(',') ?? Array.Empty<string>();
+            var capabilities = session.GetString("Capabilities")?.Split(',') ?? Array.Empty<string>();
+            var permissions = session.GetString("Permissions")?.Split(',') ?? Array.Empty<string>();
+
             Debug.WriteLine("--- 檢查 Session 登入狀態 ---");
-            
+            Debug.WriteLine($"session : {session}");
             Debug.WriteLine($"isLogin : {isLogin}");
             Debug.WriteLine($"username : {username}");
-            var sessionData = httpContext.Session.Keys.ToDictionary(
+            Debug.WriteLine($"Session Roles : {string.Join(",", roles)}");
+            Debug.WriteLine($"Session Capabilities : {string.Join(",", capabilities)}");
+            Debug.WriteLine($"Session Permissions : {string.Join(",", permissions)}");
+            var sessionData = session.Keys.ToDictionary(
                 key => key,
-                key => httpContext.Session.GetString(key)
+                key => session.GetString(key)
             );
             var sessionData_json = System.Text.Json.JsonSerializer.Serialize(sessionData, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
             Debug.WriteLine("___ Session 全部內容 ___");
             Debug.WriteLine(sessionData_json);
+
+            if (isLogin != "true" || string.IsNullOrEmpty(username))
+            {
+                var authHeader = httpContext.Request.Headers["Authorization"].ToString();
+                if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                {
+                    string token = authHeader.Substring("Bearer ".Length).Trim();
+                    // 2️ 從 DI 拿 JWTService
+                    var jwtService = httpContext.RequestServices.GetService(typeof(JWTService)) as JWTService;
+
+                    if (jwtService != null)
+                    {
+                        var principal = jwtService.ValidateToken(token);
+                        if (principal != null)
+                        {
+                            username = JWTService.GetUsername(principal);
+
+                            // 將 JWT 資訊寫入 Session
+                            session.SetString("isLogin", "true");
+                            session.SetString("Username", username);
+                            session.SetString("Roles", string.Join(",", JWTService.GetRoles(principal)));
+                            session.SetString("Permissions", string.Join(",", JWTService.GetPermissions(principal)));
+                            session.SetString("Capabilities", string.Join(",", JWTService.GetCapabilities(principal)));
+
+                            isLogin = "true";
+                        }
+                    }
+                }
+            }
 
             if (isLogin != "true" || string.IsNullOrEmpty(username))
             {
@@ -89,8 +127,11 @@ namespace CarbonProject.Attributes
                 WriteIndented = true,
                 ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
             };
+            Debug.WriteLine("以下 options 先隱藏");
+            Debug.WriteLine($"使用者角色與功能:{options}");
             var member_json = System.Text.Json.JsonSerializer.Serialize(member, options);
-            Debug.WriteLine(member_json);
+            Debug.WriteLine("以下 member_json 先隱藏");
+            //Debug.WriteLine(member_json);
 
             if (member == null)
             {
@@ -183,6 +224,9 @@ namespace CarbonProject.Attributes
                 context.Result = new RedirectToActionResult("Login", "Account", null);
                 return;
             }
+
+            // 若都符合，放行 (nothing to do)
+            Debug.WriteLine("[AuthorizeRole] Authorization passed.");
         }
     }
 }

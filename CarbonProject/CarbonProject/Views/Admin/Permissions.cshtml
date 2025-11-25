@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "管理角色與權限";
+}
+
+<h2>角色權限管理</h2>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>角色名稱</th>
+            <th>描述</th>
+            <th>可使用功能</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>Admin</td>
+            <td>最高管理員</td>
+            <td>所有功能（CRUD、Logs、Dashboard）</td>
+        </tr>
+
+        <tr>
+            <td>Manager</td>
+            <td>部門主管</td>
+            <td>查看 Dashboard、管理企業行動</td>
+        </tr>
+
+        <tr>
+            <td>Staff</td>
+            <td>員工</td>
+            <td>基本資料操作</td>
+        </tr>
+
+        <tr>
+            <td>User</td>
+            <td>一般使用者</td>
+            <td>個人頁面</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,4 +1,5 @@
-﻿using CarbonProject.Data;
+﻿using CarbonProject.Attributes;
+using CarbonProject.Data;
 using CarbonProject.Models.EFModels.RBAC;
 using CarbonProject.Service.RBAC;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace CarbonProject.Controllers
         }
         // 使用 RoleService 範例
         // From -> Service/RoleService.cs
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         public async Task<IActionResult> Index()
         {
             var roles = await _roleService.GetAllRolesAsync();
@@ -32,6 +34,7 @@ namespace CarbonProject.Controllers
         }
         // 使用 PermissionService 範例
         // From -> Service/PermissionService.cs
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         public async Task<IActionResult> Permissions()
         {
             var permissions = await _permissionService.GetAllPermissionsAsync();
@@ -39,12 +42,14 @@ namespace CarbonProject.Controllers
         }
         // 使用 CapabilityService 範例
         // From -> Service/CapabilityService.cs
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         public async Task<IActionResult> Capabilities()
         {
             var caps = await _capabilityService.GetAllCapabilitiesAsync();
             return View(caps);
         }
         // 顯示所有角色
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         public async Task<IActionResult> Roles()
         {
             var roles = await _context.Roles.ToListAsync();
@@ -52,6 +57,7 @@ namespace CarbonProject.Controllers
         }
 
         // 顯示角色對應權限
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         public async Task<IActionResult> RolePermissions(int roleId = 1)
         {
             // 查找 Role 並 Include 其對應的 Permissions
@@ -74,12 +80,15 @@ namespace CarbonProject.Controllers
         }
 
         // 顯示所有使用者
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         public async Task<IActionResult> Users()
         {
             var users = await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
             return View(users);
         }
         // 啟用中的使用者，沒有被停權、沒有被刪除、允許登入系統。
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
+
         public async Task<IActionResult> ActiveUsers()
         {
             var activeUsers = await _rbacService.GetActiveUsers();

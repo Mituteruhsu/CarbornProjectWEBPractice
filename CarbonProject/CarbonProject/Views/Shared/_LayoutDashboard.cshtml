@@ -284,24 +284,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Refrences">Refrences</a>
                         </li>
-
-                        @* 登入時才顯示 Login 測試頁
-                        @if (isLogin)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Actions" asp-action="Index">行動方案</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Actions" asp-action="Progress">進度</a>
-                            </li>
-                        }
-                        @* 如果是 Admin 登入，顯示管理入口 *@
-                        @if (isLogin && role == "Admin")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-controller="Account" asp-action="Admin_read">會員管理</a>
-                            </li>
-                        }
                     </ul>
                     <!-- 右側登入／登出區 -->
                     <ul class="navbar-nav ms-auto pe-5">

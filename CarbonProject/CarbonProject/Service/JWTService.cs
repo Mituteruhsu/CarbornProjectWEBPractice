@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mysqlx.Expr;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using Org.BouncyCastle.Utilities;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -23,10 +24,16 @@ namespace CarbonProject.Services
         }
 
         // ===== 生成 JWT Token =====
-        public string GenerateToken(string username, string role, int memberId, bool rememberMe = false)
+        public string GenerateToken(string username,
+                                    IEnumerable<string> roles,
+                                    IEnumerable<string> permissions,
+                                    IEnumerable<string> capabilities,
+                                    int memberId,
+                                    bool rememberMe = false)
         {
             // A 建立一個 JWT（有 claims、過期時間、使用 HMAC-SHA256 簽章）
             // A-01 建立 Claim 列表（Username、Role、MemberId、RememberMe）
+            Debug.WriteLine("===== Service/JWTService.cs =====");
             var claims = new List<Claim>
             {
                 // JWT 標準欄位常數表（Registered Claim Names）
@@ -38,13 +45,23 @@ namespace CarbonProject.Services
                 // iat → Issued at（簽發時間）
                 // jti → JWT ID（唯一編號）
                 new Claim(JwtRegisteredClaimNames.Sub, username),
-                new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("Username", username),
-                new Claim("Role", role),
                 new Claim("MemberId", memberId.ToString()),
-                new Claim("RememberMe", rememberMe.ToString())
+                new Claim("RememberMe", rememberMe.ToString()),
             };
+            // 多角色
+            foreach (var role in roles)
+                claims.Add(new Claim("Role", role));
+
+            // 多 Permission
+            foreach (var permission in permissions)
+                claims.Add(new Claim("Permission", permission));
+
+            // 多 Capability
+            foreach (var capability in capabilities)
+                claims.Add(new Claim("Capability", capability));
+
             // A-02 用 _secretKey 產生 SymmetricSecurityKey 與 SigningCredentials
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:SecretKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -67,12 +84,13 @@ namespace CarbonProject.Services
                 expires: expires,
                 signingCredentials: creds
             );
-
+            Debug.WriteLine($"建立 Token : {token}");
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         // ===== 驗證並解析 JWT Token =====
+        // <- **重要**：回傳 ClaimsPrincipal 或 null（不要用 out）
         public ClaimsPrincipal ValidateToken(string token)
         {
             if (string.IsNullOrEmpty(token)) return null;
@@ -91,7 +109,7 @@ namespace CarbonProject.Services
                     ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
+                }, out _);
 
                 return principal;
             }
@@ -104,14 +122,27 @@ namespace CarbonProject.Services
         // 方便取 Session 資訊
         public static string GetUsername(ClaimsPrincipal principal) =>
             principal?.Claims.FirstOrDefault(c => c.Type == "Username")?.Value;
-
-        public static string GetRole(ClaimsPrincipal principal) =>
-            principal?.Claims.FirstOrDefault(c => c.Type == "Role")?.Value;
-
         public static int GetMemberId(ClaimsPrincipal principal)
         {
             var idClaim = principal?.Claims.FirstOrDefault(c => c.Type == "MemberId")?.Value;
             return int.TryParse(idClaim, out var memberId) ? memberId : 0;
         }
+        public static List<string> GetRoles(ClaimsPrincipal principal) =>
+            principal?.Claims
+                .Where(c => c.Type == "Role")
+                .Select(c => c.Value)
+                .ToList() ?? new List<string>();
+
+        public static List<string> GetPermissions(ClaimsPrincipal principal) =>
+            principal?.Claims
+                .Where(c => c.Type == "Permission")
+                .Select(c => c.Value)
+                .ToList() ?? new List<string>();
+
+        public static List<string> GetCapabilities(ClaimsPrincipal principal) =>
+            principal?.Claims
+                .Where(c => c.Type == "Capability")
+                .Select(c => c.Value)
+                .ToList() ?? new List<string>();
     }
 }

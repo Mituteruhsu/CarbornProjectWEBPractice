@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
+@{
+    var roles = HttpContextAccessor.HttpContext?.Session.GetString("Roles")?.Split(',');
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,22 +37,6 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav mx-auto">
-                        @* 如果是 Admin 登入，顯示管理入口 *@
-                        @if (isLogin && role == "Admin")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-controller="Account" asp-action="Admin_read">會員管理</a>
-                            </li>
-                            @* <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-controller="ActivityLog" asp-action="Index">活動日誌</a>
-                            </li> *@
-                        }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="RBAC" asp-action="Roles">Roles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="RBAC" asp-action="Users">User</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -65,17 +52,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Refrences">Refrences</a>
                         </li>
-
-                        @* 如果是 Admin 登入，顯示管理入口 *@
-                        @if (isLogin && role == "Admin")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-controller="Account" asp-action="Admin_read">會員管理</a>
-                            </li>
-                        }
                     </ul>
                     <!-- 右側登入／登出區 -->
                     <ul class="navbar-nav ms-auto pe-5">
+                        @* 如果是 Admin 登入，顯示管理入口 *@
+                        @if (roles?.Contains("Admin") == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark fw-bold dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    管理後台
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">儀表板 Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">使用者管理</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Permissions">權限管理</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Admin_read">會員管理</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="RBAC" asp-action="Roles">Roles</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="RBAC" asp-action="Users">User</a></li>
+                                    <li><a class="dropdown-item" href="/AdminLogs/Index">系統 Logs</a></li>
+                                </ul>
+                            </li>
+                        }
                         @if (isLogin)
                         {
                             <li class="nav-item d-flex align-items-center me-3">
@@ -99,7 +96,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main roles="main" class="pb-3">
             @RenderBody()
         </main>
     </div>

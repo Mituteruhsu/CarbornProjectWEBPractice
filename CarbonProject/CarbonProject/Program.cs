@@ -92,8 +92,15 @@ builder.Services.AddDbContext<RbacDbContext>(options =>
 // AddScoped     每個 HTTP Request                都共用同一個物件	Request 內共用，下一個 Request 會重建
 // AddSingleton  整個應用程式都共用同一個物件     生命週期最長，直到 App 關閉
 
-// 註冊 DI Service From -> Repositories/.
+// 註冊 DI (RBAC 用) From -> Repositories/. + Service/.
 builder.Services.AddScoped<MembersRepository>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<PermissionService>();
+builder.Services.AddScoped<CapabilityService>();
+builder.Services.AddScoped<RBACService>();
+builder.Services.AddSingleton<JWTService>(); // 注冊 Service 為 singleton（stateless）或 transient 都可；singleton 比較省資源且安全
+
+// 註冊 DI Service From -> Repositories/.
 builder.Services.AddScoped<CompanyRepository>();
 builder.Services.AddScoped<HomeIndexRepository>();
 builder.Services.AddScoped<ESGActionRepository>();
@@ -103,25 +110,10 @@ builder.Services.AddScoped<ActivityLogRepository>();
 // 註冊 Service From -> Service/.
 builder.Services.AddScoped<EmissionService>();
 builder.Services.AddScoped<ActivityLogService>();
-builder.Services.AddScoped<RBACService>();
-builder.Services.AddScoped<RoleService>();
-builder.Services.AddScoped<PermissionService>();
-builder.Services.AddScoped<CapabilityService>();
 
-// 注冊 Service 為 singleton（stateless）或 transient 都可；singleton 比較省資源且安全
-builder.Services.AddSingleton<JWTService>();
-
-builder.Services.AddAuthentication("CookieAuth")
-    .AddCookie("CookieAuth", options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/Login";
-    });
+// JWT 設定 (僅做 Token 驗證，不做授權)
 // 使用內建 Jwt auth middleware 加：
-builder.Services.AddAuthentication(options => {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -136,7 +128,7 @@ builder.Services.AddAuthentication(options => {
         ),
         ClockSkew = TimeSpan.Zero
     };
-    // 這裡是關鍵：允許從 Cookie 讀取 Token
+    // 這裡是關鍵：允許從 Cookie 讀取 Token JWT (RememberMe)
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -212,13 +204,17 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseSession();   //使用 session 必須在 UseRouting 後、UseEndpoints 前
-app.UseAuthentication(); // JWT middleware
-app.UseAuthorization();
-
-app.UseRBAC(); // 自動恢復 Session, 放在 UseRouting() 之前或之後都可，但必須在 Controller 執行前
-// 註冊自訂 RBACMiddleware
+// 1️ 啟用 Session
+app.UseSession();   //使用 session 必須在 UseRouting 後、UseEndpoints 前，必須先啟用 Session（中間件用到 session）
+// 2️ 自訂 RBAC Middleware（從 JWT 自動補 Session）
 app.UseMiddleware<RBACMiddleware>();
+//app.UseRBAC(); // 自動恢復 Session, 放在 UseRouting() 之前或之後都可，但必須在 Controller 執行前
+
+// 接著是 Authentication / Authorization
+// 3️ 啟用 Authentication（只驗證 JWT，不進行 RBAC）
+app.UseAuthentication(); // JWT middleware
+// 4️ Authorization (讓 MVC Attribute 生效，但 RBAC 由你自訂控制)
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
