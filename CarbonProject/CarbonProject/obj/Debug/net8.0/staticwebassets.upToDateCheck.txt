@@ -7,6 +7,7 @@ wwwroot\assets\dist\css\bootstrap.rtl.min.css.map
 wwwroot\assets\dist\js\bootstrap.bundle.min.js
 wwwroot\assets\dist\js\bootstrap.bundle.min.js.map
 wwwroot\assets\js\color-modes.js
+wwwroot\css\admin.css
 wwwroot\css\dashboard.css
 wwwroot\css\dashboard.rtl.css
 wwwroot\css\site.css
@@ -14,6 +15,7 @@ wwwroot\data\cef_items.csv
 wwwroot\favicon.ico
 wwwroot\img\TerraCPBanner.png
 wwwroot\img\TerraLogo.png
+wwwroot\js\admin.js
 wwwroot\js\dashboard.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
@@ -73,5 +75,3 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\js\admin.js
-wwwroot\css\admin.css

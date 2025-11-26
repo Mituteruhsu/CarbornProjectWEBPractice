@@ -415,6 +415,9 @@ namespace CarbonProject.Repositories
                                     Username = reader["Username"].ToString(),
                                     Email = reader["Email"].ToString(),
                                     FullName = reader["FullName"].ToString(),
+                                    Gender = reader["Gender"] != DBNull.Value ? reader["Gender"].ToString().Trim() : null, // 加上這行
+                                    Birthday = reader["Birthday"] != DBNull.Value ? Convert.ToDateTime(reader["Birthday"]) : (DateTime?)null,
+                                    Address = reader["Address"] != DBNull.Value ? reader["Address"].ToString() : null,
                                     Role = reader["Role"].ToString(),
                                     PasswordHash = reader["PasswordHash"].ToString(),
                                     IsActive = Convert.ToBoolean(reader["IsActive"]),
@@ -518,21 +521,52 @@ namespace CarbonProject.Repositories
             }
         }
         // 更新會員資料
-        public bool UpdateMember(int id, string username, string email, string fullname)
+        public bool UpdateMember(int id,
+                                 string username,
+                                 string email,
+                                 string fullname,
+                                 DateTime? birthday,
+                                 string genderStr, // "M"/"F" or null
+                                 string address,
+                                 bool isActive)
         {
             using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                string sql = @"UPDATE Users 
-                               SET Username=@Username, Email=@Email, FullName=@FullName, UpdatedAt=SYSUTCDATETIME() 
-                               WHERE MemberId=@Id";
+                string sql = @"
+                                UPDATE Users
+                                SET 
+                                    Username = @Username,
+                                    Email = @Email,
+                                    FullName = @FullName,
+                                    Birthday = @Birthday,
+                                    Gender = @Gender,
+                                    Address = @Address,
+                                    IsActive = @IsActive,
+                                    UpdatedAt = SYSUTCDATETIME()
+                                WHERE MemberId = @Id;
+                            ";
 
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
-                    cmd.Parameters.AddWithValue("@Username", username);
-                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@Username", username ?? "");
+                    cmd.Parameters.AddWithValue("@Email", email ?? "");
                     cmd.Parameters.AddWithValue("@FullName", fullname ?? "");
+
+                    if (birthday.HasValue)
+                        cmd.Parameters.AddWithValue("@Birthday", birthday.Value);
+                    else
+                        cmd.Parameters.AddWithValue("@Birthday", DBNull.Value);
+
+                    if (!string.IsNullOrEmpty(genderStr))
+                        cmd.Parameters.AddWithValue("@Gender", genderStr);
+                    else
+                        cmd.Parameters.AddWithValue("@Gender", DBNull.Value);
+
+                    cmd.Parameters.AddWithValue("@Address", address ?? "");
+                    cmd.Parameters.AddWithValue("@IsActive", isActive);
+
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }

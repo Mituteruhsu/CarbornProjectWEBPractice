@@ -142,11 +142,9 @@ namespace CarbonProject.Controllers
         }
 
         // 編輯會員
-        //Include ActivityLogService
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // 顯示編輯畫面 (GET)
         [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
-        public async Task<IActionResult> EditMember(int id, string username, string email, string fullname)
+        public IActionResult Edit(int id)
         {
             if (HttpContext.Session.GetString("Roles") != "Admin")
             {
@@ -154,10 +152,41 @@ namespace CarbonProject.Controllers
                 return RedirectToAction("Login");
             }
 
-            bool success = _membersRepository.UpdateMember(id, username, email, fullname);
+            var user = _membersRepository.GetMemberById(id);
+            if (user == null)
+            {
+                TempData["AdminError"] = "找不到會員";
+                return RedirectToAction("Index");
+            }
+
+            return View(user);  // View 要使用 MembersViewModel
+        }
+
+        //Include ActivityLogService
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
+        public async Task<IActionResult> Edit(MembersViewModel model)
+        {
+            if (HttpContext.Session.GetString("Roles") != "Admin")
+            {
+                TempData["AdminError"] = "無權限操作";
+                return RedirectToAction("Login");
+            }
+
+            bool success = _membersRepository.UpdateMember(
+                                                            model.MemberId,
+                                                            model.Username,
+                                                            model.Email,
+                                                            model.FullName,
+                                                            model.Birthday,
+                                                            model.Gender,
+                                                            model.Address,
+                                                            model.IsActive
+                                                            );
             // 編輯會員寫入 ActivityLog
             await _activityLog.LogAsync(
-                memberId: id,
+                memberId: model.MemberId,
                 companyId: null,
                 actionType: "Admin.EditMember",
                 actionCategory: "Admin",
@@ -165,14 +194,21 @@ namespace CarbonProject.Controllers
                 ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
                 userAgent: Request.Headers["User-Agent"].ToString(),
                 createdBy: HttpContext.Session.GetString("Username"),
-                detailsObj: new { username, email, fullname }
+                detailsObj: new {
+                    model.Username,
+                    model.Email,
+                    model.FullName
+                }
             );
 
             if (!success)
             {
                 TempData["AdminError"] = "更新失敗";
+                return View(model);
             }
-            return RedirectToAction("Index");
+            
+            TempData["AdminSuccess"] = "更新成功";
+            return RedirectToAction("Detail", new { id = model.MemberId });
         }
     }
 }

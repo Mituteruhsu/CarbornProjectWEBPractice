@@ -137,6 +137,7 @@ body.dark-mode .sidebar-link:hover {
 /*Content area */
 .content-area {
     margin-left: 0;
+    margin-top: var(--navbar-height);
     transition: margin-left .3s ease;
 }
 

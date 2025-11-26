@@ -511,7 +511,7 @@ namespace CarbonProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
-        public async Task<IActionResult> EditMember(int id, string username, string email, string fullname)
+        public async Task<IActionResult> EditMember(MembersViewModel model)
         {
             if (HttpContext.Session.GetString("Roles") != "Admin")
             {
@@ -519,10 +519,19 @@ namespace CarbonProject.Controllers
                 return RedirectToAction("Login");
             }
 
-            bool success = _membersRepository.UpdateMember(id, username, email, fullname);
+            bool success = _membersRepository.UpdateMember(
+                                                            model.MemberId,
+                                                            model.Username,
+                                                            model.Email,
+                                                            model.FullName,
+                                                            model.Birthday,
+                                                            model.Gender,
+                                                            model.Address,
+                                                            model.IsActive
+                                                            );
             // 編輯會員寫入 ActivityLog
             await _activityLog.LogAsync(
-                memberId: id,
+                memberId: model.MemberId,
                 companyId: null,
                 actionType: "Admin.EditMember",
                 actionCategory: "Admin",
@@ -530,7 +539,7 @@ namespace CarbonProject.Controllers
                 ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
                 userAgent: Request.Headers["User-Agent"].ToString(),
                 createdBy: HttpContext.Session.GetString("Username"),
-                detailsObj: new { username, email, fullname }
+                detailsObj: new { model.Username, model.Email, model.FullName }
             );
 
             if (!success)
