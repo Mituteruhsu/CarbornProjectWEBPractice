@@ -20,26 +20,16 @@
         }
         <div class="card border-success bg-transparent">
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                <div>基本資料</div>
-                <div>
-                    <a href="@Url.Action("Edit", new { id = Model.MemberId })" class="btn btn-sm btn-light">編輯</a>
-
-                    <!-- 刪除會員 -->
-                    <form asp-controller="Users" asp-action="DeleteMember" asp-route-id="@Model.MemberId" method="post" class="d-inline" onsubmit="return confirm('確定要刪除此會員嗎？');">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger me-2">刪除會員</button>
-                    </form>
-
+                <div>基本資料
                     <!-- 重設密碼 -->
                     <form asp-controller="Users" asp-action="ResetPassword" asp-route-id="@Model.MemberId" method="post" class="d-inline" onsubmit="return confirm('確定要重設密碼嗎？');">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-secondary me-2">重設密碼</button>
+                        <button type="submit" class="btn btn-outline-warning ms-3 px-2 py-0">重設密碼</button>
                     </form>
-
-                    <!-- 設定角色 -->
-                    <a asp-controller="Users" asp-action="AssignRole" asp-route-id="@Model.MemberId" class="btn btn-info">設定角色</a>
-
-                    <a href="@Url.Action("Index")" class="btn btn-sm btn-light">返回列表</a>
+                </div>
+                <div>
+                    <a href="@Url.Action("Edit", new { id = Model.MemberId })" class="btn btn-sm btn-outline-light">編輯</a>
+                    <a href="@Url.Action("Index")" class="btn btn-sm btn-outline-light">返回列表</a>
                 </div>
             </div>
             <div class="card-body">
@@ -60,7 +50,16 @@
                     <div class="col-md-8">
                         <table class="table table-borderless mb-0">
                             <tbody>
-                                <tr><th>帳號</th><td>@Model.Username</td></tr>
+                                <tr>
+                                    <th>帳號</th>
+                                    <td>@Model.Username
+                                        <!-- 刪除會員 -->
+                                        <form asp-controller="Users" asp-action="DeleteMember" asp-route-id="@Model.MemberId" method="post" class="d-inline" onsubmit="return confirm('確定要刪除此會員嗎？');">
+                                        @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-outline-danger ms-2 text-nowrap" style="padding: .1rem .5rem; font-size: .75rem;">刪除會員</button>
+                                        </form>
+                                        </td>
+                                </tr>
                                 <tr><th>Email</th><td>@Model.Email</td></tr>
                                 <tr><th>姓名</th><td>@Model.FullName</td></tr>
                                 <tr><th>生日</th><td>@(Model.Birthday?.ToString("yyyy-MM-dd") ?? "未填寫")</td></tr>
@@ -103,13 +102,15 @@
                             </td>
                         </tr>
                         <tr><th>所屬公司</th><td>@(Model.Company?.CompanyName ?? "未設定")</td></tr>
-                        <tr>
+                        <tr class="align-middle">
                             <th>角色</th>
                             <td>
                                 @foreach (var ur in Model.UserRoles)
                                 {
                                     <span class="badge bg-primary me-1">@ur.Role.RoleName</span>
                                 }
+                                <!-- 設定角色 -->
+                                <a asp-controller="Users" asp-action="AssignRole" asp-route-id="@Model.MemberId" class="btn btn-outline-primary text-nowrap" style="margin: .1rem .0rem .0rem .0rem; padding: .1rem .5rem; font-size: .75rem;">設定角色</a>
                             </td>
                         </tr>
                         <tr><th>會員等級</th><td>@(Model.MembershipLevel ?? "無")</td></tr>
