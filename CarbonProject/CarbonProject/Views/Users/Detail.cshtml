@@ -9,11 +9,36 @@
     <!-- 左上：頭像卡片 -->
     <!-- 右上：基本資料卡片 -->
     <div class="col-md-12 mb-3">
+        @if (TempData["NewPassword"] != null)
+        {
+            <div class="alert alert-warning">
+                <strong>新密碼：</strong>
+                <span style="font-family:monospace">@TempData["NewPassword"]</span>
+                <br />
+                <small>請立即通知使用者並請他登入後變更密碼。</small>
+            </div>
+        }
         <div class="card border-success bg-transparent">
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                 <div>基本資料</div>
                 <div>
                     <a href="@Url.Action("Edit", new { id = Model.MemberId })" class="btn btn-sm btn-light">編輯</a>
+
+                    <!-- 刪除會員 -->
+                    <form asp-controller="Users" asp-action="DeleteMember" asp-route-id="@Model.MemberId" method="post" class="d-inline" onsubmit="return confirm('確定要刪除此會員嗎？');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger me-2">刪除會員</button>
+                    </form>
+
+                    <!-- 重設密碼 -->
+                    <form asp-controller="Users" asp-action="ResetPassword" asp-route-id="@Model.MemberId" method="post" class="d-inline" onsubmit="return confirm('確定要重設密碼嗎？');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-secondary me-2">重設密碼</button>
+                    </form>
+
+                    <!-- 設定角色 -->
+                    <a asp-controller="Users" asp-action="AssignRole" asp-route-id="@Model.MemberId" class="btn btn-info">設定角色</a>
+
                     <a href="@Url.Action("Index")" class="btn btn-sm btn-light">返回列表</a>
                 </div>
             </div>

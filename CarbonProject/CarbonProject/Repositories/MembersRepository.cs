@@ -571,5 +571,87 @@ namespace CarbonProject.Repositories
                 }
             }
         }
+        // ---------- ResetPassword ----------
+        public bool ResetPassword(int memberId, string newPlainPassword)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                // Hash
+                string hashed = BCrypt.Net.BCrypt.HashPassword(newPlainPassword);
+
+                string sql = @"UPDATE Users SET PasswordHash = @PasswordHash, UpdatedAt = SYSUTCDATETIME() WHERE MemberId = @Id";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@PasswordHash", hashed);
+                    cmd.Parameters.AddWithValue("@Id", memberId);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+        // ---------- 移除該會員所有 Role ----------
+        public void RemoveAllRolesForMember(int memberId)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = "DELETE FROM UserRoles WHERE MemberId = @MemberId";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MemberId", memberId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        // ---------- 新增角色給會員 ----------
+        public void AddRoleToMember(int memberId, int roleId)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                // 若已存在則跳過
+                string checkSql = "SELECT COUNT(*) FROM UserRoles WHERE MemberId=@MemberId AND RoleId=@RoleId";
+                using (var checkCmd = new SqlCommand(checkSql, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@MemberId", memberId);
+                    checkCmd.Parameters.AddWithValue("@RoleId", roleId);
+                    int count = Convert.ToInt32(checkCmd.ExecuteScalar());
+                    if (count > 0) return;
+                }
+
+                string insertSql = "INSERT INTO UserRoles (MemberId, RoleId) VALUES (@MemberId, @RoleId)";
+                using (var cmd = new SqlCommand(insertSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MemberId", memberId);
+                    cmd.Parameters.AddWithValue("@RoleId", roleId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        // ---------- 取得全部 Role（供 AssignRole 下拉使用） ----------
+        public List<Role> GetAllRoles()
+        {
+            var list = new List<Role>();
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = "SELECT RoleId, RoleName FROM Roles ORDER BY RoleName";
+                using (var cmd = new SqlCommand(sql, conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new Role
+                        {
+                            RoleId = Convert.ToInt32(reader["RoleId"]),
+                            RoleName = reader["RoleName"].ToString()
+                        });
+                    }
+                }
+            }
+            return list;
+        }
     }
 }

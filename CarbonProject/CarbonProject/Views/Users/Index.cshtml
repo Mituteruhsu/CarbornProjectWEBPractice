@@ -33,6 +33,20 @@
                         <td>
                             <a asp-controller="Users" asp-action="Detail" asp-route-id="@user.MemberId" class="btn btn-sm btn-outline-primary">查看</a>
                             <a asp-controller="Users" asp-action="Edit" asp-route-id="@user.MemberId" class="btn btn-sm btn-warning">編輯</a>
+                            <!-- 刪除會員（POST表單） -->
+                            <form asp-controller="Users" asp-action="DeleteMember" asp-route-id="@user.MemberId" method="post" class="d-inline" onsubmit="return confirm('確定要刪除此會員嗎？');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger">刪除</button>
+                            </form>
+
+                            <!-- 重設密碼 -->
+                            <form asp-controller="Users" asp-action="ResetPassword" asp-route-id="@user.MemberId" method="post" class="d-inline" onsubmit="return confirm('確定要重設此會員密碼嗎？');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-secondary">重設密碼</button>
+                            </form>
+
+                            <!-- 設定角色 -->
+                            <a asp-controller="Users" asp-action="AssignRole" asp-route-id="@user.MemberId" class="btn btn-sm btn-info">設定角色</a>
                         </td>
                         <!-- 帳號 -->
                         <td>@user.Username</td>

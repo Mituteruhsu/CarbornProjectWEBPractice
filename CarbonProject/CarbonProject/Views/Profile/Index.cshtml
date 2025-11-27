@@ -1,0 +1,30 @@
+﻿@model CarbonProject.Models.MembersViewModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "個人資料";
+}
+
+<h2>個人資料</h2>
+
+@if(TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if(TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div>
+    <p><strong>帳號:</strong> @Model.Username</p>
+    <p><strong>姓名:</strong> @Model.FullName</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>電話:</strong> @Model.PhoneConfirmed</p>
+    <p><strong>公司:</strong> @Model.Company?.CompanyName</p>
+    <p><strong>角色:</strong> @Model.Role</p>
+    <p><strong>生日:</strong> @(Model.Birthday?.ToString("yyyy/MM/dd") ?? "-")</p>
+    <p><strong>地址:</strong> @(Model.Address ?? "-")</p>
+</div>
+
+<a class="btn btn-primary" href="@Url.Action("EditProfile")">編輯個人資料</a>
+<a class="btn btn-warning" href="@Url.Action("ChangePassword")">修改密碼</a>

@@ -138,7 +138,155 @@ namespace CarbonProject.Controllers
             {
                 TempData["AdminError"] = "刪除失敗";
             }
+            else
+            {
+                TempData["AdminSuccess"] = "刪除成功";
+            }
             return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
+        public async Task<IActionResult> ResetPassword(int id)
+        {
+            if (HttpContext.Session.GetString("Roles") != "Admin")
+            {
+                TempData["AdminError"] = "無權限操作";
+                return RedirectToAction("Login", "Account");
+            }
+
+            // 產生臨時密碼（可改為更安全的亂數或發送重置連結）
+            string newPlainPassword = GenerateSecureTemporaryPassword(); // 我也給出簡單方法
+            bool success = _membersRepository.ResetPassword(id, newPlainPassword);
+
+            await _activityLog.LogAsync(
+                memberId: id,
+                companyId: null,
+                actionType: "Admin.ResetPassword",
+                actionCategory: "Admin",
+                outcome: success ? "Success" : "Failure",
+                ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                userAgent: Request.Headers["User-Agent"].ToString(),
+                createdBy: HttpContext.Session.GetString("Username"),
+                detailsObj: new { newPasswordHint = MaskPasswordForLog(newPlainPassword) }
+            );
+
+            if (!success)
+            {
+                TempData["AdminError"] = "重設密碼失敗";
+                return RedirectToAction("Detail", new { id });
+            }
+
+            // 直接把明碼顯示給管理員
+            TempData["AdminSuccess"] = $"密碼已重設";
+            TempData["NewPassword"] = newPlainPassword;
+
+            return RedirectToAction("Detail", new { id });
+        }
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
+        public IActionResult AssignRole(int id)
+        {
+            if (HttpContext.Session.GetString("Roles") != "Admin")
+            {
+                TempData["AdminError"] = "無權限操作";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var member = _membersRepository.GetMemberById(id);
+            if (member == null)
+            {
+                TempData["AdminError"] = "找不到該會員";
+                return RedirectToAction("Index");
+            }
+
+            // 取得系統所有角色（簡單做法：從 DB 取得 Roles 清單）
+            var roles = _membersRepository.GetAllRoles(); // 我會在 repository 加此方法
+
+            var vm = new AssignRoleViewModel
+            {
+                MemberId = member.MemberId,
+                Username = member.Username,
+                CurrentRoleIds = member.UserRoles?.Select(ur => ur.RoleId).ToList() ?? new List<int>(),
+                Roles = roles // List<Role> (含 RoleId, RoleName)
+            };
+
+            return View(vm);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "Edit" })]
+        public async Task<IActionResult> AssignRole(AssignRoleViewModel model)
+        {
+            if (HttpContext.Session.GetString("Roles") != "Admin")
+            {
+                TempData["AdminError"] = "無權限操作";
+                return RedirectToAction("Login", "Account");
+            }
+
+            // 移除該 Member 既有所有 role，然後依 model.SelectedRoleIds 加回
+            try
+            {
+                _membersRepository.RemoveAllRolesForMember(model.MemberId);
+
+                if (model.SelectedRoleIds != null && model.SelectedRoleIds.Any())
+                {
+                    foreach (var roleId in model.SelectedRoleIds)
+                    {
+                        _membersRepository.AddRoleToMember(model.MemberId, roleId);
+                    }
+                }
+
+                await _activityLog.LogAsync(
+                    memberId: model.MemberId,
+                    companyId: null,
+                    actionType: "Admin.AssignRole",
+                    actionCategory: "Admin",
+                    outcome: "Success",
+                    ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    userAgent: Request.Headers["User-Agent"].ToString(),
+                    createdBy: HttpContext.Session.GetString("Username"),
+                    detailsObj: new { assignedRoles = model.SelectedRoleIds }
+                );
+
+                TempData["AdminSuccess"] = "角色設定成功";
+            }
+            catch (Exception ex)
+            {
+                await _activityLog.LogAsync(
+                    memberId: model.MemberId,
+                    companyId: null,
+                    actionType: "Admin.AssignRole",
+                    actionCategory: "Admin",
+                    outcome: "Failure",
+                    ip: HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    userAgent: Request.Headers["User-Agent"].ToString(),
+                    createdBy: HttpContext.Session.GetString("Username"),
+                    detailsObj: new { error = ex.Message }
+                );
+
+                TempData["AdminError"] = "角色設定失敗";
+            }
+
+            return RedirectToAction("Detail", new { id = model.MemberId });
+        }
+
+
+        // ====== 補助方法（放在 UsersController 類別內或外部 helper） ======
+        private string GenerateSecureTemporaryPassword(int length = 12)
+        {
+            // 簡單實作：產生包含數字 + 大小寫字母的亂數字串（可替換為更嚴謹產生器）
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var rnd = new Random();
+            return new string(Enumerable.Range(0, length).Select(_ => chars[rnd.Next(chars.Length)]).ToArray());
+        }
+
+        private string MaskPasswordForLog(string pw)
+        {
+            if (string.IsNullOrEmpty(pw)) return "";
+            if (pw.Length <= 4) return new string('*', pw.Length);
+            return new string('*', pw.Length - 4) + pw[^4..];
         }
 
         // 編輯會員
