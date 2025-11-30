@@ -15,16 +15,32 @@
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
-<div>
-    <p><strong>帳號:</strong> @Model.Username</p>
-    <p><strong>姓名:</strong> @Model.FullName</p>
-    <p><strong>Email:</strong> @Model.Email</p>
-    <p><strong>電話:</strong> @Model.PhoneConfirmed</p>
-    <p><strong>公司:</strong> @Model.Company?.CompanyName</p>
-    <p><strong>角色:</strong> @Model.Role</p>
-    <p><strong>生日:</strong> @(Model.Birthday?.ToString("yyyy/MM/dd") ?? "-")</p>
-    <p><strong>地址:</strong> @(Model.Address ?? "-")</p>
+<div class="ms-5">
+    @if (!string.IsNullOrEmpty(Model.ProfileImage))
+    {
+        <img src="~/img_profile/@Model.ProfileImage" class="img-thumbnail my-3" style="width:150px; height:150px;" alt="Profile Image">
+    }
+    else
+    {
+        <div class="bg-secondary text-white img-thumbnail d-flex align-items-center justify-content-center my-3"
+             style="width:150px; height:150px; font-size: 2rem;">
+            N/A
+        </div>
+    }
+    <table class="table table-borderless mb-0">
+        <tbody>
+            <tr><th class="col-1">帳號:</th><td>@Model.Username</td></tr>
+            <tr><th class="col-1">姓名:</th><td>@Model.FullName</td></tr>
+            <tr><th class="col-1">Email:</th><td>@Model.Email</td></tr>
+            <tr><th class="col-1">電話:</th><td>@Model.PhoneConfirmed</td></tr>
+            <tr><th class="col-1">公司:</th><td>@Model.Company?.CompanyName</td></tr>
+            <tr><th class="col-1">角色:</th><td>@Model.Role</td></tr>
+            <tr><th class="col-1">生日:</th><td>@(Model.Birthday?.ToString("yyyy/MM/dd") ?? "未填寫")</td></tr>
+            <tr><th class="col-1">地址:</th><td>@(Model.Address ?? "未填寫")</td></tr>
+        </tbody>
+    </table>
 </div>
-
-<a class="btn btn-primary" href="@Url.Action("EditProfile")">編輯個人資料</a>
-<a class="btn btn-warning" href="@Url.Action("ChangePassword")">修改密碼</a>
+<div class="ms-5 mt-1">
+    <a class="btn btn-primary" href="@Url.Action("EditProfile")">編輯個人資料</a>
+    <a class="btn btn-warning" href="@Url.Action("ChangePassword")">修改密碼</a>
+</div>

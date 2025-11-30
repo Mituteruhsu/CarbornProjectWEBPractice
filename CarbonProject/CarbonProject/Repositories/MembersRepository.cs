@@ -418,6 +418,7 @@ namespace CarbonProject.Repositories
                                     Gender = reader["Gender"] != DBNull.Value ? reader["Gender"].ToString().Trim() : null, // 加上這行
                                     Birthday = reader["Birthday"] != DBNull.Value ? Convert.ToDateTime(reader["Birthday"]) : (DateTime?)null,
                                     Address = reader["Address"] != DBNull.Value ? reader["Address"].ToString() : null,
+                                    ProfileImage = reader["ProfileImage"] != DBNull.Value? reader["ProfileImage"].ToString() : null,
                                     Role = reader["Role"].ToString(),
                                     PasswordHash = reader["PasswordHash"].ToString(),
                                     IsActive = Convert.ToBoolean(reader["IsActive"]),
@@ -501,6 +502,27 @@ namespace CarbonProject.Repositories
                 }
             }
             return logs;
+        }
+        // 會員 Profile 圖片
+        public bool UpdateProfileImage(int memberId, string? fileName)
+        {
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = @"
+                                UPDATE Users
+                                SET ProfileImage = @ProfileImage,
+                                    UpdatedAt = GETDATE()
+                                WHERE MemberId = @MemberId";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProfileImage", (object?)fileName ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@MemberId", memberId);
+
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
         }
 
         // 刪除會員 by id

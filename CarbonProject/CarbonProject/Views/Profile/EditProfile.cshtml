@@ -5,8 +5,53 @@
 }
 
 <h2>編輯個人資料</h2>
+<h3>個人頭像</h3>
 
-<form asp-action="EditProfile" method="post">
+<div class="mb-3 mx-sm-5" style="max-width:500px;">
+    @if (!string.IsNullOrEmpty(Model.ProfileImage))
+    {
+        <img id="currentAvatar" src="~/img_profile/@Model.ProfileImage" class="img-thumbnail" style="width:150px; height:150px;" alt="Profile Image" />
+
+        <form asp-action="DeleteProfileImage" method="post">
+            <button class="btn btn-danger btn-sm mt-3 ms-4">刪除頭像</button>
+        </form>
+    }
+    else
+    {
+        <div id="currentAvatar" class="bg-secondary text-white img-thumbnail d-flex align-items-center justify-content-center"
+             style="width:150px; height:150px; font-size: 2rem;">
+            N/A
+        </div>
+    }
+</div>
+<!-- 選檔 + 預覽按鈕 -->
+<div class="mb-2 mx-sm-5" style="max-width:500px;">
+    <input type="file" id="inputImage" accept="image/*" class="form-control" />
+</div>
+<!-- Cropper 預覽區（modal 或內嵌） -->
+<div class="mx-sm-5" id="cropperContainer" style="display:none;">
+    <div style="max-width:40%; overflow:hidden;">
+        <img id="imageToCrop" src="#" alt="待裁切圖片" style="max-width:90%; max-height:90%; display:block;" />
+    </div>
+
+    <div class="mt-2">
+        <button id="btnCropAndUpload" class="btn btn-primary">裁切並上傳</button>
+        <button id="btnCancelCrop" class="btn btn-secondary">取消</button>
+    </div>
+</div>
+<!-- 顯示 TempData 訊息 -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+<!-- 上傳中 / 回傳訊息 -->
+<div id="uploadMsg" class="mt-2"></div>
+
+<form asp-action="EditProfile" method="post" class="mx-sm-5" style="max-width:500px;">
     <div class="form-group">
         <label asp-for="Username"></label>
         <input asp-for="Username" class="form-control" />
@@ -35,6 +80,157 @@
         <label asp-for="Address"></label>
         <input asp-for="Address" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-success">保存</button>
-    <a href="@Url.Action("Index")" class="btn btn-secondary">取消</a>
+    <div class="mt-4">
+        <button type="submit" class="btn btn-success">保存</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">取消</a>
+    </div>
 </form>
+
+<!-- Cropper.js JS (放在 body 底部或頁面尾巴) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+@section Scripts {
+    <!-- 先確保 Cropper.js 已載入（在 Layout 引入） -->
+    <script>
+        (function () {
+            // DOM 元件
+            const inputImage = document.getElementById("inputImage");
+            const cropperContainer = document.getElementById("cropperContainer");
+            const imageToCrop = document.getElementById("imageToCrop");
+            const btnCropAndUpload = document.getElementById("btnCropAndUpload");
+            const btnCancelCrop = document.getElementById("btnCancelCrop");
+            const uploadMsg = document.getElementById("uploadMsg");
+            const currentAvatar = document.getElementById("currentAvatar");
+
+            let cropper = null;
+            const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+            const ALLOWED = [".jpg", ".jpeg", ".png", ".gif"];
+
+            // 讀取 anti-forgery token（Razor helper 已產生）
+            function getAntiForgeryToken() {
+                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                return tokenInput ? tokenInput.value : null;
+            }
+
+            // 當使用者選擇圖片
+            inputImage.addEventListener("change", function (e) {
+                uploadMsg.innerText = "";
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+
+                // 格式檢查
+                const ext = file.name.substring(file.name.lastIndexOf(".")).toLowerCase();
+                if (!ALLOWED.includes(ext)) {
+                    alert("圖片格式僅允許 JPG / JPEG / PNG / GIF");
+                    inputImage.value = "";
+                    return;
+                }
+
+                // 大小檢查
+                if (file.size > MAX_FILE_SIZE) {
+                    alert("圖片大小不能超過 1MB");
+                    inputImage.value = "";
+                    return;
+                }
+
+                // 顯示 cropper container
+                cropperContainer.style.display = "block";
+
+                // 顯示圖片到 img 元素
+                const url = URL.createObjectURL(file);
+                imageToCrop.src = url;
+
+                // 等待圖片 load 再啟動 cropper
+                imageToCrop.onload = function () {
+                    // 如果已經有 cropper，先 destroy
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+
+                    // 初始化 Cropper
+                    cropper = new Cropper(imageToCrop, {
+                        aspectRatio: 1,               // 正方形
+                        viewMode: 1,
+                        background: false,
+                        movable: true,
+                        zoomable: true,
+                        rotatable: false,
+                        scalable: false,
+                        autoCropArea: 1,
+                        responsive: true,
+                    });
+                };
+            });
+
+            // 取消裁切
+            btnCancelCrop.addEventListener("click", function () {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+                imageToCrop.src = "#";
+                cropperContainer.style.display = "none";
+                inputImage.value = "";
+            });
+
+            // 裁切並上傳
+            btnCropAndUpload.addEventListener("click", async function () {
+                if (!cropper) return;
+
+                // 取得裁切結果（canvas），設定輸出尺寸（例如 512 x 512）
+                const canvas = cropper.getCroppedCanvas({
+                    width: 512,
+                    height: 512,
+                    imageSmoothingQuality: "high"
+                });
+
+                // 轉成 Blob（JPEG，品質 0.85）
+                canvas.toBlob(async function (blob) {
+                    if (!blob) {
+                        uploadMsg.innerText = "圖片處理失敗";
+                        return;
+                    }
+
+                    // 再檢查大小（若壓縮後仍超過 1MB，可再調低 quality）
+                    if (blob.size > MAX_FILE_SIZE) {
+                        // 嘗試第二次壓縮（品質 0.7）
+                        await new Promise((res) => {
+                            canvas.toBlob(function (b2) {
+                                blob = b2;
+                                res();
+                            }, "image/jpeg", 0.7);
+                        });
+                    }
+
+                    if (blob.size > MAX_FILE_SIZE) {
+                        alert("裁切後的圖片仍超過 1MB，請選擇較小的原圖或降低輸出尺寸。");
+                        uploadMsg.innerText = "";
+                        return;
+                    }
+
+                    // 準備 FormData（把 blob 當作檔案上傳）
+                    const formData = new FormData();
+                    // server 端我們用名稱 profileImageFile
+                    formData.append("profileImageFile", blob, "avatar.jpg");
+
+                    // Anti-forgery token header
+                    const token = getAntiForgeryToken();
+                    const resp = await fetch('@Url.Action("UpdateProfileImage", "Profile")', {
+                            method: "POST",
+                            body: formData,
+                            headers: token ? { "RequestVerificationToken": token } : {}
+                        });
+                    const result = await resp.json();
+                    if (result.success) {
+                        // 清除 cropper UI
+                        if (cropper) { cropper.destroy(); cropper = null; }
+                        cropperContainer.style.display = "none";
+                        inputImage.value = "";
+                        location.reload();
+                        }
+                
+                }, "image/jpeg", 0.85);
+            });
+        })();
+    </script>
+}

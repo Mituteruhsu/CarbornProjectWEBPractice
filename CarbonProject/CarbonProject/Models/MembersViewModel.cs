@@ -37,7 +37,8 @@ namespace CarbonProject.Models
         // 新增 ActivityLogs 屬性
         public List<ActivityLog> ActivityLogs { get; set; } = new();
         // 其他會員相關欄位
-        public string? ProfileImage { get; set; }
+        public string? ProfileImage { get; set; }  // 顯示原圖
+        public IFormFile? ProfileImageFile { get; set; } // 接收上傳檔案
         public DateTime? Birthday { get; set; }
         public string? Gender { get; set; }
         public string? Address { get; set; }
