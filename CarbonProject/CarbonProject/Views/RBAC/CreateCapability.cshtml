@@ -1,0 +1,20 @@
+﻿@using CarbonProject.Models.RBACViews
+@model CapabilitiesViewModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "新增功能";
+}
+
+<h2>新增功能</h2>
+
+<form asp-action="CreateCapability" method="post" class="mx-sm-5" style="max-width:500px;">
+    <div class="form-group">
+        <label>名稱</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>描述</label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success mt-2">建立</button>
+</form>

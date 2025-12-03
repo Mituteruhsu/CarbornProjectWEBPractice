@@ -65,11 +65,9 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">儀表板 Dashboard</a></li>
                                     <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">使用者管理</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Permissions">權限管理</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Admin_read">會員管理</a></li>
-                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="RBAC" asp-action="Roles">Roles</a></li>
-                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="RBAC" asp-action="Users">User</a></li>
-                                    <li><a class="dropdown-item" href="/AdminLogs/Index">系統 Logs</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Permissions">角色權限</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Admin_read">個人帳號管理</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Logs" asp-action="Index">系統 Logs</a></li>
                                 </ul>
                             </li>
                         }

@@ -1,0 +1,280 @@
+﻿@model IEnumerable<CarbonProject.Models.ViewModels.LogListViewModel>
+@using CarbonProject.Models.ViewModels
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "系統 Logs";
+    var q = ViewBag.Query as LogQueryModel ?? new LogQueryModel();
+    int page = ViewBag.Page ?? 1;
+    int pageSize = ViewBag.PageSize ?? 20;
+    int totalCount = ViewBag.TotalCount ?? 0;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    
+    // 產生要顯示的頁碼清單
+    var pages = new List<int>();
+
+    for (int p = page - 2; p <= page + 2; p++)
+    {
+        if (p >= 1 && p <= totalPages)
+        {
+            pages.Add(p);
+        }
+    }
+}
+
+<div class="container-fluid">
+    <h2 class="mt-3">系統 Logs</h2>
+
+    <!-- Filter Bar -->
+    <form id="filterForm" method="get" class="row g-2 align-items-end">
+        <div class="col-md-2">
+            <label class="form-label">起始日期</label>
+            <input type="date" name="From" value="@(q.From?.ToString("yyyy-MM-dd") ?? "")" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">結束日期</label>
+            <input type="date" name="To" value="@(q.To?.ToString("yyyy-MM-dd") ?? "")" class="form-control" />
+        </div>
+        <div class="col-md-1">
+            <label class="form-label">MemberId</label>
+            <input type="number" name="MemberId" value="@(q.MemberId?.ToString() ?? "")" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">模組 (ActionCategory)</label>
+            <input type="text" name="ActionCategory" value="@(q.ActionCategory ?? "")" class="form-control" placeholder="Users / RBAC / Company..." />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">動作 (ActionType)</label>
+            <input type="text" name="ActionType" value="@(q.ActionType ?? "")" class="form-control" placeholder="Create / Update..." />
+        </div>
+        <div class="col-md-1">
+            <label class="form-label">結果</label>
+            <select name="Outcome" class="form-select">
+            <option value="">全部</option>
+            <option value="Success" @@(q.Outcome= ="Success" ? "selected" : "" )>Success</option>
+                <option value="Failure" @@(q.Outcome= ="Failure" ? "selected" : "" )>Failure</option>
+            <option value="Error" @@(q.Outcome == "Error" ? "selected" : "")>Error</option>
+            </select>
+        </div>
+        <div class="col-md-10">
+            <label class="form-label">關鍵字（搜尋 Details / UserAgent / ActionType）</label>
+            <div class="input-group">
+                <input type="text" name="Keyword" class="form-control" value="@(q.Keyword ?? "")" placeholder="例如: role, delete, Failure" />
+                <button class="btn btn-primary" type="submit">搜尋</button>
+                <a class="btn btn-outline-secondary" href="/Logs/Index">重設</a>
+                <a class="btn btn-outline-success" href="@Url.Action("Export", "Logs", q)">匯出 CSV</a>
+            </div>
+        </div>
+    </form>
+
+    <hr/>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table align-middle table-sm table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th class="px-4">時間</th>
+                    <th class="px-4">LogId</th>
+                    <th class="px-4">MemberId</th>
+                    <th class="px-4">模組</th>
+                    <th class="px-4">動作</th>
+                    <th class="px-4">結果</th>
+                    <th class="px-4">IP</th>
+                    <th class="px-4">來源</th>
+                    <th class="px-4 text-nowrap">詳細</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="px-4 text-nowrap">@item.ActionTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td class="px-4">@item.LogId</td>
+                        <td class="px-4">@(item.MemberId?.ToString() ?? "")</td>
+                        <td class="px-4">@item.ActionCategory</td>
+                        <td class="px-4">@item.ActionType</td>
+                        <td class="px-4">@item.Outcome</td>
+                        <td class="px-4">@item.IpAddress</td>
+                        <td class="px-4">@item.Source</td>
+                        <td class="px-4">
+                            <button class="btn btn-sm btn-outline-primary btn-view-log text-nowrap" data-logid="@item.LogId">查看</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Logs pagination">
+        <ul class="pagination justify-content-center">
+
+            <!-- Prev -->
+            <li class="page-item @(page <= 1 ? "disabled" : "")">
+                <a class="page-link"
+                   href="@Url.Action("Index", "Logs", new { Page = page - 1, PageSize = pageSize })">
+                    Prev
+                </a>
+            </li>
+
+            <!-- 中間頁碼 -->
+            @foreach (var p in pages)
+            {
+                <li class="page-item @(p == page ? "active" : "")">
+                    <a class="page-link"
+                       href="@Url.Action("Index", "Logs", new { Page = p, PageSize = pageSize })">
+                        @p
+                    </a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(page >= totalPages ? "disabled" : "")">
+                <a class="page-link"
+                   href="@Url.Action("Index", "Logs", new { Page = page + 1, PageSize = pageSize })">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+</div>
+
+<!-- Include Modal + JS + highlight.js -->
+<!-- jQuery & Bootstrap JS (你專案可能已經有，重複載入會重複) -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+<!-- 內嵌 Details Modal + JS （上面第 2 部分）-->
+<!-- 直接把第 2) 的 Modal & JS 片段貼在這裡 -->
+<!-- Details Modal -->
+<div class="modal fade" id="logDetailsModal" tabindex="-1" aria-labelledby="logDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logDetailsModalLabel">Log Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 基本資訊 -->
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>LogId:</strong> <span id="detail-logid"></span></div>
+                    <div class="col-md-6"><strong>MemberId:</strong> <span id="detail-memberid"></span></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4"><strong>ActionType:</strong> <span id="detail-actiontype"></span></div>
+                    <div class="col-md-4"><strong>ActionCategory:</strong> <span id="detail-actioncategory"></span></div>
+                    <div class="col-md-4"><strong>Outcome:</strong> <span id="detail-outcome"></span></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4"><strong>ActionTime:</strong> <span id="detail-actiontime"></span></div>
+                    <div class="col-md-4"><strong>CreatedAt:</strong> <span id="detail-createdat"></span></div>
+                    <div class="col-md-4"><strong>CreatedBy:</strong> <span id="detail-createdby"></span></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>IP:</strong> <span id="detail-ip"></span></div>
+                    <div class="col-md-6"><strong>UserAgent:</strong> <span id="detail-ua"></span></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12"><strong>Source:</strong> <span id="detail-source"></span></div>
+                </div>
+
+                <hr />
+
+                <!-- Details JSON -->
+                <div class="mb-3">
+                    <h6>Details</h6>
+                    <pre style="background:#f8f9fa;padding:1rem;border-radius:6px;"><code id="detail-json" class="json hljs"></code></pre>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-primary" id="copyDetailsBtn">複製 Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 初始化 highlight.js
+    document.addEventListener("DOMContentLoaded", (event) => {
+            if (window.hljs) {
+            hljs.highlightAll();
+            }
+        });
+
+    // 點擊「查看」按鈕的 handler
+    $(document).on('click', '.btn-view-log', function (e) {
+        e.preventDefault();
+        var logId = $(this).data('logid');
+        if (!logId) return;
+
+        // 清除 modal
+        $('#detail-logid').text('');
+        $('#detail-memberid').text('');
+        $('#detail-actiontype').text('');
+        $('#detail-actioncategory').text('');
+        $('#detail-outcome').text('');
+        $('#detail-actiontime').text('');
+        $('#detail-createdat').text('');
+        $('#detail-createdby').text('');
+        $('#detail-ip').text('');
+        $('#detail-ua').text('');
+        $('#detail-source').text('');
+        $('#detail-json').text('');
+
+        // 呼叫後端 Details API
+        $.get('/Logs/Details/' + logId)
+        .done(function (resp) {
+            if (resp && resp.logId) {
+                $('#detail-logid').text(resp.logId);
+                $('#detail-memberid').text(resp.memberId ?? '');
+                $('#detail-actiontype').text(resp.actionType ?? '');
+                $('#detail-actioncategory').text(resp.actionCategory ?? '');
+                $('#detail-outcome').text(resp.outcome ?? '');
+                $('#detail-actiontime').text(resp.actionTime ?? '');
+                $('#detail-createdat').text(resp.createdAt ?? '');
+                $('#detail-createdby').text(resp.createdBy ?? '');
+                $('#detail-ip').text(resp.ipAddress ?? '');
+                $('#detail-ua').text(resp.userAgent ?? '');
+                $('#detail-source').text(resp.source ?? '');
+                // DetailsJson already pretty-printed server-side
+                var jsonText = resp.detailsJson ?? resp.details ?? '';
+                $('#detail-json').text(jsonText);
+
+                // run highlight
+                if (window.hljs) {
+                hljs.highlightElement(document.getElementById('detail-json'));
+                }
+
+                // show modal
+                var modalEl = document.getElementById('logDetailsModal');
+                var modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            } else {
+            alert('找不到 Log 資料');
+            }
+        })
+        .fail(function () {
+        alert('取得 Log 詳細錯誤');
+        });
+    });
+
+    // 複製 Details 到剪貼簿
+    $(document).on('click', '#copyDetailsBtn', function () {
+        var text = $('#detail-json').text();
+        if (!text) return;
+        navigator.clipboard?.writeText(text).then(function () {
+            alert('已複製 Details');
+            }, function () {
+            alert('複製失敗');
+        });
+    });
+</script>

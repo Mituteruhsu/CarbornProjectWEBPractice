@@ -1,0 +1,21 @@
+﻿@using CarbonProject.Models.RBACViews
+@model CapabilitiesViewModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "編輯功能點";
+}
+
+<h2>編輯功能點</h2>
+
+<form asp-action="EditCapability" method="post" class="mx-sm-5" style="max-width:500px;">
+    <input type="hidden" asp-for="CapabilityId" />
+    <div class="form-group">
+        <label>名稱</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>描述</label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success mt-2">更新</button>
+</form>

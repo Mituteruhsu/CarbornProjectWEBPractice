@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CarbonProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+588e6cfc4fb07200ba662a40e66266f03da8cef7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7844dea189af28e76cf0001d0c72b323ddc1b624")]
 [assembly: System.Reflection.AssemblyProductAttribute("CarbonProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CarbonProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

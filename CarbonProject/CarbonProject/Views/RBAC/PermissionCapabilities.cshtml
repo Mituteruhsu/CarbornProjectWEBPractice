@@ -1,0 +1,24 @@
+﻿@model CarbonProject.Models.EFModels.RBAC.Permission
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "設定權限功能點";
+    var allCapabilities = ViewBag.AllCapabilities as List<CarbonProject.Models.EFModels.RBAC.Capability>;
+}
+
+<h2>@Model.PermissionKey - 功能點設定</h2>
+
+<form asp-action="AssignCapabilitiesToPermission" method="post" class="mx-sm-5" style="max-width:500px;">
+    <input type="hidden" name="permissionId" value="@Model.PermissionId" />
+    <div class="form-group">
+        @foreach (var cap in allCapabilities)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="capabilityIds" value="@cap.CapabilityId"
+                       @(Model.PermissionCapabilities.Any(pc => pc.CapabilityId == cap.CapabilityId) ? "checked" : "") />
+                <label class="form-check-label">@cap.Name - @cap.Description</label>
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-success mt-2">儲存</button>
+</form>

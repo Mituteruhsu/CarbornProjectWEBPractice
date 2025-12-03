@@ -105,6 +105,7 @@ builder.Services.AddScoped<CompanyRepository>();
 builder.Services.AddScoped<HomeIndexRepository>();
 builder.Services.AddScoped<ESGActionRepository>();
 builder.Services.AddScoped<IndustryRepository>();
+builder.Services.AddScoped<RbacRepository>();
 builder.Services.AddScoped<ActivityLogRepository>();
 
 // 註冊 Service From -> Service/.

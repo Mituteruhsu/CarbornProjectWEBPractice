@@ -154,6 +154,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWZyZW5jZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Logs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9nc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Profile/ChangePassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDaGFuZ2VQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -170,24 +174,40 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxyZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/CreateCapability.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xDcmVhdGVDYXBhYmlsaXR5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/CreatePermission.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xDcmVhdGVQZXJtaXNzaW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/CreateRole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xDcmVhdGVSb2xlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/EditCapability.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xFZGl0Q2FwYWJpbGl0eS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/EditPermission.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xFZGl0UGVybWlzc2lvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/EditRole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xFZGl0Um9sZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/PermissionCapabilities.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xQZXJtaXNzaW9uQ2FwYWJpbGl0aWVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/RolePermissions.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xSb2xlUGVybWlzc2lvbnMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/Roles.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xSb2xlcy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/Users.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xVc2Vycy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/RBAC/UsersDetail.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkJBQ1xVc2Vyc0RldGFpbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Desktop/TeamProject/CarbornProjectWEBPractice/CarbonProject/CarbonProject/Views/Shared/Error.cshtml]

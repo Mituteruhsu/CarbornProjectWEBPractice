@@ -1,50 +1,115 @@
-﻿@model IEnumerable<CarbonProject.Models.MembersViewModel>
+﻿@model RbacIndexViewModel
+
 @{
     Layout = "_LayoutAdmin";
-    ViewData["Title"] = "使用者管理";
+    ViewData["Title"] = "RBAC 角色權限管理中心";
 }
 
-<h2>使用者管理</h2>
+<h2>RBAC 角色權限管理中心</h2>
 
-<table class="table table-bordered table-striped">
+<h3>角色管理</h3>
+<a class="btn btn-primary mb-2 mx-sm-5" href="@Url.Action("CreateRole")">新增角色</a>
+
+<table class="table table-bordered border-success mx-sm-5" style="max-width:700px; font-size:0.75rem;">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>帳號</th>
-            <th>姓名</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>狀態</th>
-            <th>操作</th>
+            <th class="col-sm-3">操作</th>
+            <th>角色名稱</th>
+            <th>描述</th>
+            <th>權限</th>            
         </tr>
     </thead>
     <tbody>
-        @foreach(var user in Model)
+        @foreach (var role in Model.Roles)
         {
             <tr>
-                <td>@user.MemberId</td>
-                <td>@user.Username</td>
-                <td>@user.FullName</td>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
-                <td>@(user.IsActive ? "啟用" : "停用")</td>
                 <td>
-                    <a class="btn btn-sm btn-primary" href="@Url.Action("Edit", "Users", new { id = user.MemberId })">編輯</a>
-                    <form method="post" action="@Url.Action("Disable", "Users", new { id = user.MemberId })" style="display:inline">
-                        <button class="btn btn-warning btn-sm" type="submit">停用</button>
-                    </form>
-                    <form method="post" action="@Url.Action("Delete", "Users", new { id = user.MemberId })" style="display:inline">
-                        <button class="btn btn-danger btn-sm" type="submit">刪除</button>
-                    </form>
-                    <form method="post" action="@Url.Action("ResetPassword", "Users", new { id = user.MemberId })" style="display:inline">
-                        <input name="newPassword" type="text" placeholder="新密碼" />
-                        <button class="btn btn-secondary btn-sm" type="submit">重設密碼</button>
-                    </form>
-                    <form method="post" action="@Url.Action("SetRole", "Users", new { id = user.MemberId })" style="display:inline">
-                        <input name="role" type="text" value="@user.Role" />
-                        <button class="btn btn-info btn-sm" type="submit">設定角色</button>
-                    </form>
+                    <a class="btn btn-sm btn-info p-0 px-1" href="@Url.Action("EditRole", new { roleId = role.RoleId })" style="padding: .1rem .5rem; font-size: .75rem;">編輯</a>
+                    <a class="btn btn-sm btn-warning p-0 px-1" href="@Url.Action("RolePermissions", new { roleId = role.RoleId })" style="padding: .1rem .5rem; font-size: .75rem;">設定權限</a>
+                    <a class="btn btn-sm btn-danger p-0 px-1" href="@Url.Action("DeleteRole", new { roleId = role.RoleId })" onclick="return confirm('確定刪除?')" style="padding: .1rem .5rem; font-size: .75rem;">刪除</a>
                 </td>
+                <td>@role.RoleName</td>
+                <td>@role.Description</td>
+                <td>
+                    @foreach (var desc in role.PermissionDescriptions)
+                    {
+                        <span class="badge bg-primary">@desc</span>
+                    }
+
+                    @if (!role.PermissionDescriptions.Any())
+                    {
+                        <span class="text-muted">(無權限)</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h3>權限管理</h3>
+<a class="btn btn-primary mb-2 mx-sm-5" href="@Url.Action("CreatePermission")">新增權限</a>
+
+<table class="table table-bordered border-success mx-sm-5" style="max-width:700px; font-size:0.75rem;">
+    <thead>
+        <tr>
+            <th class="col-sm-3">操作</th>
+            <th>權限Key</th>
+            <th>描述</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var permission in Model.Permissions)
+        {
+            <tr>
+                <td style="white-space: nowrap;">
+                    <a class="btn btn-sm btn-info p-0 px-1" href="@Url.Action("EditPermission", new { permissionId = permission.PermissionId })" style="padding: .1rem .5rem; font-size: .75rem;">編輯</a>
+                    <a class="btn btn-sm btn-warning p-0 px-1" href="@Url.Action("PermissionCapabilities", new { permissionId = permission.PermissionId })" style="padding: .1rem .5rem; font-size: .75rem;">設定功能</a>
+                    <a class="btn btn-sm btn-danger p-0 px-1" href="@Url.Action("DeletePermission", new { permissionId = permission.PermissionId })" onclick="return confirm('確定刪除?')" style="padding: .1rem .5rem; font-size: .75rem;">刪除</a>
+                </td>
+                <td>@permission.PermissionKey</td>
+                <td>@permission.Description</td>
+                <td>
+                    @foreach (var cap in permission.CapabilityNames)
+                    {
+                    <span class="badge bg-primary me-1">@cap</span>
+                    }
+
+                    @if (!permission.CapabilityNames.Any())
+                    {
+                        <span class="text-muted">(無權限)</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h3>功能管理</h3>
+<a class="btn btn-primary mb-2 mx-sm-5" href="@Url.Action("CreateCapability")">新增功能</a>
+
+<table class="table table-bordered border-success mx-sm-5" style="max-width:700px; font-size:0.75rem;">
+    <thead>
+        <tr>
+            <th class="col-md-3">操作</th>
+            <th>名稱</th>
+            <th>描述</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cap in Model.Capabilities)
+        {
+            <tr>
+                <td>
+                    <a class="btn btn-sm btn-info p-0 px-1" href="@Url.Action("EditCapability", new { capabilityId = cap.CapabilityId })" style="padding: .1rem .5rem; font-size: .75rem;">編輯</a>
+                    <a class="btn btn-sm btn-danger p-0 px-1" href="@Url.Action("DeleteCapability", new { capabilityId = cap.CapabilityId })" onclick="return confirm('確定刪除?')" style="padding: .1rem .5rem; font-size: .75rem;">刪除</a>
+                </td>
+                <td>@cap.Name</td>
+                <td>@cap.Description</td>
             </tr>
         }
     </tbody>

@@ -1,5 +1,6 @@
 ﻿using CarbonProject.Data;
 using CarbonProject.Models.EFModels.RBAC;
+using CarbonProject.Models.RBACViews;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarbonProject.Service.RBAC
@@ -24,6 +25,17 @@ namespace CarbonProject.Service.RBAC
                 .Include(p => p.PermissionCapabilities)
                 .ThenInclude(pc => pc.Capability)
                 .ToListAsync();
+        }
+        public async Task<List<PermissionsViewModel>> GetCapabilitiesWithPermissionsAsync()
+        {
+            var permissions = await _context.Permissions
+                .Include(p => p.RolePermissions)              // 可選，看你是否需要 Role info
+                    .ThenInclude(rp => rp.Role)
+                .Include(p => p.PermissionCapabilities)      // 必須 Include PermissionCapabilities
+                    .ThenInclude(pc => pc.Capability)       // 必須 Include Capability
+                .ToListAsync();
+
+            return permissions.Select(p => new PermissionsViewModel(p)).ToList();
         }
 
         // -- R-2 ID 取得權限 --

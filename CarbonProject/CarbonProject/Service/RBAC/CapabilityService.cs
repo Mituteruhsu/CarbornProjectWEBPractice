@@ -1,5 +1,6 @@
 ﻿using CarbonProject.Data;
 using CarbonProject.Models.EFModels.RBAC;
+using CarbonProject.Models.RBACViews;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarbonProject.Service.RBAC
@@ -22,7 +23,15 @@ namespace CarbonProject.Service.RBAC
                 .ThenInclude(pc => pc.Permission)
                 .ToListAsync();
         }
+        public async Task<List<CapabilitiesViewModel>> GetAllCapabilitiesViewAsync()
+        {
+            var capabilities = await _context.Capabilities
+                .Include(c => c.PermissionCapabilities)
+                .ThenInclude(pc => pc.Permission)
+                .ToListAsync();
 
+            return capabilities.Select(c => new CapabilitiesViewModel(c)).ToList();
+        }
         // -- R-2 ID 取得功能點 --
         public async Task<Capability?> GetCapabilityByIdAsync(int capabilityId)
         {

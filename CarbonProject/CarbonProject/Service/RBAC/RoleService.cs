@@ -1,6 +1,8 @@
 ﻿using CarbonProject.Data;
 using CarbonProject.Models.EFModels.RBAC;
+using CarbonProject.Models.RBACViews;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace CarbonProject.Service.RBAC
 {
@@ -24,6 +26,29 @@ namespace CarbonProject.Service.RBAC
                 .Include(r => r.UserRoles)
                 .ThenInclude(ur => ur.User)
                 .ToListAsync();
+        }
+        public async Task<List<RolesViewModel>> GetRolesWithPermissionsAsync()
+        {
+            var roles = await _context.Roles
+                .Include(r => r.RolePermissions)
+                    .ThenInclude(rp => rp.Permission)
+                .ToListAsync();
+            return roles.Select(r => new RolesViewModel
+            {
+                RoleId = r.RoleId,
+                RoleName = r.RoleName,
+                Description = r.Description,
+
+                PermissionIds = r.RolePermissions
+                    .Select(rp => rp.PermissionId)
+                    .ToList(),
+
+                // 一定會讀到 Permission.Description
+                PermissionDescriptions = r.RolePermissions
+                    .Select(rp => rp.Permission.Description ?? "(無描述)")
+                    .ToList()
+
+            }).ToList();
         }
 
         // --R-2 ID 取得角色 --

@@ -1,34 +1,22 @@
 ﻿@model CarbonProject.Models.EFModels.RBAC.Role
-
 @{
-    ViewData["Title"] = "角色權限";
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "設定角色權限";
+    var allPermissions = ViewBag.AllPermissions as List<CarbonProject.Models.EFModels.RBAC.Permission>;
 }
+<h2>@Model.RoleName - 設定權限</h2>
 
-<h2>@Model.RoleName 的權限</h2>
-
-@if (Model.RolePermissions != null && Model.RolePermissions.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Permission Key</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var rp in Model.RolePermissions)
-            {
-                <tr>
-                    <td>@rp.Permission?.PermissionKey</td>
-                    <td>@rp.Permission?.Description</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>此角色尚未設定任何權限。</p>
-}
-
-<a asp-action="Roles" class="btn btn-secondary">返回角色列表</a>
+<form asp-action="AssignPermissionsToRole" method="post" class="mx-sm-5" style="max-width:500px;">
+    <input type="hidden" name="roleId" value="@Model.RoleId" />
+    <div class="form-group">
+        @foreach (var p in allPermissions)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="permissionIds" value="@p.PermissionId"
+                       @(Model.RolePermissions.Any(rp => rp.PermissionId == p.PermissionId) ? "checked" : "") />
+                <label class="form-check-label">@p.PermissionKey - @p.Description</label>
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-success mt-2">儲存</button>
+</form>

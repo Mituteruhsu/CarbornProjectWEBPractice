@@ -15,7 +15,7 @@ wwwroot\data\cef_items.csv
 wwwroot\favicon.ico
 wwwroot\img\TerraCPBanner.png
 wwwroot\img\TerraLogo.png
-wwwroot\img_profile\a693f1f4-47b1-4766-a75b-4ca791dba85f.jpg
+wwwroot\img_profile\3d590f84-503a-4e36-8fc8-7bb40afb5fc0.jpg
 wwwroot\js\admin.js
 wwwroot\js\dashboard.js
 wwwroot\js\site.js
