@@ -1,11 +1,10 @@
 ﻿@{
+    Layout = null;
     var role = Context.Session.GetString("Role");
 }
 
-<div class="dashboard-wrapper container mt-4">
-    <h2>Dashboard - @role</h2>
-    <hr />
-    <div>
-        @RenderBody()
-    </div>
+<h2>Dashboard - @role</h2>
+<hr />
+<div>
+    @RenderBody()
 </div>

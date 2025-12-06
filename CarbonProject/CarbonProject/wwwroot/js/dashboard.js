@@ -2,15 +2,17 @@
     'use strict';
 
     document.addEventListener('DOMContentLoaded', () => {
-        const toggleBtn = document.getElementById('bd-theme');
+
         const ctx = document.getElementById('emissionChart').getContext('2d');
         const yearlyDataDiv = document.getElementById('yearlyData');
+        const modeBtn = document.getElementById('modeToggle');
 
         // 解析資料
         const rawText = yearlyDataDiv.textContent.trim();
         const lines = rawText.split('\n').map(l => l.trim()).filter(l => l !== '');
         const targetEmission = parseFloat(lines[0].replace(/,/g, ''));
         const yearlyData = JSON.parse(lines.slice(1).join('\n'));
+
         const labels = yearlyData.map(x => x.Year);
         const actualEmissions = yearlyData.map(x => x.AverageAcrossYears);
 
@@ -34,6 +36,7 @@
 
         function initChart(theme) {
             if (chart) chart.destroy();
+
             chart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -62,36 +65,62 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { labels: { color: theme.text } },
-                        title: { display: true, text: '年度碳排放趨勢', color: theme.text, font: { size: 18, weight: 'bold' } }
+                        title: {
+                            display: true,
+                            text: '年度碳排放趨勢',
+                            color: theme.text,
+                            font: { size: 18, weight: 'bold' }
+                        }
                     },
                     scales: {
-                        y: { ticks: { color: theme.text }, grid: { color: theme.grid } },
+                        y: { ticks: { color: theme.text}, grid: { color: theme.grid } },
                         x: { ticks: { color: theme.text }, grid: { color: theme.grid } }
                     }
                 }
             });
-
-            // 更新所有 card-title 顏色
-            document.querySelectorAll('.card-title').forEach(title => {
-                title.style.color = theme.text;
-            });
         }
 
-        // 初始圖表
-        initChart(lightTheme);
+        // 初始主題（依 body class 判斷）
+        const isDark = document.body.classList.contains("dark-mode");
+        initChart(isDark ? darkTheme : lightTheme);
 
-        // 監聽 aria-label 屬性變化
-        const observer = new MutationObserver(() => {
-            const label = toggleBtn.getAttribute('aria-label') || '';
-            let theme;
-            if (label.includes('dark')) theme = darkTheme;
-            else if (label.includes('light')) theme = lightTheme;
-            else return; // auto 或其他，不改變
-            initChart(theme);
+        // 監聽 Dark/Light 切換按鈕
+        modeBtn.addEventListener("click", () => {
+            const nowDark = document.body.classList.contains("dark-mode");
+            initChart(nowDark ? darkTheme : lightTheme);
         });
 
-        observer.observe(toggleBtn, { attributes: true, attributeFilter: ['aria-label'] });
     });
+})();
+
+
+// Navbar + Sidebar Margin Shrink Sync
+(function () {
+    const navbar = document.querySelector(".navbar.spring-nav");
+    const sidebar = document.querySelector(".spring-sidebar");
+
+    const NAVBAR_MARGIN = 65;    // 初始 margin-top
+    const NAVBAR_HEIGHT = 56;    // --navbar-height 設定值
+
+    // ⭐ 函數：依 scroll 位置設定 navbar & sidebar
+    function updateNavbarPosition() {
+        if (window.scrollY > 0) {
+            // ⬇️ 不是頁面頂端 → navbar 收起
+            navbar.style.marginTop = "0px";
+            sidebar.style.top = `${NAVBAR_HEIGHT}px`;
+        } else {
+            // ⬆️ 頁面頂端 → 還原 navbar margin
+            navbar.style.marginTop = `${NAVBAR_MARGIN}px`;
+            sidebar.style.top = `${NAVBAR_HEIGHT + NAVBAR_MARGIN}px`;
+        }
+    }
+
+    // ⭐ 初始化偵測（使用者直接刷新停在中間時）
+    updateNavbarPosition();
+
+    // ⭐ 監聽滾動事件
+    window.addEventListener("scroll", updateNavbarPosition);
 })();
