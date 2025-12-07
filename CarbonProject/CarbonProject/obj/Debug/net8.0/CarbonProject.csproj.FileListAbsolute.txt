@@ -162,7 +162,6 @@ C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\Carbon
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
-C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\scopedcss\Views\Shared\_LayoutDashboard.cshtml.rz.scp.css
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\scopedcss\bundle\CarbonProject.styles.css
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\scopedcss\projectbundle\CarbonProject.bundle.scp.css
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\staticwebassets.build.json

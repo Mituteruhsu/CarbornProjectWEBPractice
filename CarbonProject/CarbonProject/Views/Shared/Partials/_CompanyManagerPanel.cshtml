@@ -5,6 +5,7 @@
     var isLogin = HttpContextAccessor.HttpContext?.Session.GetString("isLogin") == "true";
     var username = HttpContextAccessor.HttpContext?.Session.GetString("Username");
     var role = HttpContextAccessor.HttpContext?.Session.GetString("Roles");
+    var companyname = HttpContextAccessor.HttpContext?.Session.GetString("CompanyName");
 
     if (!isLogin || role == null)
     {
@@ -54,6 +55,10 @@
         <li class="nav-item mb-1">
             <a asp-controller="Profile" asp-action="Index"
                class="nav-link sidebar-link"><i class="bi bi-file-spreadsheet me-2"></i>碳足跡計算機</a>
+        </li>
+        <li class="nav-item mb-1">
+            <a asp-controller="Profile" asp-action="Index"
+               class="nav-link sidebar-link"><i class="bi bi-person-badge me-2"></i>個人帳號管理</a>
         </li>
     </ul>
 </div>

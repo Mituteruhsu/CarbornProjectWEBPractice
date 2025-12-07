@@ -70,7 +70,19 @@ namespace CarbonProject.Repositories
             {
                 conn.Open();
 
-                string sql = @"SELECT * FROM Users WHERE Username=@U OR Email=@U";
+                string sql = @"
+                                SELECT 
+                                    u.*,
+                                    c.CompanyName,
+                                    c.TaxId,
+                                    c.Industry_Id,
+                                    c.Address AS CompanyAddress,
+                                    c.Contact_Email,
+                                    c.CreatedAt AS CompanyCreatedAt,
+                                    c.UpdatedAt AS CompanyUpdatedAt
+                                FROM Users u
+                                LEFT JOIN Companies c ON u.CompanyId = c.CompanyId
+                                WHERE u.Username=@U OR u.Email=@U";
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@U", usernameOrEmail);
@@ -130,6 +142,18 @@ namespace CarbonProject.Repositories
                                     FullName = reader["FullName"].ToString(),
                                     CompanyId = companyId,
                                     IsActive = true,
+
+                                    Company = companyId > 0 ? new Company
+                                    {
+                                        CompanyId = companyId,
+                                        CompanyName = reader["CompanyName"]?.ToString(),
+                                        TaxId = reader["TaxId"]?.ToString(),
+                                        Industry_Id = reader["Industry_Id"]?.ToString(),
+                                        Address = reader["CompanyAddress"]?.ToString(),
+                                        Contact_Email = reader["Contact_Email"]?.ToString(),
+                                        CreatedAt = reader["CompanyCreatedAt"] != DBNull.Value ? Convert.ToDateTime(reader["CompanyCreatedAt"]) : DateTime.MinValue,
+                                        UpdatedAt = reader["CompanyUpdatedAt"] != DBNull.Value ? Convert.ToDateTime(reader["CompanyUpdatedAt"]) : DateTime.MinValue
+                                    } : null,
 
                                     UserRoles = roles.Select(r => new UserRole
                                     {

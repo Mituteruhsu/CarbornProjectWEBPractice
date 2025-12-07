@@ -69,14 +69,32 @@ namespace CarbonProject.Controllers
         [AuthorizeRole(new[] { "Admin", "Manager", "Staff", "User" })]
         public IActionResult Index1()
         {
-            var role = HttpContext.Session.GetString("Roles");
+            Debug.WriteLine($"===== DashboardController.cs/Index1() =====");
+            var roleString = HttpContext.Session.GetString("Roles") ?? "";
+            Debug.WriteLine($"Roles:{roleString}");
+            
+            // 轉換成 List
+            var roles = roleString.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                  .Select(r => r.Trim())
+                                  .ToList();
 
-            return role switch
+            // ★ Admin 最優先
+            if (roles.Contains("Admin"))
             {
-                "Admin" => View("AdminDashboard"),
-                "Manager" or "Staff" => View("CompanyDashboard"),
-                _ => View("UserDashboard")
-            };
+                Debug.WriteLine("導向 AdminDashboard");
+                return View("AdminDashboard");
+            }
+
+            // ★ 公司角色次之
+            if (roles.Contains("Manager") || roles.Contains("Staff") || roles.Contains("Company"))
+            {
+                Debug.WriteLine("導向 CompanyDashboard");
+                return View("CompanyDashboard");
+            }
+
+            // ★ 其他視為 User
+            Debug.WriteLine("導向 UserDashboard");
+            return View("UserDashboard");
         }
         [AuthorizeRole(new[] { "Admin", "Manager", "Staff"})]
         public async Task<IActionResult> CompanyDashboard()

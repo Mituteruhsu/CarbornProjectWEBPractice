@@ -1,15 +1,15 @@
 ﻿@{
-    Layout = "~/Views/Dashboard/_DashboardLayout.cshtml";
-    var role = Context.Session.GetString("Role");
+    Layout = "_LayoutDashboard";
+    var role = Context.Session.GetString("Roles");
 }
 
-<h3>公司用戶儀表板</h3>
+<h3>公司用戶儀表板-@role</h3>
 
-@if (role == "Manager")
+@if (role.Contains("Manager"))
 {
     <partial name="Partials/_CompanyManagerPanel" />
 }
-else if (role == "Staff")
+else if (role.Contains("Staff"))
 {
     <partial name="Partials/_CompanyStaffPanel" />
 }

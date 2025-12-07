@@ -159,7 +159,9 @@ namespace CarbonProject.Controllers
 
                 if (member.CompanyId > 0)
                 HttpContext.Session.SetInt32("CompanyId", member.CompanyId);
+                HttpContext.Session.SetString("CompanyName", member.Company.CompanyName ?? "");
                 Debug.WriteLine($"持有 CompanyId : {member.CompanyId}");
+                Debug.WriteLine($"持有 CompanyId : {member.Company.CompanyName}");
                 HttpContext.Session.SetString("Roles", string.Join(",", rbac.Roles));
                 HttpContext.Session.SetString("Permissions", string.Join(",", rbac.Permissions));
                 HttpContext.Session.SetString("Capabilities", string.Join(",", rbac.Capabilities));

@@ -5,22 +5,14 @@
     var isLogin = HttpContextAccessor.HttpContext?.Session.GetString("isLogin") == "true";
     var username = HttpContextAccessor.HttpContext?.Session.GetString("Username");
     var role = HttpContextAccessor.HttpContext?.Session.GetString("Roles");
-
-    if (!isLogin || role == null)
-    {
-        <text>
-            <script>
-                window.location.href = '/Account/Login';
-            </script>
-        </text>
-    }
+    var companyname = HttpContextAccessor.HttpContext?.Session.GetString("CompanyName");
 }
 
 <!-- Sidebar -->
 <div id="sidebar" class="spring-sidebar shadow">
     <ul class="nav flex-column px-3">
         <li class="nav-item pt-3 px-3">
-            <h5 class="fw-bold text-primary">公司管理員面板</h5>
+            <h5 class="fw-bold text-primary">訪客您好</h5>
         </li>
         <li class="nav-item mb-1">
             <a asp-controller="Dashboard" asp-action="Index"
@@ -40,19 +32,11 @@
                class="nav-link sidebar-link"><i class="bi bi-calendar2-check me-2"></i>報表與分析</a>
         </li>
         <li class="nav-item mb-1">
-            <a asp-controller="Profile" asp-action="Index"
-               class="nav-link sidebar-link"><i class="bi bi-building-exclamation me-2"></i>公司資料</a>
-        </li>
-        <li class="nav-item mb-1">
-            <a asp-controller="Profile" asp-action="Index"
-               class="nav-link sidebar-link"><i class="bi bi-people me-2"></i>員工管理</a>
-        </li>
-        <li class="nav-item mb-1">
-            <a asp-controller="Profile" asp-action="Index"
+            <a asp-controller="Cef" asp-action="Index"
                class="nav-link sidebar-link"><i class="bi bi-search me-2"></i>碳係數查詢</a>
         </li>
         <li class="nav-item mb-1">
-            <a asp-controller="Profile" asp-action="Index"
+            <a asp-controller="CarbonCalculator" asp-action="Calculator"
                class="nav-link sidebar-link"><i class="bi bi-file-spreadsheet me-2"></i>碳足跡計算機</a>
         </li>
     </ul>
