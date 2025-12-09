@@ -112,6 +112,12 @@ builder.Services.AddScoped<ActivityLogRepository>();
 builder.Services.AddScoped<EmissionService>();
 builder.Services.AddScoped<ActivityLogService>();
 
+// 註冊 HttpClient From -> Service/.
+builder.Services.AddHttpClient<CarbonFactorImportService>();
+// 註冊 Scheduler From -> Service/.
+Debug.WriteLine($"CarbonFactorUpdateScheduler 開啟自動排程");
+builder.Services.AddHostedService<CarbonFactorUpdateScheduler>();
+
 // JWT 設定 (僅做 Token 驗證，不做授權)
 // 使用內建 Jwt auth middleware 加：
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

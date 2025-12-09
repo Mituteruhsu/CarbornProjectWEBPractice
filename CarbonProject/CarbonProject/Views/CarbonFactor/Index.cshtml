@@ -1,0 +1,54 @@
+﻿@model List<CarbonProject.Models.EFModels.CarbonFactor>
+@{
+    ViewData["Title"] = "碳足跡計算係數";
+    var message = TempData["Message"] as string;
+    Layout = "_LayoutAdmin";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success">
+        @message
+    </div>
+}
+
+<div class="mb-3">
+    <form asp-action="ManualSync" method="post">
+        <button type="submit" class="btn btn-primary">手動同步最新資料</button>
+    </form>
+</div>
+
+<table class="table table-bordered">
+    <thead class="table-success border-light">
+        <tr>
+            <th>係數名稱</th>
+            <th class="text-nowrap">碳足跡數值 (kgCO2e)</th>
+            <th>單位</th>
+            <th>政府部門/公司名稱</th>
+            <th class="text-nowrap">公告年份</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Coe</td>
+                    <td>@item.Unit</td>
+                    <td>@item.DepartmentName</td>
+                    <td>@item.AnnouncementYear</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">暫無資料</td>
+            </tr>
+        }
+    </tbody>
+</table>
