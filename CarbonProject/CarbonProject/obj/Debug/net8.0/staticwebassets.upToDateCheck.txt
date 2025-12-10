@@ -8,6 +8,7 @@ wwwroot\assets\dist\js\bootstrap.bundle.min.js
 wwwroot\assets\dist\js\bootstrap.bundle.min.js.map
 wwwroot\assets\js\color-modes.js
 wwwroot\css\admin.css
+wwwroot\css\carbonCalculator.css
 wwwroot\css\dashboard.css
 wwwroot\css\dashboard.rtl.css
 wwwroot\css\site.css
@@ -17,6 +18,7 @@ wwwroot\img\TerraCPBanner.png
 wwwroot\img\TerraLogo.png
 wwwroot\img_profile\3d590f84-503a-4e36-8fc8-7bb40afb5fc0.jpg
 wwwroot\js\admin.js
+wwwroot\js\carbonCalculator.js
 wwwroot\js\dashboard.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

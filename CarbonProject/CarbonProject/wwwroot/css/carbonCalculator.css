@@ -1,0 +1,85 @@
+/* 🎀 粉色主題 & 版面微調 */
+body {
+  font-family: "Noto Sans TC", sans-serif;
+  background: #fff8fb;
+  color: #333;
+}
+
+.card-rounded {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.2rem 1.6rem;
+  box-shadow: 0 6px 16px rgba(255, 143, 171, 0.18);
+  border: 1px solid #ffd6e0;
+  margin-bottom: 1.2rem;
+}
+
+/* 🔎 輸入列 */
+.form-label {
+    font-weight: 600;
+}
+
+.form-control {
+    border: 2px solid #ffd6e0;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: inset 0 0 5px rgba(255, 143, 171, 0.15);
+    transition: all 0.2s ease-in-out;
+    font-size: 15px;
+    min-width:250px;
+}
+
+    .form-control:focus {
+        border-color: #ff8fab;
+        box-shadow: 0 0 8px rgba(255, 143, 171, 0.35);
+        outline: none;
+    }
+
+.unit-hint { color: #ff6b9c; font-weight: 600; font-size: 14px; white-space: nowrap; }
+
+/* 按鈕 */
+#btnAdd,
+.btn-outline,
+.btn-soft,
+.btn-clear {
+  border: none; cursor: pointer; font-weight: 600; border-radius: 25px;
+  transition: all 0.25s ease; max-width:200px;
+}
+
+#btnAdd {
+  height: 44px;
+  background: linear-gradient(135deg, #ff8fab, #ffb6c1);
+  color: #fff; padding: 0 20px; box-shadow: 0 3px 6px rgba(255,105,180,0.25);
+}
+#btnAdd:hover { transform: translateY(-2px); filter: brightness(1.05); }
+
+.btn-outline {
+  background: #fff; border: 2px solid #ffb6c1; color: #ff6b9c; padding: 8px 14px; border-radius: 12px;
+}
+.btn-outline:hover { background: #ffe5ec; }
+
+.btn-soft {
+  background: linear-gradient(135deg, #ff8fab, #ffb6c1);
+  color: #fff; padding: 8px 16px; margin: 4px 3px; box-shadow: 0 3px 6px rgba(255,105,180,0.25);
+}
+.btn-soft:hover { transform: translateY(-2px); filter: brightness(1.05); }
+
+.btn-clear { background: #fff0f6; color: #e25590; padding: 8px 14px; border: 2px solid #ffc2d9; }
+.btn-clear:hover { background: #ffe5ef; }
+
+/* 建議清單 */
+.suggestions-box {
+  border: 1px solid #ffd6e0; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.suggestions-box div { padding: 8px 12px; cursor: pointer; transition: all 0.15s ease; }
+.suggestions-box div:hover { background: #ffe5ec; }
+
+/* 表格 */
+.table-card table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.table-card th, .table-card td { border: 1px solid #ffd6e0; padding: 8px; text-align: center; }
+.table-card th { background: #ffedf3; color: #ff6b9c; }
+
+.total-display { font-size: 1.1rem; font-weight: bold; color: #ff6b9c; }
+
+.fade-in { animation: fadeIn 0.35s ease-in-out; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
