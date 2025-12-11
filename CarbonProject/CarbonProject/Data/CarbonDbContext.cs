@@ -32,6 +32,7 @@ namespace CarbonProject.Data
         public DbSet<ActivityLog> ActivityLogs { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<CarbonFactor> CarbonFactors { get; set; }
+        public DbSet<CarbonCalculation> CarbonCalculations { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CompanyEmissionTarget>().HasKey(t => t.TargetId);
@@ -49,6 +50,10 @@ namespace CarbonProject.Data
                 .HasIndex(c => new { c.Name, c.AnnouncementYear })
                 .IsUnique();
             modelBuilder.Entity<CarbonFactor>().ToTable("CarbonFactor");
+
+            // CarbonCalculation
+            modelBuilder.Entity<CarbonCalculation>().ToTable("CarbonCalculation");
+            modelBuilder.Entity<CarbonCalculation>().HasKey(c => c.Id);
         }
     }
 }

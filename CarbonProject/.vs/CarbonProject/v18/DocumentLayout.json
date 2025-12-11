@@ -7,16 +7,12 @@
       "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\carboncalculator\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\shared\\_layoutdashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\shared\\_layoutdashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\wwwroot\\css\\carboncalculator.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\wwwroot\\css\\carboncalculator.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|c:\\users\\user\\desktop\\teamproject\\carbornprojectwebpractice\\carbonproject\\carbonproject\\wwwroot\\css\\carboncalculator.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{062EB78A-D63D-47BD-98B4-11C7D7E64AC5}|CarbonProject\\CarbonProject.csproj|solutionrelative:carbonproject\\wwwroot\\css\\carboncalculator.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,34 +22,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 265,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-10T08:23:54.935Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_LayoutDashboard.cshtml",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_LayoutDashboard.cshtml",
-              "RelativeDocumentMoniker": "CarbonProject\\Views\\Shared\\_LayoutDashboard.cshtml",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_LayoutDashboard.cshtml",
-              "RelativeToolTip": "CarbonProject\\Views\\Shared\\_LayoutDashboard.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-10T08:23:54.236Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -62,22 +32,9 @@
               "RelativeDocumentMoniker": "CarbonProject\\Views\\CarbonCalculator\\Index.cshtml",
               "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\CarbonCalculator\\Index.cshtml",
               "RelativeToolTip": "CarbonProject\\Views\\CarbonCalculator\\Index.cshtml",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAAACwAAABQAAAAAAAAAA==",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAADUAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-10T04:40:46.333Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "carbonCalculator.css",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\wwwroot\\css\\carbonCalculator.css",
-              "RelativeDocumentMoniker": "CarbonProject\\wwwroot\\css\\carbonCalculator.css",
-              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\wwwroot\\css\\carbonCalculator.css",
-              "RelativeToolTip": "CarbonProject\\wwwroot\\css\\carbonCalculator.css",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAABwAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-12-10T04:57:47.975Z",
+              "WhenOpened": "2025-12-10T11:44:23.399Z",
               "EditorCaption": ""
             },
             {
@@ -91,6 +48,32 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "carbonCalculator.css",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\wwwroot\\css\\carbonCalculator.css",
+              "RelativeDocumentMoniker": "CarbonProject\\wwwroot\\css\\carbonCalculator.css",
+              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\wwwroot\\css\\carbonCalculator.css",
+              "RelativeToolTip": "CarbonProject\\wwwroot\\css\\carbonCalculator.css",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAEkAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-12-10T11:47:37.409Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "CarbonProject\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\User\\Desktop\\TeamProject\\CarbornProjectWEBPractice\\CarbonProject\\CarbonProject\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "CarbonProject\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAAAGYAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-10T08:23:54.935Z",
+              "EditorCaption": ""
             }
           ]
         }

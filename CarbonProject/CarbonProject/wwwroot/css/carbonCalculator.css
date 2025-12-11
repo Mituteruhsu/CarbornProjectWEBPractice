@@ -5,13 +5,20 @@ body {
   color: #333;
 }
 
+.card {
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(255, 143, 171, 0.18);
+    border: 1px solid #ffd6e0;
+    margin-bottom: 1.2rem;
+    background-color:transparent;
+}
+
 .card-rounded {
-  background: #fff;
-  border-radius: 16px;
-  padding: 1.2rem 1.6rem;
-  box-shadow: 0 6px 16px rgba(255, 143, 171, 0.18);
-  border: 1px solid #ffd6e0;
-  margin-bottom: 1.2rem;
+    border-radius: 16px;
+    padding: 1.6rem;
+    box-shadow: 0 6px 16px rgba(255, 143, 171, 0.18);
+    border: 1px solid #ffd6e0;
+    margin-bottom: 1.2rem;
 }
 
 /* 🔎 輸入列 */
@@ -29,11 +36,11 @@ body {
     min-width:250px;
 }
 
-    .form-control:focus {
-        border-color: #ff8fab;
-        box-shadow: 0 0 8px rgba(255, 143, 171, 0.35);
-        outline: none;
-    }
+.form-control:focus {
+    border-color: #ff8fab;
+    box-shadow: 0 0 8px rgba(255, 143, 171, 0.35);
+    outline: none;
+}
 
 .unit-hint { color: #ff6b9c; font-weight: 600; font-size: 14px; white-space: nowrap; }
 
@@ -54,7 +61,7 @@ body {
 #btnAdd:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
 .btn-outline {
-  background: #fff; border: 2px solid #ffb6c1; color: #ff6b9c; padding: 8px 14px; border-radius: 12px;
+  background: #fff; border: 2px solid #ffb6c1; color: #ff6b9c; border-radius: 12px;
 }
 .btn-outline:hover { background: #ffe5ec; }
 
@@ -64,7 +71,7 @@ body {
 }
 .btn-soft:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
-.btn-clear { background: #fff0f6; color: #e25590; padding: 8px 14px; border: 2px solid #ffc2d9; }
+.btn-clear { background: #fff0f6; color: #e25590; border: 2px solid #ffc2d9; }
 .btn-clear:hover { background: #ffe5ef; }
 
 /* 建議清單 */
@@ -75,9 +82,24 @@ body {
 .suggestions-box div:hover { background: #ffe5ec; }
 
 /* 表格 */
-.table-card table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-.table-card th, .table-card td { border: 1px solid #ffd6e0; padding: 8px; text-align: center; }
-.table-card th { background: #ffedf3; color: #ff6b9c; }
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+thead { background-color: #ffedf3;}
+th, td {
+    border: 1px solid #ffd6e0;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle !important;
+}
+th { background: #ffedf3; color: #ff6b9c; }
+
+
+#recordTable th:first-child {
+    min-width: 125px;
+}
+
+#recordTable td input.auto-width {
+    max-width: 120px;
+}
 
 .total-display { font-size: 1.1rem; font-weight: bold; color: #ff6b9c; }
 

@@ -17,7 +17,7 @@
     </div>
 
     <!-- 輸入列 -->
-    <div class="card-rounded">
+    <div class="card p-3">
         <div class="row g-3">
             <div class="col">
                 <label for="search" class="form-label">項目搜尋</label>
@@ -39,31 +39,33 @@
 
 
     <!-- 表格 -->
-    <div class="card-rounded table-card">
+    <div class="card p-3">
         <h3>我的碳排紀錄</h3>
-        <div class="table-actions" style="display:flex; gap:8px; margin:6px 0;">
-            <button class="btn-outline" type="button" onclick="addRecord()">＋ 新增項目</button>
-            <button class="btn-outline" type="button" onclick="clearAll()">🗑 清空所有</button>
-            <button class="btn-clear" type="button" onclick="clearAll()">🧹 一鍵清空</button>
+        <div class="row row-cols-3 justify-content-evenly m-1">
+            <button class="col btn-outline p-0" type="button" onclick="addRecord()">＋ 新增項目</button>
+            <button class="col btn-outline p-0" type="button" onclick="clearAll()">🗑 清空所有</button>
+            <button class="col btn-clear p-0" type="button" onclick="clearAll()">🧹 一鍵清空</button>
         </div>
-        <table id="recordTable">
-            <thead>
-                <tr>
-                    <th>項目名稱</th>
-                    <th>使用量</th>
-                    <th>排放係數 (kgCO₂e)</th>
-                    <th>總排放</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table" id="recordTable">
+                <thead>
+                    <tr>
+                        <th class="text-nowrap">項目名稱</th>
+                        <th class="text-nowrap">使用量</th>
+                        <th>排放係數 (kgCO₂e)</th>
+                        <th class="text-nowrap">總排放</th>
+                        <th class="text-nowrap">操作</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
     <!-- 總排 + 圖表 -->
-    <div class="card-rounded">
+    <div class="card p-3">
         <div class="total-display">🌍 總碳排量：<span id="totalEmission">0.00</span> kgCO₂e</div>
-        <canvas id="emissionChart" width="420" height="220" style="max-width: 680px;"></canvas>
+        <canvas id="emissionChart" style="max-height:500px;"></canvas>
     </div>
 </div>
 

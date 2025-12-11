@@ -13,38 +13,31 @@ async function initCalculator() {
     if (searchInput) {
         searchInput.addEventListener("input", (e) => showSuggestions(e.target.value));
     }
+
+    // 初始縮小圖表
+    updateChartDisplayMode();
 }
 
-// === 載入排放係數（外部優先、本地備援） ===
+// === 載入排放係數 from DB ===
 async function loadEmissionData() {
-    const API_URL = "https://data.moenv.gov.tw/api/v2/cfp_p_02/json";
-    const LOCAL_URL = "/data/moenv_factors_full.json";
-
-    let apiData = [];
-    let localData = [];
+    const DB_URL = "/CarbonCalculator/GetEmissionFactors";
 
     try {
-        console.log("🌏 嘗試從外部 API 載入資料...");
-        const res = await fetch(API_URL, { cache: "no-store", mode: "cors" });
-        if (!res.ok) throw new Error(`API 回應錯誤: ${res.status}`);
-        apiData = await res.json();
-        console.log(`✅ 外部 API 載入成功，共 ${apiData.length} 筆資料`);
-    } catch (err) {
-        console.warn("⚠️ 外部 API 失敗，使用本地資料。", err);
-    }
+        console.log("📡 從後端載入 DB CarbonFactor...");
 
-    try {
-        const resLocal = await fetch(LOCAL_URL, { cache: "no-store" });
-        if (!resLocal.ok) throw new Error(`本地 JSON 載入失敗: ${resLocal.status}`);
-        localData = await resLocal.json();
-        console.log(`📁 已載入本地 moenv_factors_full.json，共 ${localData.length} 筆`);
-    } catch (err) {
-        console.error("❌ 無法載入本地 moenv_factors_full.json，請確認路徑是否正確。", err);
-    }
+        const res = await fetch(DB_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("後端回傳錯誤：" + res.status);
 
-    const combined = [...apiData, ...localData];
-    emissionFactors = formatEmissionData(combined);
-    console.log(`✨ 載入完成，共 ${Object.keys(emissionFactors).length} 筆 emission factors`);
+        const dbData = await res.json();
+        console.log(`✅ 從 DB 成功載入 ${dbData.length} 筆 CarbonFactor`);
+
+        emissionFactors = formatEmissionData(dbData);
+        console.log("🌍 emissionFactors：", emissionFactors);
+    }
+    catch (err) {
+        console.error("❌ 資料庫載入失敗", err);
+        alert("後端發生錯誤，無法載入排放係數！");
+    }
 }
 
 // === 格式化資料 & 去重 ===
@@ -107,7 +100,7 @@ function selectSuggestion(name) {
     }
 }
 
-// === 一鍵加入類別推薦項目（模糊比對） ===
+// === 一鍵加入類別推薦項目 ===
 function quickAdd(category) {
     const mapping = {
         transport: ["汽車", "機車", "公車", "捷運"],
@@ -135,18 +128,14 @@ function quickAdd(category) {
                 saveToDB(record);
                 added++;
             });
-        } else {
-            console.warn(`⚠️ 未找到關鍵字：「${keyword}」`);
         }
     });
 
-    if (added === 0) {
-        console.warn("⚠️ 本地資料集中沒有符合該類別的項目，請確認 moenv_factors_full.json。");
-    }
     renderTable();
+    updateChart();
 }
 
-// === 使用者輸入使用量時自動更新 ===
+// === 使用者輸入使用量 ===
 function updateUsage(index, value) {
     const usage = parseFloat(value);
     if (isNaN(usage) || usage < 0) {
@@ -160,7 +149,7 @@ function updateUsage(index, value) {
     updateChart();
 }
 
-// === 加入單筆紀錄（手動） ===
+// === 加入一筆 ===
 function addRecord() {
     const name = document.getElementById("search").value.trim();
     const usage = parseFloat(document.getElementById("usage").value);
@@ -177,6 +166,7 @@ function addRecord() {
 
     const rec = { name, usage: isNaN(usage) ? "" : usage, unit: theUnit, factor, emission };
     records.push(rec);
+
     renderTable();
     updateChart();
     saveToDB(rec);
@@ -186,7 +176,7 @@ function addRecord() {
     document.getElementById("unitHint").textContent = "";
 }
 
-// === 渲染紀錄表 ===
+// === 渲染表格 ===
 function renderTable(showAlert = true) {
     const tbody = document.querySelector("#recordTable tbody");
     tbody.innerHTML = records
@@ -195,13 +185,12 @@ function renderTable(showAlert = true) {
         <tr>
             <td>${r.name}</td>
             <td>
-                <input type="number" class="usage-input" value="${r.usage}" min="0" 
-                    oninput="updateUsage(${i}, this.value)" 
+                <input type="number" style="max-width: 12rem;" value="${r.usage}" oninput="updateUsage(${i}, this.value)" 
                     placeholder="${r.unit ? '單位：' + r.unit : '輸入使用量'}" />
             </td>
             <td>${r.factor}</td>
             <td>${r.emission}</td>
-            <td><button class="btn-outline" onclick="removeRecord(${i})">刪除</button></td>
+            <td><button class="btn-outline text-nowrap py-0" onclick="removeRecord(${i})">刪除</button></td>
         </tr>
     `
         )
@@ -218,14 +207,14 @@ function renderTable(showAlert = true) {
     }
 }
 
-// === 移除單筆紀錄 ===
+// === 刪除單筆 ===
 function removeRecord(index) {
     records.splice(index, 1);
     renderTable(false);
     updateChart();
 }
 
-// === 清空所有 ===
+// === 清空全部 ===
 async function clearAll() {
     try {
         const res = await fetch("/api/Carbon/ClearAll", { method: "DELETE" });
@@ -240,49 +229,24 @@ async function clearAll() {
 }
 
 // === 寫入 DB ===
-async function saveToDB(record = null) {
-    let data;
-
-    // ① 如果是一鍵加入（record有值），直接用它
-    if (record) {
-        data = {
-            name: record.name || "未命名項目",
-            usage: parseFloat(record.usage) || 0,
-            unit: record.unit || "",
-            factor: parseFloat(record.factor) || 0,
-            emission: parseFloat(record.emission) || 0
-        };
-    } else {
-        // ② 如果是手動輸入，才從畫面抓
-        const name = document.getElementById("search").value.trim();
-        const usage = parseFloat(document.getElementById("usage").value) || 0;
-        const unit = document
-            .getElementById("unitHint")
-            ?.textContent?.replace("單位：", "")
-            .replace(/\s+/g, "") || "";
-        const factor = emissionFactors[name]?.factor || 0;
-        const emission = usage * factor;
-
-        data = { name, usage, unit, factor, emission };
-    }
-
-    console.log("🚀 傳送資料：", data);
-
-    const res = await fetch("/api/Carbon/SaveRecord", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    });
-
-    if (res.ok) {
-        console.log("✅ 資料已成功寫入資料庫！"); // 改成 console log，不彈窗
-    } else {
-        const msg = await res.text();
-        alert("❌ 無法寫入資料庫：" + res.status + " → " + msg);
+async function saveToDB(record) {
+    try {
+        await fetch("/api/CarbonCalculation/Save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: record.name,
+                inputValue: record.usage || 0,
+                factor: record.factor || 0,
+                resultValue: record.emission || 0
+            })
+        });
+    } catch (err) {
+        console.error("❌ 儲存到資料庫失敗:", err);
     }
 }
-
-
 
 // === PDF 匯出 ===
 function downloadPDF() {
@@ -312,7 +276,27 @@ function downloadPDF() {
     doc.save("CustosCarbon_碳足跡紀錄.pdf");
 }
 
-// === 圖表 ===
+// =====================================================
+// 🚀 圖表區域
+// =====================================================
+
+// ★ 新增：自動切換圖表高度（縮小 / 展開）
+function updateChartDisplayMode() {
+    const canvas = document.getElementById("emissionChart");
+    if (!canvas) return;
+
+    const hasData = records.length > 0;
+
+    if (hasData) {
+        canvas.classList.remove("chart-minimized");
+        canvas.classList.add("chart-expanded");
+    } else {
+        canvas.classList.remove("chart-expanded");
+        canvas.classList.add("chart-minimized");
+    }
+}
+
+// === 更新 Chart.js ===
 function updateChart() {
     const ctx = document.getElementById("emissionChart");
     if (!ctx) return;
@@ -339,8 +323,20 @@ function updateChart() {
             ],
         },
         options: {
-            plugins: { legend: { position: "right" } }
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "right",
+                    labels: {
+                        textAlign: "left",
+                        padding: 30,
+                    }
+                }
+            }
         },
     });
-}
 
+    // ★ 每次更新圖表時，同步更新高度
+    updateChartDisplayMode();
+}

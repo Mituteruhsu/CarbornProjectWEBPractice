@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "ContainingType": "CarbonCalculationController",
+    "Method": "Save",
+    "RelativePath": "api/CarbonCalculation/Save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SaveCarbonRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
