@@ -125,7 +125,6 @@ function quickAdd(category) {
                     emission: "",
                 };
                 records.push(record);
-                saveToDB(record);
                 added++;
             });
         }
@@ -145,7 +144,13 @@ function updateUsage(index, value) {
         records[index].emission = (usage * factor).toFixed(2);
         records[index].usage = usage;
     }
-    renderTable(false);
+    // 只更新該列 DOM
+    const tbody = document.querySelector("#recordTable tbody");
+    const row = tbody.rows[index];
+    if (row) {
+        const emissionCell = row.cells[3]; // 總排放那一格
+        emissionCell.textContent = records[index].emission;
+    }
     updateChart();
 }
 
@@ -216,37 +221,74 @@ function removeRecord(index) {
 
 // === 清空全部 ===
 async function clearAll() {
-    try {
-        const res = await fetch("/api/Carbon/ClearAll", { method: "DELETE" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        records = [];
-        renderTable(false);
-        updateChart();
-        console.log("🧹 [DB] 已清空所有 CarbonRecords");
-    } catch (err) {
-        console.error("❌ [DB] 清空失敗：", err);
-    }
+    // 清空資料陣列
+    records = [];
+
+    // 清空 tbody
+    const tbody = document.querySelector("#recordTable tbody");
+    if (tbody) tbody.innerHTML = "";
+
+    // 重置總排放顯示
+    const totalEl = document.getElementById("totalEmission");
+    if (totalEl) totalEl.textContent = "0.00";
+
+    // 清空使用量輸入欄位
+    const usageInput = document.getElementById("usage");
+    if (usageInput) usageInput.value = "";
+
+    // 清空項目名稱欄位
+    const searchInput = document.getElementById("search");
+    if (searchInput) searchInput.value = "";
+
+    // 清空單位提示
+    const unitHint = document.getElementById("unitHint");
+    if (unitHint) unitHint.textContent = "";
+
+    // 更新圖表
+    updateChart();
+
+    console.log("🧹 前端已清空所有紀錄");
 }
 
 // === 寫入 DB ===
 async function saveToDB(record) {
     try {
-        await fetch("/api/CarbonCalculation/Save", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                name: record.name,
-                inputValue: record.usage || 0,
-                factor: record.factor || 0,
-                resultValue: record.emission || 0
-            })
+        console.log("📌 送出的 record：", record);
+
+        const response = await fetch('/api/CarbonCalculationAPI/Save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',   // 自動帶上：.AspNetCore.Session.AspNetCore.AntiforgeryAuthToken（你有 JWT）所有 cookie
+            body: JSON.stringify(record)
         });
+
+        // 防止 "res is not defined" 的錯誤
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("❌ 後端 500 錯誤內容:", errorText);
+            throw new Error("後端錯誤: " + response.status);
+        }
+
+        const data = await response.json();
+        console.log("✅ 儲存成功:", data);
+        return data;
+
     } catch (err) {
         console.error("❌ 儲存到資料庫失敗:", err);
+        throw err;
     }
 }
+
+async function saveAllToDB() {
+    console.log("🚀 正在儲存全部紀錄到 DB...");
+    console.log("📄 records 內容：", records);
+
+    for (const rec of records) {
+        await saveToDB(rec);
+    }
+    alert("已儲存全部紀錄到資料庫！");
+}
+
 
 // === PDF 匯出 ===
 function downloadPDF() {

@@ -99,6 +99,7 @@ builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<CapabilityService>();
 builder.Services.AddScoped<RBACService>();
 builder.Services.AddSingleton<JWTService>(); // 注冊 Service 為 singleton（stateless）或 transient 都可；singleton 比較省資源且安全
+builder.Services.AddScoped<CarbonCalculationService>();
 
 // 註冊 DI Service From -> Repositories/.
 builder.Services.AddScoped<CompanyRepository>();
@@ -107,6 +108,7 @@ builder.Services.AddScoped<ESGActionRepository>();
 builder.Services.AddScoped<IndustryRepository>();
 builder.Services.AddScoped<RbacRepository>();
 builder.Services.AddScoped<ActivityLogRepository>();
+builder.Services.AddScoped<CarbonCalculationRepository>();
 
 // 註冊 Service From -> Service/.
 builder.Services.AddScoped<EmissionService>();

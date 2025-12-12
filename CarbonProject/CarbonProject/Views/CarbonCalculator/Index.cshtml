@@ -1,11 +1,17 @@
 ﻿@{
     ViewData["Title"] = "碳足跡計算機";
     Layout = "_LayoutDashboard";
+    var username = Context.Session.GetString("Username");
+    var memberId = Context.Session.GetInt32("MemberId");
 }
 
 <link rel="stylesheet" href="~/css/carbonCalculator.css" asp-append-version="true" />
 
 <div class="fade-in">
+    @if (!string.IsNullOrEmpty(username))
+    {
+        <p>歡迎回來, @memberId-@username</p>
+    }
     <h2>碳足跡計算機</h2>
 
     <!-- 一鍵加入 -->
@@ -44,7 +50,7 @@
         <div class="row row-cols-3 justify-content-evenly m-1">
             <button class="col btn-outline p-0" type="button" onclick="addRecord()">＋ 新增項目</button>
             <button class="col btn-outline p-0" type="button" onclick="clearAll()">🗑 清空所有</button>
-            <button class="col btn-clear p-0" type="button" onclick="clearAll()">🧹 一鍵清空</button>
+            <button class="col btn-outline p-0" type="button" onclick="saveAllToDB()"><i class="bi bi-floppy"></i>儲存</button>
         </div>
         <div class="table-responsive">
             <table class="table" id="recordTable">
@@ -65,7 +71,7 @@
     <!-- 總排 + 圖表 -->
     <div class="card p-3">
         <div class="total-display">🌍 總碳排量：<span id="totalEmission">0.00</span> kgCO₂e</div>
-        <canvas id="emissionChart" style="max-height:500px;"></canvas>
+        <canvas class="chart-minimized" id="emissionChart"></canvas>
     </div>
 </div>
 

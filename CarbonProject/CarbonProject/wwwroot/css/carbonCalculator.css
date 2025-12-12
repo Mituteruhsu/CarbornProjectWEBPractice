@@ -2,7 +2,6 @@
 body {
   font-family: "Noto Sans TC", sans-serif;
   background: #fff8fb;
-  color: #333;
 }
 
 .card {
@@ -13,12 +12,16 @@ body {
     background-color:transparent;
 }
 
-.card-rounded {
-    border-radius: 16px;
-    padding: 1.6rem;
-    box-shadow: 0 6px 16px rgba(255, 143, 171, 0.18);
-    border: 1px solid #ffd6e0;
-    margin-bottom: 1.2rem;
+.card .chart-minimized {
+    max-height: 0.5rem;
+    max-width: auto;
+    transition: max-height 0.3s ease;
+}
+
+.card .chart-expanded {
+    max-height: 500px;
+    max-width: auto;
+    transition: max-height 0.3s ease;
 }
 
 /* 🔎 輸入列 */

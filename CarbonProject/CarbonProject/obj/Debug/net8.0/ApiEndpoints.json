@@ -1,8 +1,8 @@
 [
   {
-    "ContainingType": "CarbonCalculationController",
+    "ContainingType": "CarbonCalculationAPIController",
     "Method": "Save",
-    "RelativePath": "api/CarbonCalculation/Save",
+    "RelativePath": "api/CarbonCalculationAPI/Save",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,

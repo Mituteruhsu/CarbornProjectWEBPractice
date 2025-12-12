@@ -2,23 +2,27 @@
 
 [Route("api/[controller]")]
 [ApiController]
-public class CarbonCalculationController : ControllerBase
+public class CarbonCalculationAPIController : ControllerBase
 {
     private readonly CarbonCalculationService _service;
 
-    public CarbonCalculationController(CarbonCalculationService service)
+    public CarbonCalculationAPIController(CarbonCalculationService service)
     {
         _service = service;
     }
 
+    [AutoValidateAntiforgeryToken]
     [HttpPost("Save")]
     public async Task<IActionResult> Save([FromBody] SaveCarbonRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest("資料格式錯誤");
 
-        int userId = int.Parse(HttpContext.Session.GetString("UserId") ?? "0");
+        int userId = int.Parse(HttpContext.Session.GetString("MemberId") ?? "0");
         string role = HttpContext.Session.GetString("Role") ?? "User";
+        
+        if (userId == 0)
+            return Unauthorized("使用者未登入");
 
         await _service.SaveRecordAsync(
             userId,

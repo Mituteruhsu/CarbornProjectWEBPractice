@@ -18,6 +18,7 @@ wwwroot\img\TerraCPBanner.png
 wwwroot\img\TerraLogo.png
 wwwroot\img_profile\3d590f84-503a-4e36-8fc8-7bb40afb5fc0.jpg
 wwwroot\js\admin.js
+wwwroot\js\carbonCalculator.js
 wwwroot\js\dashboard.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
@@ -77,4 +78,3 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\js\carbonCalculator.js
