@@ -26,7 +26,7 @@ namespace CarbonProject.Service.RBAC
                 .ThenInclude(pc => pc.Capability)
                 .ToListAsync();
         }
-        public async Task<List<PermissionsViewModel>> GetCapabilitiesWithPermissionsAsync()
+        public async Task<List<Models.RBACViews.PermissionsViewModel>> GetCapabilitiesWithPermissionsAsync()
         {
             var permissions = await _context.Permissions
                 .Include(p => p.RolePermissions)              // 可選，看你是否需要 Role info

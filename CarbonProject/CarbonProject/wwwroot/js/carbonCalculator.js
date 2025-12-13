@@ -251,18 +251,21 @@ async function clearAll() {
 }
 
 // === 寫入 DB ===
-async function saveToDB(record) {
-    try {
-        console.log("📌 送出的 record：", record);
+async function saveAllToDB() {
+    console.log("🚀 正在儲存全部紀錄到 DB...");
+    console.log("📄 records 內容：", records);
 
+    try {
         const response = await fetch('/api/CarbonCalculationAPI/Save', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',   // 自動帶上：.AspNetCore.Session.AspNetCore.AntiforgeryAuthToken（你有 JWT）所有 cookie
-            body: JSON.stringify(record)
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(records)   // 直接傳整個陣列
         });
 
-        // 防止 "res is not defined" 的錯誤
         if (!response.ok) {
             const errorText = await response.text();
             console.error("❌ 後端 500 錯誤內容:", errorText);
@@ -271,24 +274,13 @@ async function saveToDB(record) {
 
         const data = await response.json();
         console.log("✅ 儲存成功:", data);
-        return data;
+        alert(`已儲存 ${data.count} 筆紀錄到資料庫！`);
 
     } catch (err) {
         console.error("❌ 儲存到資料庫失敗:", err);
-        throw err;
+        alert("儲存失敗，請查看 console");
     }
 }
-
-async function saveAllToDB() {
-    console.log("🚀 正在儲存全部紀錄到 DB...");
-    console.log("📄 records 內容：", records);
-
-    for (const rec of records) {
-        await saveToDB(rec);
-    }
-    alert("已儲存全部紀錄到資料庫！");
-}
-
 
 // === PDF 匯出 ===
 function downloadPDF() {

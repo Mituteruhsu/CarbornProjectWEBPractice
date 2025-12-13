@@ -7,15 +7,6 @@
     var username = HttpContextAccessor.HttpContext?.Session.GetString("Username");
     var role = HttpContextAccessor.HttpContext?.Session.GetString("Roles") ?? "";
     var companyname = HttpContextAccessor.HttpContext?.Session.GetString("CompanyName");
-
-    // if (!isLogin || role == null)
-    // {
-    //     <text>
-    //         <script>
-    //             window.location.href = '/Account/Login';
-    //         </script>
-    //     </text>
-    // }
 }
 <style>
     /* 基本色系 - 春天綠 */
@@ -247,12 +238,28 @@
     <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">🌿 @companyname</a>
 
     <div class="ms-auto d-flex align-items-center">
+        @if (role?.Contains("Admin") == true)
+        {
+            <div class="nav-item dropdown">
+                <a class="nav-link text-dark fw-bold dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    管理後台
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">儀表板 Dashboard</a></li>
+                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">使用者管理</a></li>
+                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Permissions">角色權限</a></li>
+                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Admin_read">個人帳號管理</a></li>
+                    <li><a class="dropdown-item" asp-controller="Logs" asp-action="Index">系統 Logs</a></li>
+                    <li><a class="dropdown-item" asp-controller="CarbonFactor" asp-action="Index">碳係數更新</a></li>
+                </ul>
+            </div>
+        }
         <button id="modeToggle" class="btn btn-outline-primary me-3">
             <i class="bi bi-brightness-high"></i>
         </button>
     </div>
 </nav>
-@if (role.Contains("Manager"))
+@if (role.Contains("Admin") || role.Contains("Manager"))
 {
     <partial name="Partials/_CompanyManagerPanel" />
 }

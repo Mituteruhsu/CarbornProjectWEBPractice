@@ -66,50 +66,50 @@ namespace CarbonProject.Controllers
             );
         }
         // >>>>> 測試用頁面 <<<<<
-        [AuthorizeRole(new[] { "Admin", "Manager", "Staff", "User" })]
-        public IActionResult Index1()
-        {
-            Debug.WriteLine($"===== DashboardController.cs/Index1() =====");
-            var roleString = HttpContext.Session.GetString("Roles") ?? "";
-            Debug.WriteLine($"Roles:{roleString}");
+        //[AuthorizeRole(new[] { "Admin", "Manager", "Staff", "User" })]
+        //public IActionResult Index1()
+        //{
+        //    Debug.WriteLine($"===== DashboardController.cs/Index1() =====");
+        //    var roleString = HttpContext.Session.GetString("Roles") ?? "";
+        //    Debug.WriteLine($"Roles:{roleString}");
             
-            // 轉換成 List
-            var roles = roleString.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                  .Select(r => r.Trim())
-                                  .ToList();
+        //    // 轉換成 List
+        //    var roles = roleString.Split(',', StringSplitOptions.RemoveEmptyEntries)
+        //                          .Select(r => r.Trim())
+        //                          .ToList();
 
-            // ★ Admin 最優先
-            if (roles.Contains("Admin"))
-            {
-                Debug.WriteLine("導向 AdminDashboard");
-                return View("AdminDashboard");
-            }
+        //    // ★ Admin 最優先
+        //    if (roles.Contains("Admin"))
+        //    {
+        //        Debug.WriteLine("導向 AdminDashboard");
+        //        return View("AdminDashboard");
+        //    }
 
-            // ★ 公司角色次之
-            if (roles.Contains("Manager") || roles.Contains("Staff") || roles.Contains("Company"))
-            {
-                Debug.WriteLine("導向 CompanyDashboard");
-                return View("CompanyDashboard");
-            }
+        //    // ★ 公司角色次之
+        //    if (roles.Contains("Manager") || roles.Contains("Staff") || roles.Contains("Company"))
+        //    {
+        //        Debug.WriteLine("導向 CompanyDashboard");
+        //        return View("CompanyDashboard");
+        //    }
 
-            // ★ 其他視為 User
-            Debug.WriteLine("導向 UserDashboard");
-            return View("UserDashboard");
-        }
-        [AuthorizeRole(new[] { "Admin", "Manager", "Staff"})]
-        public async Task<IActionResult> CompanyDashboard()
-        {
-            int memberId = HttpContext.Session.GetInt32("MemberId") ?? 0;
+        //    // ★ 其他視為 User
+        //    Debug.WriteLine("導向 UserDashboard");
+        //    return View("UserDashboard");
+        //}
+        //[AuthorizeRole(new[] { "Admin", "Manager", "Staff"})]
+        //public async Task<IActionResult> CompanyDashboard()
+        //{
+        //    int memberId = HttpContext.Session.GetInt32("MemberId") ?? 0;
 
-            var model = new CompanyDashboardViewModel
-            {
-                CanEditCompany = await _capabilityService.UserHasCapabilityAsync(memberId, "EditCompany"),
-                CanEditEmployee = await _capabilityService.UserHasCapabilityAsync(memberId, "EditEmployee"),
-                CanSubmitReport = await _capabilityService.UserHasCapabilityAsync(memberId, "SubmitReport")
-            };
+        //    var model = new CompanyDashboardViewModel
+        //    {
+        //        CanEditCompany = await _capabilityService.UserHasCapabilityAsync(memberId, "EditCompany"),
+        //        CanEditEmployee = await _capabilityService.UserHasCapabilityAsync(memberId, "EditEmployee"),
+        //        CanSubmitReport = await _capabilityService.UserHasCapabilityAsync(memberId, "SubmitReport")
+        //    };
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
         // ↑↑↑↑↑ 測試用頁面 ↑↑↑↑↑
         public async Task<IActionResult> Index()
         {

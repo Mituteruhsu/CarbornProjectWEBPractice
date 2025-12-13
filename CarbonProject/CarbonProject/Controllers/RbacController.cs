@@ -42,7 +42,7 @@ namespace CarbonProject.Controllers
                 // 直接使用 service 回傳的 ViewModel
                 Roles = roles ?? new List<RolesViewModel>(),
 
-                Permissions = permissions?? new List<PermissionsViewModel>(),
+                Permissions = permissions?? new List<Models.RBACViews.PermissionsViewModel>(),
 
                 Capabilities = capabilities?.Select(c => new CapabilitiesViewModel(c)).ToList()
                         ?? new List<CapabilitiesViewModel>()
@@ -145,7 +145,7 @@ namespace CarbonProject.Controllers
         [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePermission(PermissionsViewModel model)
+        public async Task<IActionResult> CreatePermission(Models.RBACViews.PermissionsViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -171,7 +171,7 @@ namespace CarbonProject.Controllers
         [AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPermission(PermissionsViewModel model)
+        public async Task<IActionResult> EditPermission(Models.RBACViews.PermissionsViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -269,68 +269,5 @@ namespace CarbonProject.Controllers
             await _capabilityService.DeleteCapabilityAsync(capabilityId);
             return RedirectToAction("Index");
         }
-
-        //// 使用 PermissionService 範例
-        //// From -> Service/PermissionService.cs
-        //[AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
-        //public async Task<IActionResult> Permissions()
-        //{
-        //    var permissions = await _permissionService.GetAllPermissionsAsync();
-        //    return View(permissions);
-        //}
-        //// 使用 CapabilityService 範例
-        //// From -> Service/CapabilityService.cs
-        //[AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
-        //public async Task<IActionResult> Capabilities()
-        //{
-        //    var caps = await _capabilityService.GetAllCapabilitiesAsync();
-        //    return View(caps);
-        //}
-        //// 顯示所有角色
-        //[AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
-        //public async Task<IActionResult> Roles()
-        //{
-        //    var roles = await _context.Roles.ToListAsync();
-        //    return View(roles);
-        //}
-
-        //// 顯示角色對應權限
-        //[AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
-        //public async Task<IActionResult> RolePermissions(int roleId = 1)
-        //{
-        //    // 查找 Role 並 Include 其對應的 Permissions
-        //    var role = await _context.Roles
-        //        .Include(r => r.RolePermissions)
-        //        .ThenInclude(rp => rp.Permission)
-        //        .FirstOrDefaultAsync(r => r.RoleId == roleId);
-
-        //    Debug.WriteLine("===== Controllers/RbacController.cs =====");
-        //    Debug.WriteLine("--- RolePermissions ---");
-        //    Debug.WriteLine($"RoleName: {role.RoleName}");
-        //    foreach (var rp in role.RolePermissions)
-        //    {
-        //        Debug.WriteLine($"RolePermissions here:{rp.Permission?.PermissionKey} - {rp.Permission?.Description}");
-        //    }
-
-        //    if (role == null) return NotFound();
-
-        //    return View(role); // 傳 Role 給 View
-        //}
-
-        //// 顯示所有使用者
-        //[AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
-        //public async Task<IActionResult> Users()
-        //{
-        //    var users = await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
-        //    return View(users);
-        //}
-        //// 啟用中的使用者，沒有被停權、沒有被刪除、允許登入系統。
-        //[AuthorizeRole(roles: new[] { "Admin" }, capabilities: new[] { "View" }, permissions: new[] { "Administor" })]
-
-        //public async Task<IActionResult> ActiveUsers()
-        //{
-        //    var activeUsers = await _rbacService.GetActiveUsers();
-        //    return View(activeUsers); // 傳給 ActiveUsers.cshtml 顯示
-        //}
     }
 }

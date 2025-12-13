@@ -9,7 +9,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "SaveCarbonRequest",
+        "Type": "System.Collections.Generic.List\u00601[[CarbonProject.Models.Request.SaveCarbonRequest, CarbonProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],

@@ -33,6 +33,7 @@ namespace CarbonProject.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<CarbonFactor> CarbonFactors { get; set; }
         public DbSet<CarbonCalculation> CarbonCalculations { get; set; }
+        public DbSet<CarbonCalculationBatch> CarbonCalculationBatches { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CompanyEmissionTarget>().HasKey(t => t.TargetId);
@@ -54,6 +55,17 @@ namespace CarbonProject.Data
             // CarbonCalculation
             modelBuilder.Entity<CarbonCalculation>().ToTable("CarbonCalculation");
             modelBuilder.Entity<CarbonCalculation>().HasKey(c => c.Id);
+            
+            // CarbonCalculationBatch
+            modelBuilder.Entity<CarbonCalculationBatch>()
+                .ToTable("CarbonCalculationBatch")
+                .HasKey(b => b.Id);
+
+            modelBuilder.Entity<CarbonCalculationBatch>()
+                .HasMany(b => b.Calculations)
+                .WithOne(c => c.Batch)
+                .HasForeignKey(c => c.BatchId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
