@@ -162,14 +162,12 @@ C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\Carbon
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\rjsmcshtml.dswa.cache.json
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
-C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\scopedcss\Views\Shared\_LayoutDashboard.cshtml.rz.scp.css
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\scopedcss\bundle\CarbonProject.styles.css
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\scopedcss\projectbundle\CarbonProject.bundle.scp.css
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\staticwebassets.build.json
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\staticwebassets.build.json.cache
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\staticwebassets.development.json
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\staticwebassets.build.endpoints.json
-C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\CarbonPr.C0251291.Up2Date
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\CarbonProject.dll
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Release\net8.0\refint\CarbonProject.dll

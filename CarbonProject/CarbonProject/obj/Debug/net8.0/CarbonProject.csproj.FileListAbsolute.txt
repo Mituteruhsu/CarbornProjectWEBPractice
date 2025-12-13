@@ -168,7 +168,6 @@ C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\Carbon
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\CarbonPr.C0251291.Up2Date
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\CarbonProject.dll
 C:\Users\User\Desktop\TeamProject\CarbornProjectWEBPractice\CarbonProject\CarbonProject\obj\Debug\net8.0\refint\CarbonProject.dll
